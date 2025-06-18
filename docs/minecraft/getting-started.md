@@ -69,7 +69,7 @@ For a complete setup with all options and troubleshooting, follow these guides i
 - **Server Address**: `server.survivorsunited.org`
 - **Minecraft Version**: 1.21.5
 - **Mod Loader**: Fabric
-- **Discord**: [Join our community](https://discord.gg/survivorsunited)
+- **Discord**: [Join our community](https://discord.gg/NAaPWfSu)
 
 ## Getting Help
 
@@ -93,4 +93,4 @@ Ready to get started? Begin with [Java Installation](/docs/minecraft/installatio
 
 ---
 
-**Need help?** Join our [Discord server](https://discord.gg/survivorsunited) for real-time support and community interaction. 
+**Need help?** Join our [Discord server](https://discord.gg/NAaPWfSu) for real-time support and community interaction. 
