@@ -30,6 +30,7 @@
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "nodemon": "^3.0.3",
+    "sharp": "^0.34.2",
     "typescript": "^5.3.3"
   },
   "browserslist": {
@@ -47,4 +48,4 @@
   "engines": {
     "node": ">=18.0"
   }
-} 
+}
