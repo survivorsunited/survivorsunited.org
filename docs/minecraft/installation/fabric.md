@@ -11,7 +11,7 @@ Fabric is a lightweight mod loader that allows you to run mods in Minecraft. It'
 ## Download Fabric Installer
 
 Download `fabric-installer-1.0.3.jar` from:  
-[https://drive.google.com/file/d/1aJLyUVQpBF78CrNiesIKSOuf5Y3MFz-g/view?usp=drive_link](https://drive.google.com/file/d/1aJLyUVQpBF78CrNiesIKSOuf5Y3MFz-g/view?usp=drive_link)
+[/install/fabric-installer-1.0.3.jar](/install/fabric-installer-1.0.3.jar)
 
 ## Installation Steps
 

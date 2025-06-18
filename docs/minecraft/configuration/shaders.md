@@ -24,7 +24,19 @@ Before installing shaders, make sure you have:
 
 ## Download Shaders
 
-### From Google Drive
+### Direct Downloads (Recommended)
+
+Download shader packs directly from our server:
+
+**Recommended:**
+- **Complementary Unbound** - [/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip](/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip)
+
+**Alternative Options:**
+- **Complementary Reimagined** - [/mods/shaderpacks/ComplementaryReimagined_r5.5.1.zip](/mods/shaderpacks/ComplementaryReimagined_r5.5.1.zip)
+- **BSL Shaders** - [/mods/shaderpacks/BSL_v10.0.zip](/mods/shaderpacks/BSL_v10.0.zip)
+- **AstraLex** - [/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip](/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip)
+
+### From Google Drive (Alternative)
 1. Access the shared Google Drive: [Shared Mods and Shaders](https://drive.google.com/drive/folders/1S6SMU223DnPjUVCfcpRXFlnZUHGfjiqk?usp=drive_link)
 2. Navigate to the `shaders` folder
 3. Download the shader packs you want to try

@@ -10,17 +10,27 @@ To play on the Survivors United server, you need to install the required mods. T
 
 ## Download Mods
 
-### Step 1: Access the Shared Drive
+### Step 1: Download the Latest Modpack
 
-Open the shared Google Drive:  
+Download the latest modpack:  
+[/mods/client-mod-all-4930ec84bbd9ce85253dcf95e689991f-2025-06-18_16-47-27.zip](/mods/client-mod-all-4930ec84bbd9ce85253dcf95e689991f-2025-06-18_16-47-27.zip)
+
+### Step 2: Download Shader Packs (Optional)
+
+For enhanced graphics, download one of these shader packs:
+
+**Recommended:**
+- **Complementary Unbound** - [/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip](/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip)
+
+**Alternative Options:**
+- **Complementary Reimagined** - [/mods/shaderpacks/ComplementaryReimagined_r5.5.1.zip](/mods/shaderpacks/ComplementaryReimagined_r5.5.1.zip)
+- **BSL Shaders** - [/mods/shaderpacks/BSL_v10.0.zip](/mods/shaderpacks/BSL_v10.0.zip)
+- **AstraLex** - [/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip](/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip)
+
+### Step 3: Alternative - Access the Shared Drive
+
+If you need older versions or additional files, you can also access the shared Google Drive:  
 [Google Drive – Shared Mods and Shaders](https://drive.google.com/drive/folders/1S6SMU223DnPjUVCfcpRXFlnZUHGfjiqk?usp=drive_link)
-
-### Step 2: Find the Modpack
-
-1. Look for the `mods` folder in the Google Drive
-2. Open the `mods` folder
-3. Find the latest modpack file: `client-mod-all-*.zip`
-4. Download this file to your computer
 
 ## Install Mods
 
