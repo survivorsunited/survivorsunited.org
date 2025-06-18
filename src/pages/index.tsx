@@ -26,7 +26,7 @@ function HomepageHeader(): JSX.Element {
             className="button button--secondary button--lg"
             to="/docs/minecraft/getting-started"
           >
-            Setup Guide - 5min ⏱️
+            Setup Guide ⏱️
           </Link>
           <Link
             className="button button--primary button--lg"

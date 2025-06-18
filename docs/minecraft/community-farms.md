@@ -8,29 +8,9 @@ description: Shared farms and infrastructure available to all Survivors United p
 
 Welcome to the shared infrastructure of Survivors United! These farms are built and maintained by the community for everyone to use. Please respect these shared resources and help maintain them.
 
-## Farm Locations
+## ✅ Active Farms
 
-### Spawn Area Farms
-Most community farms are located near the spawn area for easy access. Use the waypoints system to navigate between farms.
-
-### Farm Categories
-
-<details>
-<summary>🛠️ Resource Farms</summary>
-
-### Iron Farm
-- **Location**: Near spawn area
-- **Purpose**: Provides iron ingots for tools, armor, and building
-- **How to Use**: Stand near the farm and collect iron ingots that drop
-- **Maintenance**: Automatic, no player input required
-- **Output**: ~100 iron ingots per hour
-
-### Gold Farm
-- **Location**: Nether dimension
-- **Purpose**: Provides gold ingots and XP
-- **How to Use**: Use the nether portal near spawn, then follow waypoints
-- **Maintenance**: Automatic, but requires occasional repair
-- **Output**: ~50 gold ingots per hour + XP
+These farms are currently built and operational for community use.
 
 ### XP Farm
 - **Location**: End dimension
@@ -38,18 +18,6 @@ Most community farms are located near the spawn area for easy access. Use the wa
 - **How to Use**: Use the end portal, then follow waypoints
 - **Maintenance**: Automatic enderman farm
 - **Output**: High XP rates for enchanting
-
-### Creeper Farm
-- **Location**: Underground near spawn
-- **Purpose**: Provides gunpowder for fireworks and TNT
-- **How to Use**: Stand in the designated area
-- **Maintenance**: Automatic
-- **Output**: Gunpowder for explosives
-
-</details>
-
-<details>
-<summary>🌾 Food Farms</summary>
 
 ### Crop Farms
 - **Location**: Community garden near spawn
@@ -65,40 +33,20 @@ Most community farms are located near the spawn area for easy access. Use the wa
 - **Maintenance**: Automatic breeding systems
 - **Output**: Food and materials
 
-### Tree Farm
-- **Location**: Forest area near spawn
-- **Purpose**: Provides wood for building
-- **How to Use**: Cut trees and replant saplings
-- **Maintenance**: Community responsibility - replant saplings
-- **Output**: Various wood types
+## 🚧 Planned Farms
 
-</details>
+These farms are planned but not yet built. Check Discord for updates on construction progress.
 
-<details>
-<summary>🏗️ Building Material Farms</summary>
+### Resource Farms
+- **Iron Farm**: Near spawn area - Provides iron ingots for tools, armor, and building (~100 iron/hour)
+- **Gold Farm**: Nether dimension - Provides gold ingots and XP (~50 gold/hour + XP)
+- **Creeper Farm**: Underground near spawn - Provides gunpowder for fireworks and TNT
 
-### Sand Farm
-- **Location**: Desert area
-- **Purpose**: Provides sand for glass and concrete
-- **How to Use**: Use the sand duplicator
-- **Maintenance**: Requires occasional repair
-- **Output**: Sand for building materials
-
-### Stone Farm
-- **Location**: Underground near spawn
-- **Purpose**: Provides stone, cobblestone, and smooth stone
-- **How to Use**: Mine the generated stone
-- **Maintenance**: Automatic
-- **Output**: Various stone types
-
-### Concrete Farm
-- **Location**: Near spawn area
-- **Purpose**: Provides concrete powder and concrete
-- **How to Use**: Collect concrete powder and convert to concrete
-- **Maintenance**: Community responsibility
-- **Output**: Concrete for building
-
-</details>
+### Food & Material Farms
+- **Tree Farm**: Forest area near spawn - Provides wood for building (various wood types)
+- **Sand Farm**: Desert area - Provides sand for glass and concrete
+- **Stone Farm**: Underground near spawn - Provides stone, cobblestone, and smooth stone
+- **Concrete Farm**: Near spawn area - Provides concrete powder and concrete
 
 ## How to Use Community Farms
 
@@ -114,51 +62,20 @@ Most community farms are located near the spawn area for easy access. Use the wa
 - **Ask Questions**: If you're unsure how to use a farm, ask in Discord
 - **Contribute**: Help build new farms or improve existing ones
 
-## Building Your Own Farms
-
-### Guidelines for Personal Farms
-- **Location**: Build away from spawn and community farms
-- **Scale**: Keep personal farms reasonable in size
-- **Efficiency**: Use efficient designs to reduce server lag
-- **Aesthetics**: Make your farms look good and fit the server theme
-
-### Sharing Your Farms
-If you want to share your farm with the community:
-1. **Ask Permission**: Get approval from moderators
-2. **Documentation**: Create a guide for how to use your farm
-3. **Maintenance**: Be willing to help maintain the farm
-4. **Location**: Consider building near other community farms
-
-## Farm Maintenance
-
-### Community Responsibility
-- **Regular Checks**: Visit farms regularly to ensure they're working
-- **Repairs**: Help fix broken farms when possible
-- **Improvements**: Suggest and implement improvements
-- **Documentation**: Update farm guides when changes are made
-
-### Maintenance Schedule
-- **Daily**: Check spawn area farms
-- **Weekly**: Check all community farms
-- **Monthly**: Major repairs and improvements
-- **As Needed**: Emergency repairs and updates
-
 ## Farm Coordinates
 
 ### Important Locations
 - **Spawn**: 0, 64, 0
-- **Iron Farm**: 100, 64, 100
-- **Gold Farm**: Nether coordinates available in Discord
-- **XP Farm**: End coordinates available in Discord
 - **Community Garden**: 50, 64, 50
+- **Iron Farm**: 100, 64, 100 (planned)
+- **Gold Farm**: Nether coordinates available in Discord (planned)
+- **XP Farm**: End coordinates available in Discord
 
 ### Waypoints
 Use the waypoint system in your map mods to navigate between farms:
 - **Spawn Hub**: Central meeting point
-- **Iron Farm**: Iron resource location
-- **Gold Farm**: Gold and XP location
-- **XP Farm**: Experience farming location
 - **Community Garden**: Food farming location
+- **XP Farm**: Experience farming location
 
 ## Getting Help
 
@@ -166,12 +83,15 @@ Use the waypoint system in your map mods to navigate between farms:
 - **Broken Farms**: Report in #minecraft-support Discord channel
 - **Usage Questions**: Ask in #minecraft-general
 - **Maintenance Help**: Coordinate in Discord
-- **New Farm Ideas**: Discuss in #minecraft-builds
 
-### Contributing
-- **Building Farms**: Coordinate with the community
-- **Maintenance**: Help keep farms running
-- **Documentation**: Update guides and information
-- **Improvements**: Suggest and implement enhancements
+---
+
+## Have a Farm Idea or Need Help?
+
+If you have an idea for a new community farm or need help building one:
+
+- **[Submit a Farm Request](https://github.com/survivorsunited/survivorsunited.org/issues/new?template=farm-request.md)** - Propose a new farm or request help with building
+- **[Request Access](https://github.com/survivorsunited/survivorsunited.org/issues/new?template=request-access.md)** - If you need special permissions for farm building
+- **Join Discord**: For immediate help, ask in the #minecraft-builds channel
 
 Remember, these farms are for everyone! Help maintain them and share the resources fairly. Together, we can build an amazing community infrastructure! 

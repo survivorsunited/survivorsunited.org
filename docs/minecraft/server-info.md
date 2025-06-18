@@ -112,7 +112,7 @@ Welcome to the **Survivors United** Minecraft server! This is a survival communi
 - **#minecraft-events**: Event announcements and coordination
 - **#minecraft-builds**: Share your builds and get feedback
 
-### Voice Channels
+### Voice Channels (planned)
 - **General Chat**: Casual conversation while playing
 - **Event Voice**: Voice chat during community events
 - **Build Teams**: Coordination for group projects

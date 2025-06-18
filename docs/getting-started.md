@@ -10,35 +10,12 @@ Welcome to Survivors United! This guide will help you get started with our Minec
 
 Survivors United is a **Minecraft survival community** where players come together to build, explore, and survive in a modded environment. Our server offers a family-friendly, collaborative experience with carefully curated mods that enhance gameplay while maintaining performance.
 
-### What We Offer
-
-Our Minecraft community provides:
-
-- **Modded Survival**: Enhanced gameplay with performance and quality-of-life mods
-- **Community Farms**: Collaborative building projects and resource sharing
-- **Safe Environment**: Family-friendly, moderated server with anti-cheat protection
-- **Active Community**: Regular events, building competitions, and community projects
-- **Comprehensive Guides**: Step-by-step setup instructions for new players
-
-### Server Features
-
-- **Modded Gameplay**: Enhanced with carefully selected mods for better performance and features
-- **Community Farms**: Collaborative projects where players work together
-- **Regular Events**: Building competitions, community challenges, and special events
-- **Anti-Cheat Protection**: Fair play environment for all players
-- **24/7 Uptime**: Reliable server hosting with minimal downtime
-
 ## Requirements
 
 Before joining our server, please ensure you have:
 
 - **Minecraft Java Edition**: A valid, purchased copy of Minecraft Java Edition
-- **Operating System**: Windows 10/11 (our guides are optimized for Windows)
-- **System Requirements**:
-  - At least 4GB of RAM available for Minecraft
-  - Stable internet connection
-  - Basic computer skills
-- **Java**: Latest version of Java 17 or higher
+- **Java**: Latest version of Java 20 or higher
 - **Time**: About 30-45 minutes for initial setup
 
 ## First Steps
