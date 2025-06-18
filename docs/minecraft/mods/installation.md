@@ -27,11 +27,6 @@ For enhanced graphics, download one of these shader packs:
 - **BSL Shaders** - [/mods/shaderpacks/BSL_v10.0.zip](/mods/shaderpacks/BSL_v10.0.zip)
 - **AstraLex** - [/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip](/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip)
 
-### Step 3: Alternative - Access the Shared Drive
-
-If you need older versions or additional files, you can also access the shared Google Drive:  
-[Google Drive – Shared Mods and Shaders](https://drive.google.com/drive/folders/1S6SMU223DnPjUVCfcpRXFlnZUHGfjiqk?usp=drive_link)
-
 ## Install Mods
 
 ### Step 1: Find Your Minecraft Folder

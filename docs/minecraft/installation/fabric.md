@@ -45,44 +45,6 @@ Java -jar fabric-installer-1.0.3.jar
 
 ![Fabric Selection](/img/minecraft/fabric-selection.png)
 
-## Alternative Installation Methods
-
-### Using CurseForge
-1. Download and install CurseForge
-2. Create a new Fabric modpack
-3. CurseForge will handle the Fabric installation
-
-### Using MultiMC
-1. Download and install MultiMC
-2. Create a new instance
-3. Select Fabric as the mod loader
-4. MultiMC will download and install Fabric
-
-## Troubleshooting
-
-### Installer Won't Run
-- Make sure Java is installed and in your PATH
-- Try running as administrator
-- Check that the file downloaded completely
-
-### No Fabric Profile
-- Check that the installation completed successfully
-- Try running the installer again
-- Check the Minecraft launcher settings
-
-### Version Mismatch
-- Make sure you're installing Fabric for Minecraft 1.21.5
-- Check that your Minecraft version matches
-- Update Minecraft to the latest version if needed
-
-## What Fabric Does
-
-Fabric provides:
-- **Mod Loading**: Allows mods to be loaded into Minecraft
-- **API**: Provides interfaces for mods to interact with the game
-- **Compatibility**: Ensures mods work together properly
-- **Performance**: Lightweight compared to other mod loaders
-
 ## Next Steps
 
 Once Fabric is installed, proceed to [Install Mods](/docs/minecraft/mods/installation). 
