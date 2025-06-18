@@ -1,248 +1,75 @@
 ---
-sidebar_position: 3
+title: Supported Mods
+description: Complete list of mods supported on the Survivors United server
 ---
 
 # Supported Mods
 
-A comprehensive list of all mods used on the Survivors United server, with descriptions and download links.
+This page contains the complete list of mods that are supported and recommended for the Survivors United server.
 
-## Required Mods
+## 📦 Core and Utility Mods
 
-These mods are **required** to join our server. All players must have these installed.
+* **Fabric API** – v0.126.0+1.21.5 – Required by most Fabric mods
+* **Cloth Config v17** – v18.0.145 – Configuration library used by many mods
+* **Forge Config API Port** – v21.5.1 – Compatibility layer for config mods
+* **CraterLib** – v2.1.5 – Library mod required by some UI mods
+* **Balm** – v21.5.14 – Shared codebase for performance and utility mods
+* **Fabric Language Kotlin** – v1.13.3+kotlin.2.1.21 – Enables Kotlin-based mods
+* **Collective** – v8.3 – Shared code library for various mods
+* **Architectury** – v16.1.4 – Intermediary API for multiplatform mods
+* **Amecs Reborn** – v2.0.2+mc1.21.5 – Enables modifier keys for keybinds
+* **JamLib** – v1.3.5+1.21.5 – Platform-agnostic library for JamCore mods
+* **libIPN** – v6.5.0 – Inventory Profiles Next GUI Library
+* **ukulib** – v1.7.1+1.21.5 – Utility library used in several mods
+* **Placeholder API** – v2.6.4+1.21.5 – Enables user-friendly placeholders
+* **Mod Menu** – v14.0.0-rc.2 – Adds a mod menu to view installed mods
 
-### Core Mods
+## 🧱 World, Maps & Exploration
 
-#### Fabric Loader
-- **Description**: The mod loader that allows other mods to run
-- **Version**: Latest stable
-- **Download**: [Fabric Installer](https://fabricmc.net/use/)
-- **Installation**: See our [Fabric Installation Guide](./minecraft/installation/fabric)
+* **Xaero's World Map** – v1.39.9 – Fullscreen world map with land claim support
+* **Xaero's Minimap** – v25.2.6 – On-screen minimap with item visibility
+* **Journeymap** – v1.21.5-6.0.0-beta.45 – Real-time map and waypoint management
+* **Waystones** – v21.5.4 – Fast travel points between waystones
+* **MaLiLib** – v0.24.1 – Library for map-related mods like Xaero's
+* **WorldEdit** – v7.3.14+7149-8bea01b – In-game world editor
+* **oωo** – v0.12.21+1.21.5 – Miscellaneous mod
 
-#### Fabric API
-- **Description**: Core API for Fabric mods
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-- **Required**: Yes
+## 🏠 Storage & Inventory Enhancements
 
-### Performance Mods
+* **Tom's Simple Storage Mod** – v2.4.0 – Simple inventory storage mod
+* **Traveler's Backpack** – v10.5.1 – Upgradeable backpacks with accessories integration
+* **Shulker Box Tooltip** – v5.2.6+1.21.5 – Preview Shulker Box contents
+* **Inventory Totem** – v3.4 – Totem effect works from inventory
+* **AppleSkin** – v3.0.6+mc1.21.5 – Detailed food/saturation HUD
+* **Inventory HUD+** – v3.4.27 – Display inventory on screen
+* **Inventory Management** – v1.6.0 – Sort/transfer items easily
+* **ItemLocks** – v1.21.5-1.3.11 – Prevent accidental item loss by locking slots
+* **Stack Refill** – v4.7 – Automatically refills depleted items
+* **CraftableNameTag** – v1.21.5-0.2 – Allows Name Tag crafting
 
-#### Sodium
-- **Description**: High-performance graphics engine for Minecraft
-- **Version**: Latest stable
-- **Download**: [Modrinth](https://modrinth.com/mod/sodium)
-- **Benefits**: Significantly improves FPS and reduces lag
-- **Required**: Yes
+## 👥 Multiplayer & Server Features
 
-#### Lithium
-- **Description**: General-purpose optimization mod
-- **Version**: Latest stable
-- **Download**: [Modrinth](https://modrinth.com/mod/lithium)
-- **Benefits**: Improves server and client performance
-- **Required**: Yes
+* **Open Parties and Claims** – v0.24.1 – Land claims, chunk loading, and parties
+* **Universal Graves** – v3.7.1+1.21.5 – Customisable death graves
+* **Styled Chat** – v2.8.0+1.21.5 – Custom in-game chat styling
+* **Styled Player List** – v3.7.0+1.21.5 – Customisable player tab list
+* **Pets Don't Die** – v1.1.2 – Makes tameable mobs immortal (with exceptions)
 
-#### Phosphor
-- **Description**: Lighting engine optimization
-- **Version**: Latest stable
-- **Download**: [Modrinth](https://modrinth.com/mod/phosphor)
-- **Benefits**: Faster world loading and lighting updates
-- **Required**: Yes
+## 💥 Performance & Protection
 
-### Quality of Life Mods
+* **Sodium** – v0.6.13+mc1.21.5 – Improves rendering performance
+* **FerriteCore** – v8.0.0 – Reduces memory usage
+* **BLAST** – v1.13.3-1.21.5 – Performance optimisations and anti-crash
+* **InertiaAntiCheat** – v1.0.4.3 – Required anti-cheat mod for server access
+* **Iris** – v1.8.11+mc1.21.5 – Shaders mod compatible with OptiFine packs
+* **BetterF3** – v14.0.0 – Customisable debug HUD
 
-#### JourneyMap
-- **Description**: Real-time mapping and waypoint system
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/journeymap)
-- **Features**: 
-  - Real-time world map
-  - Waypoint system
-  - Death markers
-  - Fullscreen map view
-- **Required**: Yes
+## 🫒 Miscellaneous
 
-#### Inventory Tweaks
-- **Description**: Inventory management and sorting
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/inventory-tweaks)
-- **Features**:
-  - Auto-sort inventory
-  - Chest sorting
-  - Item replacement
-  - Quick crafting
-- **Required**: Yes
+* **Egg Of Capitalism** – v4.0 – Drops a personal dragon egg upon "The End" achievement
 
-#### AppleSkin
-- **Description**: Enhanced food and hunger display
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/appleskin)
-- **Features**:
-  - Shows hunger and saturation values
-  - Food tooltips
-  - Hunger bar improvements
-- **Required**: Yes
+---
 
-## Optional Mods
+## Want to recommend a mod?
 
-These mods are **optional** but recommended for the best experience.
-
-### Visual Enhancements
-
-#### Sodium Extra
-- **Description**: Additional graphics options for Sodium
-- **Version**: Latest stable
-- **Download**: [Modrinth](https://modrinth.com/mod/sodium-extra)
-- **Features**: More graphics settings and options
-- **Required**: No
-
-#### Reese's Sodium Options
-- **Description**: Configuration screen for Sodium
-- **Version**: Latest stable
-- **Download**: [Modrinth](https://modrinth.com/mod/reeses-sodium-options)
-- **Features**: Easy Sodium configuration
-- **Required**: No
-
-### Shader Support
-
-#### Iris Shaders
-- **Description**: Shader support for Fabric
-- **Version**: Latest stable
-- **Download**: [Iris Website](https://irisshaders.net/)
-- **Features**: 
-  - Shader pack support
-  - Performance optimized
-  - Compatible with Sodium
-- **Required**: No (only if using shaders)
-
-#### Oculus
-- **Description**: Alternative shader loader
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/oculus)
-- **Features**: Shader support for older shader packs
-- **Required**: No (only if using shaders)
-
-## Community Mods
-
-These mods enhance community features and collaboration.
-
-#### Simple Voice Chat
-- **Description**: Proximity-based voice chat
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/simple-voice-chat)
-- **Features**:
-  - Proximity voice chat
-  - Discord integration
-  - Push-to-talk
-  - Mute options
-- **Required**: No (but highly recommended)
-
-#### Enhanced Chat
-- **Description**: Improved chat system
-- **Version**: Latest stable
-- **Download**: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/enhanced-chat)
-- **Features**:
-  - Better chat formatting
-  - Chat history
-  - Improved readability
-- **Required**: No
-
-## Mod Installation
-
-### Automatic Installation
-1. Download our modpack (coming soon)
-2. Import into your mod launcher
-3. Launch and join the server
-
-### Manual Installation
-1. Install [Fabric Loader](./minecraft/installation/fabric)
-2. Download all required mods
-3. Place mod files in `.minecraft/mods/` folder
-4. Launch Minecraft with Fabric profile
-
-For detailed instructions, see our [Mod Installation Guide](./minecraft/mods/installation).
-
-## Mod Configuration
-
-### Performance Settings
-- **Render Distance**: 8-12 chunks (balance performance and visibility)
-- **Graphics**: Fast (recommended)
-- **Smooth Lighting**: Off (better performance)
-- **Particles**: Minimal
-
-### JourneyMap Settings
-- **Map Type**: Cave mapping enabled
-- **Waypoints**: Auto-save enabled
-- **Death Markers**: Enabled
-- **Fullscreen Map**: M key
-
-### Voice Chat Settings
-- **Push to Talk**: V key (default)
-- **Proximity**: 64 blocks
-- **Discord Integration**: Enabled
-
-## Troubleshooting
-
-### Common Issues
-
-**Mod Not Loading:**
-- Check Minecraft and Fabric versions
-- Verify mod compatibility
-- Remove conflicting mods
-
-**Performance Issues:**
-- Reduce render distance
-- Lower graphics settings
-- Allocate more RAM
-- Disable optional mods
-
-**Crash on Startup:**
-- Check crash logs
-- Verify all required mods are installed
-- Try removing optional mods
-
-### Getting Help
-
-If you're having issues with mods:
-
-1. **Check our [Troubleshooting Guide](./minecraft/troubleshooting/errors)**
-2. **Join our Discord** for real-time help
-3. **Verify mod versions** match our requirements
-4. **Check mod compatibility** with your Minecraft version
-
-## Mod Updates
-
-We regularly update our mod list to:
-- Improve performance
-- Add new features
-- Fix compatibility issues
-- Enhance gameplay
-
-**Check our Discord** for announcements about mod updates and new releases.
-
-## Contributing
-
-Have a mod suggestion? Let us know on Discord! We're always looking for mods that:
-- Improve performance
-- Enhance gameplay
-- Support community features
-- Maintain compatibility
-
-## Download Links
-
-### Required Mods
-- [Fabric Loader](https://fabricmc.net/use/)
-- [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-- [Sodium](https://modrinth.com/mod/sodium)
-- [Lithium](https://modrinth.com/mod/lithium)
-- [Phosphor](https://modrinth.com/mod/phosphor)
-- [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap)
-- [Inventory Tweaks](https://www.curseforge.com/minecraft/mc-mods/inventory-tweaks)
-- [AppleSkin](https://www.curseforge.com/minecraft/mc-mods/appleskin)
-
-### Optional Mods
-- [Sodium Extra](https://modrinth.com/mod/sodium-extra)
-- [Reese's Sodium Options](https://modrinth.com/mod/reeses-sodium-options)
-- [Iris Shaders](https://irisshaders.net/)
-- [Simple Voice Chat](https://www.curseforge.com/minecraft/mc-mods/simple-voice-chat)
-- [Enhanced Chat](https://www.curseforge.com/minecraft/mc-mods/enhanced-chat)
-
-For the best experience, install all required mods and the optional mods that interest you! 
+If you'd like to suggest a mod for the server, please [raise an issue](https://github.com/survivorsunited/survivorsunited.org/issues/new?template=mod-request.md) on our GitHub repository. 

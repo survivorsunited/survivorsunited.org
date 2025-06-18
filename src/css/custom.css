@@ -125,6 +125,38 @@ h1, h2, h3, h4, h5, h6 {
   border-right: 2px solid var(--minecraft-grass);
 }
 
+/* Dark mode sidebar styling */
+[data-theme='dark'] .theme-doc-sidebar-menu {
+  background-color: #1a1a1a;
+  border-right: 2px solid var(--minecraft-grass);
+}
+
+[data-theme='dark'] .theme-doc-sidebar-container {
+  background-color: #1a1a1a;
+}
+
+[data-theme='dark'] .theme-doc-sidebar {
+  background-color: #1a1a1a;
+}
+
+[data-theme='dark'] .menu__list {
+  background-color: #1a1a1a;
+}
+
+[data-theme='dark'] .menu__link {
+  color: #e0e0e0;
+}
+
+[data-theme='dark'] .menu__link:hover {
+  background-color: #2a2a2a;
+  color: var(--minecraft-grass);
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: var(--minecraft-grass);
+  color: white;
+}
+
 /* Minecraft-style blockquotes */
 blockquote {
   border-left: 4px solid var(--minecraft-grass);
