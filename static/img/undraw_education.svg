@@ -1,0 +1,72 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#E8F5E8"/>
+  
+  <!-- Farm plot -->
+  <rect x="30" y="120" width="140" height="40" fill="#8B4513"/> <!-- Dirt -->
+  <rect x="30" y="120" width="140" height="10" fill="#7CB342"/> <!-- Grass -->
+  
+  <!-- Wheat plants -->
+  <rect x="40" y="100" width="2" height="20" fill="#8B4513"/> <!-- Stem 1 -->
+  <rect x="42" y="95" width="2" height="5" fill="#FFD700"/> <!-- Wheat 1 -->
+  <rect x="44" y="97" width="2" height="3" fill="#FFD700"/> <!-- Wheat 1 -->
+  <rect x="46" y="99" width="2" height="1" fill="#FFD700"/> <!-- Wheat 1 -->
+  
+  <rect x="60" y="105" width="2" height="15" fill="#8B4513"/> <!-- Stem 2 -->
+  <rect x="62" y="100" width="2" height="5" fill="#FFD700"/> <!-- Wheat 2 -->
+  <rect x="64" y="102" width="2" height="3" fill="#FFD700"/> <!-- Wheat 2 -->
+  <rect x="66" y="104" width="2" height="1" fill="#FFD700"/> <!-- Wheat 2 -->
+  
+  <rect x="80" y="98" width="2" height="22" fill="#8B4513"/> <!-- Stem 3 -->
+  <rect x="82" y="93" width="2" height="5" fill="#FFD700"/> <!-- Wheat 3 -->
+  <rect x="84" y="95" width="2" height="3" fill="#FFD700"/> <!-- Wheat 3 -->
+  <rect x="86" y="97" width="2" height="1" fill="#FFD700"/> <!-- Wheat 3 -->
+  
+  <rect x="100" y="102" width="2" height="18" fill="#8B4513"/> <!-- Stem 4 -->
+  <rect x="102" y="97" width="2" height="5" fill="#FFD700"/> <!-- Wheat 4 -->
+  <rect x="104" y="99" width="2" height="3" fill="#FFD700"/> <!-- Wheat 4 -->
+  <rect x="106" y="101" width="2" height="1" fill="#FFD700"/> <!-- Wheat 4 -->
+  
+  <rect x="120" y="104" width="2" height="16" fill="#8B4513"/> <!-- Stem 5 -->
+  <rect x="122" y="99" width="2" height="5" fill="#FFD700"/> <!-- Wheat 5 -->
+  <rect x="124" y="101" width="2" height="3" fill="#FFD700"/> <!-- Wheat 5 -->
+  <rect x="126" y="103" width="2" height="1" fill="#FFD700"/> <!-- Wheat 5 -->
+  
+  <rect x="140" y="101" width="2" height="19" fill="#8B4513"/> <!-- Stem 6 -->
+  <rect x="142" y="96" width="2" height="5" fill="#FFD700"/> <!-- Wheat 6 -->
+  <rect x="144" y="98" width="2" height="3" fill="#FFD700"/> <!-- Wheat 6 -->
+  <rect x="146" y="100" width="2" height="1" fill="#FFD700"/> <!-- Wheat 6 -->
+  
+  <!-- Tools -->
+  <rect x="160" y="80" width="4" height="20" fill="#8D8D8D"/> <!-- Pickaxe handle -->
+  <rect x="158" y="75" width="8" height="8" fill="#8D8D8D"/> <!-- Pickaxe head -->
+  <rect x="156" y="73" width="4" height="4" fill="#4FC3F7"/> <!-- Diamond tip 1 -->
+  <rect x="162" y="77" width="4" height="4" fill="#4FC3F7"/> <!-- Diamond tip 2 -->
+  
+  <!-- Books -->
+  <rect x="20" y="60" width="15" height="20" fill="#F44336"/> <!-- Book 1 -->
+  <rect x="22" y="62" width="11" height="2" fill="white"/> <!-- Page 1 -->
+  <rect x="22" y="66" width="11" height="2" fill="white"/> <!-- Page 2 -->
+  <rect x="22" y="70" width="11" height="2" fill="white"/> <!-- Page 3 -->
+  
+  <rect x="25" y="55" width="15" height="20" fill="#4CAF50"/> <!-- Book 2 -->
+  <rect x="27" y="57" width="11" height="2" fill="white"/> <!-- Page 1 -->
+  <rect x="27" y="61" width="11" height="2" fill="white"/> <!-- Page 2 -->
+  <rect x="27" y="65" width="11" height="2" fill="white"/> <!-- Page 3 -->
+  
+  <rect x="30" y="50" width="15" height="20" fill="#2196F3"/> <!-- Book 3 -->
+  <rect x="32" y="52" width="11" height="2" fill="white"/> <!-- Page 1 -->
+  <rect x="32" y="56" width="11" height="2" fill="white"/> <!-- Page 2 -->
+  <rect x="32" y="60" width="11" height="2" fill="white"/> <!-- Page 3 -->
+  
+  <!-- Water bucket -->
+  <rect x="150" y="70" width="20" height="15" fill="#8D8D8D"/> <!-- Bucket -->
+  <rect x="152" y="72" width="16" height="11" fill="#4FC3F7"/> <!-- Water -->
+  <rect x="155" y="65" width="10" height="8" fill="#8D8D8D"/> <!-- Handle -->
+  
+  <!-- Chest -->
+  <rect x="40" y="80" width="30" height="20" fill="#8B4513"/> <!-- Chest body -->
+  <rect x="42" y="82" width="26" height="16" fill="#A0522D"/> <!-- Chest lid -->
+  <rect x="50" y="85" width="10" height="10" fill="#654321"/> <!-- Lock -->
+  <rect x="52" y="87" width="6" height="6" fill="#FFD700"/> <!-- Gold lock -->
+</svg> 

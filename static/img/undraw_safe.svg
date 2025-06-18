@@ -1,0 +1,47 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#E8F5E8"/>
+  
+  <!-- House/Base -->
+  <rect x="60" y="100" width="80" height="60" fill="#8B4513"/> <!-- House body -->
+  <rect x="65" y="105" width="15" height="20" fill="#4FC3F7"/> <!-- Window 1 -->
+  <rect x="120" y="105" width="15" height="20" fill="#4FC3F7"/> <!-- Window 2 -->
+  <rect x="90" y="130" width="20" height="30" fill="#654321"/> <!-- Door -->
+  <rect x="95" y="135" width="10" height="10" fill="#FFD700"/> <!-- Door handle -->
+  
+  <!-- Roof -->
+  <polygon points="50,100 100,70 150,100" fill="#A0522D"/> <!-- Roof -->
+  <rect x="95" y="75" width="10" height="15" fill="#4FC3F7"/> <!-- Chimney -->
+  
+  <!-- Shield -->
+  <path d="M140 60 L160 70 L160 90 L140 100 L120 90 L120 70 Z" fill="#7CB342"/> <!-- Shield -->
+  <path d="M145 70 L155 75 L155 85 L145 90 L135 85 L135 75 Z" fill="#4CAF50"/> <!-- Shield inner -->
+  <rect x="148" y="77" width="4" height="6" fill="#FFD700"/> <!-- Shield emblem -->
+  
+  <!-- Protection barrier -->
+  <rect x="40" y="80" width="4" height="80" fill="#8D8D8D"/> <!-- Barrier left -->
+  <rect x="156" y="80" width="4" height="80" fill="#8D8D8D"/> <!-- Barrier right -->
+  <rect x="40" y="80" width="120" height="4" fill="#8D8D8D"/> <!-- Barrier top -->
+  <rect x="40" y="156" width="120" height="4" fill="#8D8D8D"/> <!-- Barrier bottom -->
+  
+  <!-- Torches for lighting -->
+  <rect x="35" y="90" width="3" height="15" fill="#8B4513"/> <!-- Torch 1 handle -->
+  <rect x="33" y="85" width="7" height="8" fill="#FFD700"/> <!-- Torch 1 flame -->
+  <rect x="34" y="83" width="5" height="4" fill="#FF5722"/> <!-- Torch 1 glow -->
+  
+  <rect x="162" y="90" width="3" height="15" fill="#8B4513"/> <!-- Torch 2 handle -->
+  <rect x="160" y="85" width="7" height="8" fill="#FFD700"/> <!-- Torch 2 flame -->
+  <rect x="161" y="83" width="5" height="4" fill="#FF5722"/> <!-- Torch 2 glow -->
+  
+  <!-- Safe zone indicator -->
+  <circle cx="100" cy="50" r="15" fill="#4CAF50" stroke="#2E7D32" stroke-width="2"/>
+  <text x="100" y="55" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">✓</text>
+  
+  <!-- Anti-griefing symbol -->
+  <rect x="20" y="120" width="15" height="15" fill="#F44336"/> <!-- Stop sign -->
+  <text x="27" y="130" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">✗</text>
+  
+  <!-- Family-friendly symbol -->
+  <circle cx="180" cy="120" r="8" fill="#FFD700"/>
+  <text x="180" y="125" text-anchor="middle" fill="#8B4513" font-family="Arial" font-size="10" font-weight="bold">♥</text>
+</svg> 

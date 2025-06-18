@@ -1,0 +1,105 @@
+---
+sidebar_position: 1
+title: Install Mods
+description: How to download and install mods for the Survivors United server
+---
+
+# Install Mods
+
+To play on the Survivors United server, you need to install the required mods. This guide will walk you through the process.
+
+## Download Mods
+
+### Step 1: Access the Shared Drive
+
+Open the shared Google Drive:  
+[Google Drive – Shared Mods and Shaders](https://drive.google.com/drive/folders/1S6SMU223DnPjUVCfcpRXFlnZUHGfjiqk?usp=drive_link)
+
+### Step 2: Find the Modpack
+
+1. Look for the `mods` folder in the Google Drive
+2. Open the `mods` folder
+3. Find the latest modpack file: `client-mod-all-*.zip`
+4. Download this file to your computer
+
+## Install Mods
+
+### Step 1: Find Your Minecraft Folder
+
+First, you need to locate your Minecraft installation folder:
+
+#### On Windows
+1. Press `Win + R` to open the Run dialog
+2. Type `%appdata%\.minecraft` and press Enter
+3. This will open your Minecraft folder
+
+![Windows Minecraft Folder](/img/minecraft/windows-minecraft-folder.png)
+
+#### On MacOS
+1. Open Finder
+2. Press `⇧ + ⌘ + G` (Shift + Command + G)
+3. Type `~/Library/Application Support/minecraft` and press Enter
+
+### Step 2: Create Mods Folder
+
+1. In your Minecraft folder, look for a folder called `mods`
+2. If it doesn't exist, create a new folder called `mods`
+3. This is your **Mods Folder** - all mods go here
+
+### Step 3: Extract Mods
+
+1. Right-click the downloaded `client-mod-all-*.zip` file
+2. Select "Extract All" or "Extract Here"
+3. Extract the contents directly into your **Mods Folder**
+4. **Important**: Overwrite any existing mods when prompted
+
+## Verify Installation
+
+### Check Mods Folder
+Your mods folder should now contain many `.jar` files, including:
+- `fabric-api-*.jar`
+- `sodium-*.jar`
+- `xaeros-world-map-*.jar`
+- And many others
+
+### Launch Minecraft
+1. Open the Minecraft Launcher
+2. Make sure **Fabric** is selected
+3. Click "Play"
+4. If everything is installed correctly, Minecraft should start with mods
+
+## Troubleshooting
+
+### Minecraft Won't Start
+- Check that Fabric is selected in the launcher
+- Verify all mods are in the correct folder
+- Check that you have Java 21+ installed
+- Try removing and reinstalling mods
+
+### Missing Mods Error
+- Make sure you downloaded the complete modpack
+- Check that all files were extracted properly
+- Verify the mods folder location is correct
+
+### Version Mismatch
+- Ensure you're using the latest modpack
+- Check that mod versions match the server
+- Update your modpack if needed
+
+## Mod Updates
+
+### When Updates Are Available
+1. Check the Discord server for update announcements
+2. Download the new modpack from Google Drive
+3. Replace all mods in your mods folder
+4. Overwrite existing files when prompted
+
+### Backup Your Mods
+Before updating:
+1. Copy your current mods folder
+2. Rename it to `mods-backup`
+3. This way you can restore if something goes wrong
+
+## Next Steps
+
+Once mods are installed, proceed to [Connect to Server](/docs/minecraft/server/connection). 

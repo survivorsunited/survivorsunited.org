@@ -1,0 +1,193 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-focused websites.
+ */
+
+/* Import Press Start 2P font for headings */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #7CB342;
+  --ifm-color-primary-dark: #689F38;
+  --ifm-color-primary-darker: #558B2F;
+  --ifm-color-primary-darkest: #33691E;
+  --ifm-color-primary-light: #8BC34A;
+  --ifm-color-primary-lighter: #9CCC65;
+  --ifm-color-primary-lightest: #AED581;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Minecraft color palette */
+  --minecraft-grass: #7CB342;
+  --minecraft-stone: #8D8D8D;
+  --minecraft-dirt: #8B4513;
+  --minecraft-diamond: #4FC3F7;
+  --minecraft-gold: #FFD700;
+  --minecraft-redstone: #F44336;
+  --minecraft-dark-green: #2E7D32;
+  --minecraft-light-brown: #A0522D;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #8BC34A;
+  --ifm-color-primary-dark: #7CB342;
+  --ifm-color-primary-darker: #689F38;
+  --ifm-color-primary-darkest: #558B2F;
+  --ifm-color-primary-light: #9CCC65;
+  --ifm-color-primary-lighter: #AED581;
+  --ifm-color-primary-lightest: #C5E1A5;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Minecraft-style headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Press Start 2P', cursive;
+  color: var(--minecraft-grass);
+  text-shadow: 2px 2px 0px var(--minecraft-dark-green);
+}
+
+/* Hero section styling */
+.hero {
+  background: linear-gradient(135deg, var(--minecraft-grass) 0%, var(--minecraft-dark-green) 100%);
+}
+
+.hero__title {
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  text-shadow: 3px 3px 0px var(--minecraft-dark-green);
+}
+
+.hero__subtitle {
+  color: #E8F5E8;
+  font-weight: bold;
+}
+
+/* Button styling */
+.button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  border: 3px solid var(--minecraft-dark-green);
+  box-shadow: 3px 3px 0px var(--minecraft-dark-green);
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--minecraft-dark-green);
+}
+
+.button--primary {
+  background-color: var(--minecraft-grass);
+  color: white;
+}
+
+.button--secondary {
+  background-color: var(--minecraft-stone);
+  color: white;
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: var(--minecraft-dirt);
+  border-bottom: 3px solid var(--minecraft-dark-green);
+}
+
+.navbar__title {
+  font-family: 'Press Start 2P', cursive;
+  color: var(--minecraft-grass);
+  text-shadow: 2px 2px 0px var(--minecraft-dark-green);
+}
+
+/* Footer styling */
+.footer {
+  background-color: var(--minecraft-dirt);
+  border-top: 3px solid var(--minecraft-dark-green);
+}
+
+/* Feature cards */
+.featureSvg {
+  height: 200px;
+  width: 200px;
+}
+
+/* Code blocks */
+.prism-code {
+  background-color: var(--minecraft-stone);
+  border: 2px solid var(--minecraft-dark-green);
+}
+
+/* Sidebar styling */
+.theme-doc-sidebar-menu {
+  background-color: #F5F5F5;
+  border-right: 2px solid var(--minecraft-grass);
+}
+
+/* Minecraft-style blockquotes */
+blockquote {
+  border-left: 4px solid var(--minecraft-grass);
+  background-color: #E8F5E8;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Minecraft-style tables */
+table {
+  border: 2px solid var(--minecraft-dark-green);
+  border-collapse: collapse;
+}
+
+th {
+  background-color: var(--minecraft-grass);
+  color: white;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  padding: 0.5rem;
+  border: 1px solid var(--minecraft-dark-green);
+}
+
+td {
+  padding: 0.5rem;
+  border: 1px solid var(--minecraft-dark-green);
+  background-color: #F5F5F5;
+}
+
+/* Minecraft-style links */
+a {
+  color: var(--minecraft-diamond);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--minecraft-diamond);
+}
+
+a:hover {
+  color: var(--minecraft-gold);
+  border-bottom: 2px solid var(--minecraft-gold);
+}
+
+/* Minecraft-style badges */
+.badge {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  background-color: var(--minecraft-grass);
+  color: white;
+  border: 2px solid var(--minecraft-dark-green);
+  box-shadow: 2px 2px 0px var(--minecraft-dark-green);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 0.9em;
+  }
+  
+  .button {
+    font-size: 0.6rem;
+  }
+  
+  .navbar__title {
+    font-size: 0.8rem;
+  }
+} 
