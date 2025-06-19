@@ -17,7 +17,7 @@ This page contains the complete list of mods that are supported and recommended 
 * **Fabric Language Kotlin** – v1.13.3+kotlin.2.1.21 – Enables Kotlin-based mods
 * **Collective** – v8.3 – Shared code library for various mods
 * **Architectury** – v16.1.4 – Intermediary API for multiplatform mods
-* **Amecs Reborn** – v2.0.2+mc1.21.5 – Enables modifier keys for keybinds
+* **Amecs Reborn** – v2.0.2+mc1.21.5 – Enables modifier keys for keybinds [Modrinth](https://modrinth.com/mod/amecs-reborn)
 * **JamLib** – v1.3.5+1.21.5 – Platform-agnostic library for JamCore mods
 * **libIPN** – v6.5.0 – Inventory Profiles Next GUI Library
 * **ukulib** – v1.7.1+1.21.5 – Utility library used in several mods
