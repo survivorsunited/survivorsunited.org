@@ -1,0 +1,156 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Development Workflow
+
+## Environment Variables and Configuration
+
+### Environment Setup
+- **DISCORD_LOBBY**: Discord server invite link (defaults to `https://discord.gg/kwdaEmmv`)
+- Use dotenv for environment variable management
+- Configure in [docusaurus.config.js](mdc:docusaurus.config.js) with `require("dotenv").config();`
+
+### Markdown Preprocessing
+Use Docusaurus's built-in markdown preprocessor for dynamic content:
+
+```javascript
+markdown: {
+  preprocessor: ({ filePath, fileContent }) => {
+    const regexp = /\${([^{]+)}/g;
+    let result = fileContent.replace(regexp, function(ignore, key){
+        return process.env[key];
+    });
+    return result;
+  },
+},
+```
+
+### Usage in Markdown Files
+- Use `${DISCORD_LOBBY}` for Discord invite links
+- Use `${VARIABLE_NAME}` for any environment variable
+- Variables are replaced at build time
+
+## Development Process
+
+### Before Writing Code
+1. **Research framework capabilities** - Check if solution already exists
+2. **Create GitHub issue** for the development task
+3. **Plan approach** - Document in issue before implementation
+4. **Consider alternatives** - Evaluate multiple solutions
+
+### During Development
+- **Reference issues** in commit messages: `fixes #123` or `closes #123`
+- **Update issue status** as work progresses
+- **Add comments** with progress updates and decisions
+- **Link related issues** when dependencies exist
+
+### Code Quality Standards
+- **Research first** - Check Docusaurus documentation before implementing custom solutions
+- **Use built-in features** - Leverage framework capabilities over custom code
+- **Keep it simple** - Prefer 10 lines over 100 lines when possible
+- **Test solutions** - Verify before suggesting or implementing
+
+## Docusaurus Best Practices
+
+### Configuration Files
+- [docusaurus.config.js](mdc:docusaurus.config.js) - Main configuration
+- [sidebars.js](mdc:sidebars.js) - Documentation sidebar structure
+- [package.json](mdc:package.json) - Dependencies and scripts
+
+### File Structure
+- Documentation goes in `docs/` directory
+- Static assets in `static/` directory
+- React components in `src/components/`
+- Custom pages in `src/pages/`
+
+### Common Patterns
+- Use markdown preprocessing for dynamic content
+- Leverage existing plugins before creating custom ones
+- Follow established patterns and conventions
+- Use environment variables for configuration
+
+## Build and Deployment
+
+### Development Commands
+```bash
+npm start          # Development server
+npm run build      # Production build
+npm run serve      # Test build locally
+npm run deploy     # Deploy to GitHub Pages
+npm run typecheck  # TypeScript type checking
+```
+
+### Environment Variable Usage
+- In markdown: `${VARIABLE_NAME}`
+- In config: `process.env.VARIABLE_NAME`
+- Always provide fallbacks: `process.env.VARIABLE_NAME || "default"`
+
+### Deployment Process
+1. Set environment variables for production
+2. Run `npm run build` to generate static site
+3. Test locally with `npm run serve`
+4. Deploy with `npm run deploy`
+
+## Documentation Development
+
+### Content Guidelines
+- Keep installation steps simple and sequential
+- Include troubleshooting sections for common issues
+- Use consistent formatting and heading structure
+- Reference specific mod versions and compatibility
+- Include download links to files in [static/mods/](mdc:static/mods)
+
+### Documentation Structure
+- Use clear, step-by-step instructions for installation guides
+- Include screenshots from [static/img/minecraft/](mdc:static/img/minecraft) for visual guidance
+- Cross-reference related documentation using relative links
+- Maintain consistent terminology as defined in [docs/minecraft/terminology.md](mdc:docs/minecraft/terminology.md)
+
+### Static Assets
+- Minecraft images: [static/img/minecraft/](mdc:static/img/minecraft)
+- Mod downloads: [static/mods/](mdc:static/mods)
+- Shader packs: [static/mods/shaderpacks/](mdc:static/mods/shaderpacks)
+- Installer files: [static/install/](mdc:static/install)
+
+## Common Issues and Solutions
+
+### Blog Feature
+- If you see "blogDir doesn't exist" warnings, either:
+  1. Create a `blog/` directory with markdown posts, or
+  2. Comment out the blog preset in [docusaurus.config.js](mdc:docusaurus.config.js)
+  3. Remove any `/blog` links from navbar/footer
+
+### Broken Links
+- Check `onBrokenLinks: "throw"` in config - this prevents builds with broken links
+- Common broken links: `/blog` when blog feature is disabled
+- Fix by updating navigation items in [docusaurus.config.js](mdc:docusaurus.config.js)
+
+### Environment Variables
+- Ensure `.env` file exists with required variables
+- Check that dotenv is properly configured
+- Verify variable names match exactly (case-sensitive)
+- Test preprocessing with different variable values
+
+## Integration with Governance
+
+### Issue Management
+- Create issues for all development tasks
+- Use appropriate labels and assignees
+- Reference issues in commit messages
+- Update issue status as work progresses
+
+### Quality Assurance
+- Research framework capabilities before implementing
+- Test solutions before suggesting them
+- Use built-in features over custom implementations
+- Maintain clean code and documentation
+
+### Communication
+- Use issues for development communication
+- Keep discussions focused and relevant
+- Update stakeholders through issue comments
+- Use issue templates for consistency
+
+Remember: Always research framework capabilities first, use built-in features when available, and maintain clean, simple solutions.

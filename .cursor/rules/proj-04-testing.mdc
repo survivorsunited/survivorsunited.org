@@ -1,0 +1,183 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project-Specific Testing Patterns
+
+## Testing Strategy for Documentation Site
+
+### Documentation Testing
+- **Link Validation**: Ensure all internal and external links work
+- **Content Accuracy**: Verify installation steps and commands work
+- **Visual Testing**: Check screenshots and images display correctly
+- **Cross-Reference Testing**: Validate all documentation links
+
+### Build Testing
+- **Production Build**: Test `npm run build` generates valid static site
+- **Development Server**: Verify `npm start` works correctly
+- **Local Serving**: Test `npm run serve` serves built site properly
+- **Type Checking**: Run `npm run typecheck` for TypeScript validation
+
+## Testing Workflow
+
+### Pre-Development Testing
+1. **Research existing solutions** - Check if feature already exists
+2. **Test framework capabilities** - Verify built-in features work
+3. **Validate approach** - Ensure solution is appropriate for Docusaurus
+4. **Check compatibility** - Verify with current project setup
+
+### During Development Testing
+- **Test environment variables** - Verify preprocessing works correctly
+- **Validate markdown changes** - Check rendering and links
+- **Test configuration changes** - Ensure docusaurus.config.js works
+- **Verify static assets** - Check images and downloads are accessible
+
+### Post-Development Testing
+- **Full build test** - Run complete production build
+- **Link validation** - Check all internal and external links
+- **Content review** - Verify documentation accuracy
+- **Cross-browser testing** - Test in different browsers
+
+## Environment Variable Testing
+
+### Preprocessing Testing
+```bash
+# Test with different environment variables
+$env:DISCORD_LOBBY="https://discord.gg/test123"
+npm run build
+
+# Verify replacement in output
+grep -r "https://discord.gg/test123" build/
+```
+
+### Fallback Testing
+- Test behavior when environment variables are not set
+- Verify default values work correctly
+- Check error handling for missing variables
+
+### Configuration Testing
+- Test dotenv loading in docusaurus.config.js
+- Verify environment variables are accessible
+- Check preprocessing configuration works
+
+## Documentation Testing
+
+### Content Validation
+- **Installation Steps**: Test all PowerShell commands work
+- **File Paths**: Verify Windows paths are correct
+- **Screenshots**: Check images display and are current
+- **Cross-References**: Validate all internal links work
+
+### User Experience Testing
+- **Navigation**: Test sidebar and navigation links
+- **Search**: Verify search functionality works
+- **Responsive Design**: Test on different screen sizes
+- **Loading Performance**: Check page load times
+
+### Static Asset Testing
+- **Image Loading**: Verify all images display correctly
+- **Download Links**: Test mod and shader downloads work
+- **File Organization**: Check static file structure is correct
+- **Asset Optimization**: Verify images are appropriately sized
+
+## Build and Deployment Testing
+
+### Build Process Testing
+```bash
+# Clean build test
+npm run clear
+npm run build
+
+# Verify build output
+ls build/
+npm run serve
+```
+
+### Deployment Testing
+- Test GitHub Pages deployment process
+- Verify environment variables work in production
+- Check all links work in deployed site
+- Validate search functionality in production
+
+### Configuration Testing
+- Test docusaurus.config.js changes
+- Verify sidebar configuration works
+- Check plugin configuration is correct
+- Test theme configuration changes
+
+## Quality Assurance Testing
+
+### Code Quality Testing
+- **TypeScript Validation**: Run `npm run typecheck`
+- **Linting**: Check for code style issues
+- **Dependency Testing**: Verify all dependencies work
+- **Security Testing**: Check for security vulnerabilities
+
+### Performance Testing
+- **Build Performance**: Monitor build times
+- **Page Load Times**: Test site performance
+- **Asset Optimization**: Verify images and files are optimized
+- **Bundle Size**: Check JavaScript bundle sizes
+
+### Accessibility Testing
+- **Screen Reader Compatibility**: Test with screen readers
+- **Keyboard Navigation**: Verify keyboard-only navigation
+- **Color Contrast**: Check text contrast ratios
+- **Alt Text**: Verify images have appropriate alt text
+
+## Testing Tools and Commands
+
+### Built-in Testing
+```bash
+# Type checking
+npm run typecheck
+
+# Build testing
+npm run build
+
+# Development testing
+npm start
+
+# Local serving
+npm run serve
+```
+
+### Manual Testing Checklist
+- [ ] All internal links work
+- [ ] All external links are accessible
+- [ ] Images display correctly
+- [ ] Installation steps work
+- [ ] Environment variables function
+- [ ] Search works properly
+- [ ] Navigation is functional
+- [ ] Responsive design works
+- [ ] Performance is acceptable
+
+### Automated Testing Opportunities
+- **Link Validation**: Automated link checking
+- **Build Validation**: Automated build testing
+- **Content Validation**: Automated content checking
+- **Performance Monitoring**: Automated performance testing
+
+## Testing Best Practices
+
+### Test-Driven Development
+- **Define acceptance criteria** before implementation
+- **Test framework capabilities** before custom solutions
+- **Verify simple solutions** before complex ones
+- **Test edge cases** and error conditions
+
+### Documentation Testing
+- **Test all commands** in documentation
+- **Verify file paths** are correct for Windows
+- **Check screenshots** are current and accurate
+- **Validate cross-references** work properly
+
+### Environment Testing
+- **Test with different** environment variable values
+- **Verify fallbacks** work when variables are missing
+- **Check preprocessing** works correctly
+- **Test configuration** changes
+
+Remember: Test framework capabilities first, verify simple solutions work, and ensure documentation accuracy for users.

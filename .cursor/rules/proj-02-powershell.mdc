@@ -1,0 +1,209 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# PowerShell-Specific Patterns
+
+## Environment Setup
+
+### Windows Environment
+- **OS**: 64-bit Windows 11
+- **Terminal**: PowerShell with Administrator rights
+- **Package Manager**: winget for software installation
+- **File Paths**: Use Windows-style paths with backslashes
+
+### PowerShell Commands
+
+#### Software Installation
+```powershell
+# Install Java
+winget install --id=Oracle.JDK.22 -e
+
+# Install Minecraft
+winget install -e --id Mojang.MinecraftLauncher
+
+# Install other software
+winget install -e --id SoftwareName
+```
+
+#### Environment Variables
+```powershell
+# Set environment variable
+$env:VARIABLE_NAME="value"
+
+# Set multiple variables
+$env:DISCORD_LOBBY="https://discord.gg/your-invite"; $env:OTHER_VAR="value"
+
+# Check environment variable
+echo $env:VARIABLE_NAME
+
+# Clear environment variable
+Remove-Item Env:VARIABLE_NAME
+```
+
+#### File Operations
+```powershell
+# Navigate to Minecraft folder
+cd $env:APPDATA\.minecraft
+
+# Open folder in Explorer
+explorer $env:APPDATA\.minecraft
+
+# Check if directory exists
+Test-Path $env:APPDATA\.minecraft
+
+# Create directory
+New-Item -ItemType Directory -Path "path\to\directory"
+```
+
+#### Java Operations
+```powershell
+# Run JAR file
+java -jar filename.jar
+
+# Check Java version
+java -version
+
+# Run with specific Java version
+"C:\Program Files\Java\jdk-22\bin\java.exe" -jar filename.jar
+```
+
+## Development Workflow
+
+### Project Commands
+```powershell
+# Navigate to project
+cd C:\projects\minecraft\survivorsunited.org
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+
+# Build project
+npm run build
+
+# Run tests
+npm run typecheck
+```
+
+### Git Operations
+```powershell
+# Check status
+git status
+
+# Add files
+git add .
+
+# Commit with issue reference
+git commit -m "#123 feat(docs): update installation guide"
+
+# Push changes
+git push
+
+# Create branch
+git checkout -b feature/new-feature
+```
+
+### GitHub CLI
+```powershell
+# Create issue
+gh issue create --title "Title" --body "Description" --label "feature,medium-priority"
+
+# List issues
+gh issue list --state open
+
+# Close issue
+gh issue close 123 --reason completed
+
+# View issue
+gh issue view 123
+```
+
+## Common Patterns
+
+### Error Handling
+```powershell
+# Check if command succeeded
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "Success"
+} else {
+    Write-Error "Command failed"
+}
+
+# Try-catch for file operations
+try {
+    Get-Content "file.txt"
+} catch {
+    Write-Error "File not found: $($_.Exception.Message)"
+}
+```
+
+### Path Management
+```powershell
+# Use environment variables for paths
+$minecraftPath = "$env:APPDATA\.minecraft"
+$modsPath = "$minecraftPath\mods"
+
+# Join paths safely
+$fullPath = Join-Path $minecraftPath "mods"
+
+# Check if path exists
+if (Test-Path $fullPath) {
+    Write-Host "Path exists"
+}
+```
+
+### Process Management
+```powershell
+# Start process
+Start-Process "minecraft.exe"
+
+# Kill process
+Stop-Process -Name "minecraft" -Force
+
+# Check if process is running
+Get-Process -Name "minecraft" -ErrorAction SilentlyContinue
+```
+
+## Documentation Integration
+
+### Code Blocks
+When documenting PowerShell commands:
+- Use `powershell` syntax highlighting
+- Include full commands with parameters
+- Show expected output
+- Include error handling examples
+
+### File Paths in Documentation
+- Use Windows-style paths: `C:\Users\username\AppData\Roaming\.minecraft`
+- Reference environment variables: `%appdata%\.minecraft`
+- Show both absolute and relative paths when relevant
+
+### Command Examples
+- Include complete commands that users can copy-paste
+- Show variations for different scenarios
+- Include troubleshooting commands
+- Reference specific versions and compatibility
+
+## Best Practices
+
+### Security
+- Run as Administrator only when necessary
+- Use signed scripts when possible
+- Validate file paths before operations
+- Handle sensitive data securely
+
+### Performance
+- Use native PowerShell cmdlets over external tools
+- Minimize file system operations
+- Use efficient loops and conditionals
+- Profile scripts for performance issues
+
+### Maintainability
+- Use descriptive variable names
+- Add comments for complex operations
+- Structure scripts logically
+- Handle errors gracefully

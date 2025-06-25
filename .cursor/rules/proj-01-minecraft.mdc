@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Minecraft Project Overview
+
+## Project Description
+Survivors United is a compassionate Minecraft survival community website built with Docusaurus. The site provides comprehensive documentation for setting up and participating in our modded Minecraft server.
+
+## Documentation Organization
+- **Root documentation**: [docs/](mdc:docs)
+- **Minecraft-specific docs**: [docs/minecraft/](mdc:docs/minecraft)
+- **Installation guides**: [docs/minecraft/installation/](mdc:docs/minecraft/installation)
+- **Configuration guides**: [docs/minecraft/configuration/](mdc:docs/minecraft/configuration)
+- **Mod documentation**: [docs/minecraft/mods/](mdc:docs/minecraft/mods)
+- **Server guides**: [docs/minecraft/server/](mdc:docs/minecraft/server)
+- **Troubleshooting**: [docs/minecraft/troubleshooting/](mdc:docs/minecraft/troubleshooting)
+
+## Static Assets Organization
+- **Minecraft images**: [static/img/minecraft/](mdc:static/img/minecraft)
+- **Mod downloads**: [static/mods/](mdc:static/mods)
+- **Shader packs**: [static/mods/shaderpacks/](mdc:static/mods/shaderpacks)
+- **Installer files**: [static/install/](mdc:static/install)
+
+## Key Documentation Files
+- Getting started: [docs/minecraft/getting-started.md](mdc:docs/minecraft/getting-started.md)
+- FAQ: [docs/minecraft/faq.md](mdc:docs/minecraft/faq.md)
+- Supported mods: [docs/minecraft/supported-mods.md](mdc:docs/minecraft/supported-mods.md)
+- Server info: [docs/minecraft/server-info.md](mdc:docs/minecraft/server-info.md)
+- Terminology: [docs/minecraft/terminology.md](mdc:docs/minecraft/terminology.md)
+
+## Content Guidelines
+- Keep installation steps simple and sequential
+- Include troubleshooting sections for common issues
+- Use consistent formatting and heading structure
+- Reference specific mod versions and compatibility
+- Include download links to files in [static/mods/](mdc:static/mods)
+- Use screenshots from [static/img/minecraft/](mdc:static/img/minecraft) for visual guidance
+- Cross-reference related documentation using relative links
+- Maintain consistent terminology as defined in [docs/minecraft/terminology.md](mdc:docs/minecraft/terminology.md)
+
+## Documentation Patterns
+- Use clear, step-by-step instructions for installation guides
+- Include screenshots from [static/img/minecraft/](mdc:static/img/minecraft) for visual guidance
+- Cross-reference related documentation using relative links
+- Maintain consistent terminology as defined in [docs/minecraft/terminology.md](mdc:docs/minecraft/terminology.md)

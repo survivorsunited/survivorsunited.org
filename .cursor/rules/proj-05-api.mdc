@@ -1,0 +1,187 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# API Integration Patterns
+
+## External Service Integrations
+
+### Discord Integration
+- **Discord Invite Links**: Dynamic Discord server invite management
+- **Environment Variables**: Use `DISCORD_LOBBY` for invite link configuration
+- **Markdown Preprocessing**: Replace `${DISCORD_LOBBY}` placeholders in documentation
+
+### GitHub Integration
+- **GitHub Pages**: Automatic deployment from main branch
+- **GitHub Actions**: CI/CD pipeline for build and deployment
+- **GitHub CLI**: Issue management and project workflow
+- **Repository Integration**: Links to GitHub repository in navigation
+
+### Google Drive Integration
+- **Mod Downloads**: Shared Google Drive for mod files
+- **Documentation Links**: Direct links to Google Drive resources
+- **File Sharing**: Public access to modpacks and shaders
+
+## API Configuration
+
+### Environment Variables
+```javascript
+// Discord configuration
+DISCORD_LOBBY=https://discord.gg/your-invite-code
+
+// GitHub configuration (if needed)
+GITHUB_TOKEN=your-github-token
+GITHUB_REPO=survivorsunited/survivorsunited.org
+
+// Google Drive configuration (if needed)
+GOOGLE_DRIVE_FOLDER_ID=your-folder-id
+```
+
+### Configuration Files
+- **docusaurus.config.js**: Main configuration for external services
+- **.env**: Environment variables for API keys and URLs
+- **package.json**: Dependencies for API integrations
+
+## Integration Patterns
+
+### Discord Integration
+```javascript
+// In docusaurus.config.js
+const DISCORD_LOBBY = process.env.DISCORD_LOBBY || "https://discord.gg/kwdaEmmv";
+
+// In footer configuration
+{
+  label: "Discord",
+  href: DISCORD_LOBBY,
+}
+
+// In markdown files
+Join our [Discord server](mdc:${DISCORD_LOBBY}) for support.
+```
+
+### GitHub Integration
+```javascript
+// Repository links in navigation
+{
+  href: "https://github.com/survivorsunited/survivorsunited.org",
+  label: "GitHub",
+  position: "right",
+}
+
+// Edit links in documentation
+editUrl: "https://github.com/survivorsunited/survivorsunited.org/tree/main/",
+```
+
+### Google Drive Integration
+```markdown
+<!-- Direct download links -->
+Download the latest modpack: [Google Drive – Shared Mods](mdc:https:/drive.google.com/drive/folders/1S6SMU223DnPjUVCfcpRXFlnZUHGfjiqk?usp=drive_link)
+
+<!-- Specific file links -->
+Download Fabric installer: [fabric-installer-1.0.3.jar](mdc:https:/drive.google.com/file/d/1aJLyUVQpBF78CrNiesIKSOuf5Y3MFz-g/view?usp=drive_link)
+```
+
+## API Security and Best Practices
+
+### Environment Variable Security
+- **Never commit API keys** to version control
+- **Use .env files** for local development
+- **Set production variables** in deployment environment
+- **Provide fallback values** for missing variables
+
+### URL Management
+- **Use environment variables** for dynamic URLs
+- **Validate URLs** before using them
+- **Provide fallback URLs** for missing variables
+- **Test URL accessibility** regularly
+
+### Error Handling
+```javascript
+// Safe environment variable access
+const discordUrl = process.env.DISCORD_LOBBY || "https://discord.gg/kwdaEmmv";
+
+// Validate URL format
+const isValidUrl = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+```
+
+## Integration Testing
+
+### Discord Integration Testing
+```bash
+# Test with different Discord URLs
+$env:DISCORD_LOBBY="https://discord.gg/test123"
+npm run build
+
+# Verify replacement in output
+grep -r "https://discord.gg/test123" build/
+```
+
+### GitHub Integration Testing
+- Test repository links work correctly
+- Verify edit links function properly
+- Check GitHub Pages deployment
+- Validate GitHub Actions workflow
+
+### Google Drive Integration Testing
+- Test download links are accessible
+- Verify file sharing permissions
+- Check link validity and accessibility
+- Test with different file types
+
+## Documentation Integration
+
+### API Documentation
+- **Installation Guides**: Include API setup instructions
+- **Configuration Guides**: Document environment variable setup
+- **Troubleshooting**: Common API integration issues
+- **Examples**: Working examples of API usage
+
+### User Experience
+- **Clear Instructions**: Step-by-step API setup guides
+- **Error Messages**: Helpful error messages for API issues
+- **Fallback Options**: Alternative solutions when APIs fail
+- **Support Channels**: Where to get help with API issues
+
+## Future Integration Opportunities
+
+### Potential APIs
+- **Minecraft Server API**: Real-time server status
+- **Discord Bot API**: Automated community management
+- **Mod Database API**: Dynamic mod information
+- **Analytics API**: Site usage and community metrics
+
+### Integration Considerations
+- **Rate Limiting**: Handle API rate limits gracefully
+- **Caching**: Cache API responses for performance
+- **Fallbacks**: Provide offline alternatives
+- **Monitoring**: Track API health and performance
+
+## Best Practices
+
+### Security
+- **Secure API Keys**: Never expose sensitive credentials
+- **HTTPS Only**: Use secure connections for all APIs
+- **Input Validation**: Validate all API inputs
+- **Error Handling**: Handle API errors gracefully
+
+### Performance
+- **Caching**: Cache API responses when appropriate
+- **Lazy Loading**: Load API data only when needed
+- **Optimization**: Minimize API calls and payload sizes
+- **Monitoring**: Track API performance and usage
+
+### Maintainability
+- **Documentation**: Document all API integrations
+- **Versioning**: Handle API version changes
+- **Testing**: Test API integrations regularly
+- **Updates**: Keep API integrations current
+
+Remember: Use environment variables for configuration, provide fallbacks for missing data, and test all integrations thoroughly.
