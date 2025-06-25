@@ -10,7 +10,7 @@ The Survivors United Discord server is the central hub for our community. Join u
 
 ## Discord Server Link
 
-**Join our Discord**: [Survivors United Discord](https://discord.gg/NAaPWfSu)
+**Join our Discord**: [Survivors United Discord](${DISCORD_LOBBY})
 
 ## Why Join Discord?
 

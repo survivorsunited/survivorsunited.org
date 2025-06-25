@@ -68,5 +68,3 @@ assignees: ""
 <!-- GitHub, Discord, email, etc. -->
 
 ---
-
-**Note:** For urgent issues or immediate assistance, please join our [Discord server](https://discord.gg/NAaPWfSu) and ask in the appropriate support channel. 

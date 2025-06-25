@@ -27,5 +27,3 @@ assignees: ""
 <!-- Any other details that might help us process your request -->
 
 ---
-
-**Note:** Access requests are reviewed by the admin team. Please allow some time for processing. For urgent requests, join our [Discord server](https://discord.gg/NAaPWfSu) and ask in the support channel. 

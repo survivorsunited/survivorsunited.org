@@ -74,5 +74,3 @@ assignees: ""
 <!-- Any other information that might be helpful -->
 
 ---
-
-**Note:** Farm requests are reviewed by the community and admin team. We prioritize farms that benefit the most players and fit well with our server theme. For immediate help, join our [Discord server](https://discord.gg/NAaPWfSu) and ask in the #minecraft-builds channel. 

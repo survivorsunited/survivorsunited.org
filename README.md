@@ -17,6 +17,7 @@ Survivors United is a compassionate Minecraft survival community where players w
 - **Blog**: Community updates and educational content
 - **Responsive Design**: Works beautifully on all devices
 - **GitHub Pages Deployment**: Automatic deployment from main branch
+- **Environment Variables**: Dynamic configuration using dotenv and markdown preprocessing
 
 ## Tech Stack
 
@@ -25,6 +26,7 @@ Survivors United is a compassionate Minecraft survival community where players w
 - **Styling**: CSS Modules + Custom CSS
 - **Deployment**: GitHub Pages with GitHub Actions
 - **Node.js**: Version 18+
+- **Environment Variables**: dotenv for configuration management
 
 ## Getting Started
 
@@ -46,21 +48,39 @@ Survivors United is a compassionate Minecraft survival community where players w
    npm install
    ```
 
-3. **Start the development server**
+3. **Set up environment variables (optional)**
+   Create a `.env` file in the root directory:
+   ```bash
+   DISCORD_LOBBY=https://discord.gg/your-invite-code
+   ```
+
+4. **Start the development server**
    ```bash
    npm start
    ```
 
-4. **Open your browser**
+5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Environment Variables
+
+The website supports dynamic configuration using environment variables:
+
+- **DISCORD_LOBBY**: Discord server invite link (defaults to `https://discord.gg/kwdaEmmv`)
+
+You can use `${DISCORD_LOBBY}` in any markdown file and it will be automatically replaced with the environment variable value during build time.
 
 ### Available Scripts
 
 - `npm start` - Start the development server
 - `npm run build` - Build the site for production
-- `npm run serve` - Serve the built site locally
+- `npm run watch` - Start the development server in watch mode
+- `npm run swizzle` - Swizzle Docusaurus components
 - `npm run deploy` - Deploy to GitHub Pages
 - `npm run clear` - Clear the build cache
+- `npm run serve` - Serve the built site locally
+- `npm run write-translations` - Write translation files
+- `npm run write-heading-ids` - Add heading IDs to markdown files
 - `npm run typecheck` - Run TypeScript type checking
 
 ## Project Structure

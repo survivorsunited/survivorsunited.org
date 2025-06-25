@@ -4,6 +4,11 @@
 const lightCodeTheme = require("prism-react-renderer").themes.github;
 const darkCodeTheme = require("prism-react-renderer").themes.dracula;
 
+//import dotenv
+require("dotenv").config();
+
+
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Survivors United",
@@ -73,6 +78,18 @@ const config = {
     ],
   ],
 
+  markdown: {
+    preprocessor: ({ filePath, fileContent }) => {
+
+      const regexp = /\${([^{]+)}/g;
+      let result = fileContent.replace(regexp, function(ignore, key){
+          return process.env[key];
+      });
+
+      return result;
+    },
+  },
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -133,7 +150,7 @@ const config = {
             items: [
               {
                 label: "Discord",
-                href: "https://discord.gg/NAaPWfSu",
+                href: process.env.DISCORD_LOBBY,
               },
             ],
           },

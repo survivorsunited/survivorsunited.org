@@ -125,9 +125,7 @@ This means you need to update your mods. Download the latest modpack from the Go
 
 ### How do I join Discord?
 Join the appropriate Discord channels:
-- **General**: [https://discord.gg/NAaPWfSu](https://discord.gg/NAaPWfSu)
-- **Support**: [https://discord.gg/DqgY4CkS](https://discord.gg/DqgY4CkS)
-- **Private**: [https://discord.gg/u5WPQwbV](https://discord.gg/u5WPQwbV)
+- **Lobby**: [${DISCORD_LOBBY}](${DISCORD_LOBBY})
 
 ### Where can I get help?
 - **Discord Support**: #minecraft-support channel
