@@ -34,7 +34,7 @@ Your `.minecraft` folder contains several important subfolders:
 ```
 .minecraft/
 ├── mods/              # Your mods go here
-├── shaders/           # Shader packs (if using Iris)
+├── shaderpacks/       # Shader packs for Iris, to make Minecraft look awesome
 ├── resourcepacks/     # Resource packs
 ├── saves/             # Single-player worlds
 ├── screenshots/       # Game screenshots

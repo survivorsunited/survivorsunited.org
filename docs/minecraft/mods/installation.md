@@ -12,12 +12,12 @@ To play on the Survivors United server, you need to install the required mods. T
 
 ### Step 1: Download the Latest Modpack
 
-Download the latest modpack:  
+Download the latest modpack and extract it into mods folder `%appdata%\.minecraft\mods` (create it if it doesn't exist, folder should just have .jar files):  
 [/mods/client-mod-all-4930ec84bbd9ce85253dcf95e689991f-2025-06-18_16-47-27.zip](/mods/client-mod-all-4930ec84bbd9ce85253dcf95e689991f-2025-06-18_16-47-27.zip)
 
-### Step 2: Download Shader Packs (Optional)
+### Step 2: Download Shader Packs
 
-For enhanced graphics, download one of these shader packs:
+For enhanced graphics these shader packs and put them into shaderpacks folder `%appdata%\.minecraft\shaderpacks` (create it if it doesn't exist, folder should just have .zip files not need to extract these):
 
 **Recommended:**
 - **Complementary Unbound** - [/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip](/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip)
