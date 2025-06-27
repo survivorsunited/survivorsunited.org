@@ -44,6 +44,14 @@ const sidebars = {
         },
         {
           type: "category",
+          label: "First Steps in Minecraft",
+          items: [
+            "minecraft/first-steps/things-to-do-first",
+            "minecraft/first-steps/things-to-visit"
+          ]
+        },
+        {
+          type: "category",
           label: "Configuration",
           items: [
             "minecraft/configuration/keybinds",
