@@ -59,7 +59,7 @@ The home base area contains several essential facilities:
 
 ### Community Contribution
 - Help maintain farms and facilities
-- Contribute resources when you can
+- Contribute resources when you can, put them into sorter input or into mass storage bins located in the home base.
 - Report issues or needs to administrators
 
 ## Trading Hall
