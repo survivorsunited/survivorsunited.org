@@ -30,6 +30,8 @@ Follow our comprehensive setup guide:
 4. **[Install Mods](./minecraft/mods/installation)** - Performance and quality-of-life improvements
 5. **[Configure Settings](./minecraft/configuration/keybinds)** - Optimize for our server
 6. **[Connect to Server](./minecraft/server/connection)** - Join our community
+7. **[First Steps](./minecraft/first-steps/things-to-do-first)** - Get started on the server
+8. **[Things to Visit](./minecraft/first-steps/things-to-visit)** - Explore the server
 
 ### 2. Join Our Community
 

@@ -44,7 +44,7 @@ const sidebars = {
         },
         {
           type: "category",
-          label: "First Steps in Minecraft",
+          label: "First Steps",
           items: [
             "minecraft/first-steps/things-to-do-first",
             "minecraft/first-steps/things-to-visit"
