@@ -74,6 +74,9 @@ const config = {
         highlightSearchTermsOnTargetPage: true,
         explicitSearchResultPath: true,
         searchBarPosition: "right",
+        docsRouteBasePath: ["docs"],
+        indexPages: true,
+        ignoreFiles: [],
       },
     ],
   ],
@@ -83,7 +86,7 @@ const config = {
 
       const regexp = /\${([^{]+)}/g;
       let result = fileContent.replace(regexp, function(ignore, key){
-          return process.env[key];
+          return process.env[key] || "";
       });
 
       return result;
@@ -91,7 +94,7 @@ const config = {
   },
 
   themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+    /** @type {import('@docusaurus/types').ThemeConfig} */
     ({
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
