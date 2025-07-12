@@ -39,7 +39,7 @@ Download the latest modpack from the shared Google Drive:
 
 ### How do I install mods?
 1. Find the `mods` folder in the Google Drive
-2. Download the latest `client-mod-all-*.zip` file
+2. Download the latest `client-mod-all-27ccad54aa4567b5b8a20660674307ac-2025-07-12_23-37-12.zip` file
 3. Extract it into your Minecraft mods folder
 4. Overwrite any existing mods
 
