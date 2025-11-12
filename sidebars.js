@@ -28,6 +28,7 @@ const sidebars = {
       items: [
         "minecraft/mods/installation",
         "minecraft/mods/mod-manager",
+        "minecraft/mods/modpack-release-sync",
         "minecraft/mods/folder-setup"
       ]
     },
