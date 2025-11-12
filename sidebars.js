@@ -27,6 +27,7 @@ const sidebars = {
       label: "Mods",
       items: [
         "minecraft/mods/installation",
+        "minecraft/mods/mod-manager",
         "minecraft/mods/folder-setup"
       ]
     },
