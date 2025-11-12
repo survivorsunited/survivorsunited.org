@@ -29,32 +29,31 @@ This document outlines the plan for introducing a daily GitHub Actions workflow 
     - Any future locations recorded in `docs/modpack-release-automation-plan.md` under [Reference Map](#5-reference-map).
   - If the latest release filename matches the existing references, exit successfully without changes.
 
-## 3. Asset Retrieval
+## 3. Asset Metadata
 
-- **Download artifacts** only when a new release is detected:
-  - Primary ZIP (`client-mod-all-*.zip`).
-  - Hash files (`.sha256`, `.sha512`, `.sha1`, `.md5`).
-  - Supplemental documentation (e.g. README, hash summary, configs).
+- **Collect release metadata** when a new tag is detected:
+  - Capture the primary ZIP asset name and `browser_download_url`.
+  - Capture optional checksum assets (e.g. `.sha256`, `.sha512`, `.hash.txt`).
 - **Validation**:
-  - Confirm the primary ZIP exists and has a non-zero size.
-  - Verify the hash files are present; compute checksums to ensure integrity.
-  - Abort with failure (and notify) if validation fails.
+  - Ensure at least one ZIP asset is present.
+  - Warn (but do not fail) when checksum assets are missing.
+  - Abort with failure if the release response cannot be parsed.
 
 ## 4. Repository Update Procedure
 
-- **Step 4.1 – Workspace preparation**:
-  - Use a temporary working directory inside the workflow runner.
-  - Download release assets to `static/mods/<release-tag>/` and place the ZIP alongside hash files in `static/mods/`.
+- **Step 4.1 – Metadata application**:
+  - Run `npm run modpack:sync` to update tracked files using the release metadata.
+  - Set `DOWNLOAD_LINK_MODPACK` in `.env` to the release `browser_download_url`.
 - **Step 4.2 – Documentation refresh**:
-  - Replace modpack references in the following files with the new filename:
+  - Replace modpack references in the following files with the new filename and download URL:
     - `docs/minecraft/mods/installation.md`
     - `docs/minecraft/faq.md`
     - `README.md`
     - `docs/minecraft/mods/mod-manager.md`
-  - Update hash references if documented elsewhere.
+  - Update hash references to point at release-hosted checksum assets when available.
 - **Step 4.3 – Reference map maintenance**:
-  - Append the new release entry (timestamp, filename, hashes) to `static/mods/<release-tag>/<release-tag>-hash.txt` if provided.
-  - Optionally maintain a changelog table inside `docs/minecraft/mods/mod-manager.md`.
+  - Record the release filename in `docs/minecraft/mods/mod-manager.md`.
+  - Optionally append release notes to a changelog section for historical tracking.
 - **Step 4.4 – Formatting**: Run `npm run fmt` or `npm run lint` if available to maintain consistency.
 
 ## 5. Reference Map
@@ -72,7 +71,6 @@ Maintain this list to track all locations that reference the modpack filename:
 
 - **Unit/Integration tests**: Run `npm run build` to ensure docs compile successfully.
 - **Link validation**: Execute existing link check workflows (if present) or add a `linkinator`/`docusaurus check` step.
-- **Asset size guardrail**: Optionally verify the ZIP size stays within expected bounds (e.g. 40–80 MB).
 - **Workflow exit**: Fail the job if any validation step fails, preventing partial updates.
 
 ## 7. Change Delivery Strategy
@@ -81,8 +79,8 @@ Maintain this list to track all locations that reference the modpack filename:
 - **Commit**: Use conventional commits, referencing the automation issue (e.g. `feat(modpack): sync to <tag>`).
 - **Pull request**: Open an auto-generated PR summarizing:
   - New release tag and publication date.
-  - Downloaded assets.
-  - Any hash verification results.
+  - Primary asset filename and download URL.
+  - Any checksum asset links or validation notes.
 - **Review & Merge**: Assign to maintainers; allow auto-merge once checks pass.
 - **Issue Automation**: Auto-close the tracking issue when the PR merges.
 
@@ -97,7 +95,7 @@ Maintain this list to track all locations that reference the modpack filename:
 - **Rollback triggers**: Failed validation, build errors, or community reports of modpack issues.
 - **Action**:
   - Revert the PR via GitHub UI or `gh pr merge --rebase --delete-branch` for rollback commits.
-  - Restore previous modpack assets from Git history (stored under `static/mods/`).
+  - Re-run `npm run modpack:sync` with the prior release tag if manual intervention is required.
 - **Communication**: Alert the community via Discord and update the mod manager page with status notes.
 
 ## 10. Future Enhancements

@@ -1,0 +1,74 @@
+name: Modpack Release Sync
+
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Synchronize modpack release
+        id: modpack
+        run: npm run modpack:sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Detect repository changes
+        id: changes
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build documentation
+        if: steps.modpack.outputs.should_update == 'true' && steps.changes.outputs.changes == 'true'
+        run: npm run build
+
+      - name: Read release metadata
+        if: steps.modpack.outputs.should_update == 'true' && steps.changes.outputs.changes == 'true'
+        id: release
+        run: |
+          echo "release_tag=${{ steps.modpack.outputs.release_tag }}" >> "$GITHUB_OUTPUT"
+          echo "asset_name=${{ steps.modpack.outputs.asset_name }}" >> "$GITHUB_OUTPUT"
+          echo "release_name=${{ steps.modpack.outputs.release_name }}" >> "$GITHUB_OUTPUT"
+          echo "published_at=${{ steps.modpack.outputs.published_at }}" >> "$GITHUB_OUTPUT"
+          echo "download_url=${{ steps.modpack.outputs.download_url }}" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        if: steps.modpack.outputs.should_update == 'true' && steps.changes.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(modpack): sync to ${{ steps.release.outputs.asset_name }}"
+          title: "chore(modpack): sync to ${{ steps.release.outputs.asset_name }}"
+          body: |
+            ## Summary
+            - Automated update to `${{ steps.release.outputs.asset_name }}`
+            - Release tag: `${{ steps.release.outputs.release_tag }}`
+            - Published at: `${{ steps.release.outputs.published_at }}`
+            - Download URL: `${{ steps.release.outputs.download_url }}`
+
+            _This pull request was generated automatically by the Modpack Release Sync workflow._
+          branch: automation/modpack-${{ steps.release.outputs.asset_name }}

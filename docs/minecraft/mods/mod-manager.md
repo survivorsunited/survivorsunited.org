@@ -24,9 +24,9 @@ The Survivors United Mod Manager streamlines distribution of the curated modpack
 | Item | Details |
 | --- | --- |
 | Release Repository | [`survivorsunited/minecraft-mods-manager`](https://github.com/survivorsunited/minecraft-mods-manager/releases) |
-| Latest Filename | `client-mod-all-27ccad54aa4567b5b8a20660674307ac-2025-07-12_23-37-12.zip` |
-| Direct Download | [/mods/client-mod-all-27ccad54aa4567b5b8a20660674307ac-2025-07-12_23-37-12.zip](/mods/client-mod-all-27ccad54aa4567b5b8a20660674307ac-2025-07-12_23-37-12.zip) |
-| Hash Summary | Located in `static/mods/client-mod-all-27ccad54aa4567b5b8a20660674307ac-2025-07-12_23-37-12/` |
+| Latest Filename | `modpack-1.21.8.zip` |
+| Direct Download | [modpack-1.21.8.zip](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2025.11.06-031732/modpack-1.21.8.zip) |
+| Hash Summary | Refer to release assets for checksum files |
 
 ## Release Lifecycle
 
