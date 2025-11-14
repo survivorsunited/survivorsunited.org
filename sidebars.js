@@ -27,9 +27,16 @@ const sidebars = {
       label: "Mods",
       items: [
         "minecraft/mods/installation",
-        "minecraft/mods/mod-manager",
-        "minecraft/mods/modpack-release-sync",
         "minecraft/mods/folder-setup"
+      ]
+    },
+    {
+      type: "category",
+      label: "Tools",
+      items: [
+        "tools/mod-manager",
+        "tools/modpack-release-sync",
+        "tools/journeymap-export"
       ]
     },
     {

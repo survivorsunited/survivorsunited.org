@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 2
 title: Modpack Release Sync Workflow
 description: How the Survivors United site stays aligned with the latest Mod Manager releases.
 tags:
@@ -25,7 +25,7 @@ The Modpack Release Sync pipeline keeps this site aligned with the latest public
 | `.env` | Sets `DOWNLOAD_LINK_MODPACK` to the latest release `browser_download_url`. |
 | `README.md` | Updates the quick-start download link. |
 | `docs/minecraft/faq.md` | Refreshes the filename referenced in the FAQ. |
-| `docs/minecraft/mods/mod-manager.md` | Updates the release snapshot table (filename, download link, hash reference). |
+| `docs/tools/mod-manager.md` | Updates the release snapshot table (filename, download link, hash reference). |
 | `docs/minecraft/mods/installation.md` | Keeps the `${DOWNLOAD_LINK_MODPACK}` token in place for dynamic rendering. |
 
 If no new release is detected (matching filename and URL), the workflow exits without committing changes.
@@ -68,6 +68,6 @@ Before merging or when troubleshooting:
 
 ## Related Resources
 
-- [`docs/modpack-release-automation-plan.md`](../../modpack-release-automation-plan.md): Detailed implementation plan.
-- GitHub Actions workflow: [`.github/workflows/modpack-sync.yml`](../../../.github/workflows/modpack-sync.yml)
-- Mod Manager overview: [`docs/minecraft/mods/mod-manager.md`](./mod-manager.md)
+- [`docs/modpack-release-automation-plan.md`](../modpack-release-automation-plan.md): Detailed implementation plan.
+- GitHub Actions workflow: [`.github/workflows/modpack-sync.yml`](../../.github/workflows/modpack-sync.yml)
+- Mod Manager overview: [`docs/tools/mod-manager.md`](./mod-manager.md)

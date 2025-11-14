@@ -49,10 +49,10 @@ This document outlines the plan for introducing a daily GitHub Actions workflow 
     - `docs/minecraft/mods/installation.md`
     - `docs/minecraft/faq.md`
     - `README.md`
-    - `docs/minecraft/mods/mod-manager.md`
+    - `docs/tools/mod-manager.md`
   - Update hash references to point at release-hosted checksum assets when available.
 - **Step 4.3 – Reference map maintenance**:
-  - Record the release filename in `docs/minecraft/mods/mod-manager.md`.
+  - Record the release filename in `docs/tools/mod-manager.md`.
   - Optionally append release notes to a changelog section for historical tracking.
 - **Step 4.4 – Formatting**: Run `npm run fmt` or `npm run lint` if available to maintain consistency.
 
@@ -65,7 +65,7 @@ Maintain this list to track all locations that reference the modpack filename:
 | `README.md` | Quick-start instructions for new players |
 | `docs/minecraft/mods/installation.md` | Core installation guide |
 | `docs/minecraft/faq.md` | FAQ entry directing players to the download |
-| `docs/minecraft/mods/mod-manager.md` | Overview page describing the Mod Manager and latest release |
+| `docs/tools/mod-manager.md` | Overview page describing the Mod Manager and latest release |
 
 ## 6. Compliance and Quality Gates
 

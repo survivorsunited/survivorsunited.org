@@ -139,7 +139,7 @@ Use `${DISCORD_LOBBY}` in markdown files for dynamic content replacement.
 
 To play on the Survivors United server, download the latest modpack:
 
-[Download modpack-1.21.8.zip](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2025.11.06-031732/modpack-1.21.8.zip)
+[Download the latest modpack](docs/tools/mod-manager.md#latest-release-snapshot)
 
 Extract the contents into your Minecraft `mods` folder (usually `%appdata%\.minecraft\mods`).
 

@@ -1,7 +1,7 @@
 ---
-sidebar_position: 3
+sidebar_position: 1
 title: Survivors United Mod Manager
-description: Overview of the Survivors United Mod Manager and how this site stays in sync with its releases
+description: Overview of the Survivors United Mod Manager and supporting automation.
 tags:
   - mods
   - tooling
@@ -17,22 +17,22 @@ The Survivors United Mod Manager streamlines distribution of the curated modpack
 - **Consistent releases**: Every release bundles the exact set of mods validated for the Survivors United server.
 - **Integrity checked**: Each asset ships with MD5, SHA1, SHA256, and SHA512 hashes so players can verify downloads.
 - **Documentation ready**: Release assets include installation notes and configuration presets used throughout this site.
-- **Automated updates**: A scheduled workflow (see `Modpack Release Automation Plan`) checks for new releases daily and refreshes documentation automatically.
+- **Automated updates**: A scheduled workflow (see the [Modpack Release Automation Plan](../modpack-release-automation-plan.md)) checks for new releases daily and refreshes documentation automatically.
 
 ## Latest Release Snapshot
 
 | Item | Details |
 | --- | --- |
 | Release Repository | [`survivorsunited/minecraft-mods-manager`](https://github.com/survivorsunited/minecraft-mods-manager/releases) |
-| Latest Filename | `modpack-1.21.8.zip` |
-| Direct Download | [modpack-1.21.8.zip](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2025.11.06-031732/modpack-1.21.8.zip) |
+| Latest Filename | `modpack.zip` *(resolved at build time)* |
+| Direct Download | [modpack.zip](${DOWNLOAD_LINK_MODPACK}) |
 | Hash Summary | Refer to release assets for checksum files |
 
 ## Release Lifecycle
 
 1. A new release is published in the Mod Manager repository.
-2. Our automation pipeline downloads the release assets at 04:00 UTC, verifies hashes, and stages documentation updates.
-3. Installation guides, FAQs, and this overview page receive the new filename and metadata.
+2. Our automation pipeline (running daily at 04:00 UTC) records the latest release metadata and updates site content with the new download link—no archives are stored in this repository.
+3. Installation guides, FAQs, and this overview page receive the refreshed filename and metadata.
 4. The site is rebuilt and deployed once validation passes.
 
 ## Contributing to the Mod Manager

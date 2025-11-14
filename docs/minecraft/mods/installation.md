@@ -15,7 +15,6 @@ To play on the Survivors United server, you need to install the required mods. T
 Download the latest modpack and extract it into mods folder `%appdata%\.minecraft\mods` (create it if it doesn't exist, folder should just have .jar files):  
 [modpack.zip](${DOWNLOAD_LINK_MODPACK})
 
-Learn more about how releases are curated on the [Survivors United Mod Manager](./mod-manager.md) page.
 
 ### Step 2: Download Shader Packs
 
@@ -97,7 +96,7 @@ Your mods folder should now contain many `.jar` files, including:
 
 ### When Updates Are Available
 1. Check the Discord server for update announcements
-2. Download the new modpack using the [site download link](${DOWNLOAD_LINK_MODPACK}) or visit the [Survivors United Mod Manager](./mod-manager.md)
+2. Download the new modpack using the [site download link](${DOWNLOAD_LINK_MODPACK}) or visit the [Survivors United Mod Manager](../../tools/mod-manager.md)
 3. Replace all mods in your mods folder
 4. Overwrite existing files when prompted
 

@@ -88,7 +88,7 @@ const LATEST_RELEASE_URL = `https://api.github.com/repos/${MOD_MANAGER_REPOSITOR
 const README_PATH = path.join(PROJECT_ROOT, "README.md");
 const FAQ_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "faq.md");
 const INSTALLATION_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "mods", "installation.md");
-const MOD_MANAGER_DOC_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "mods", "mod-manager.md");
+const MOD_MANAGER_DOC_PATH = path.join(PROJECT_ROOT, "docs", "tools", "mod-manager.md");
 const ENV_FILE_PATH = path.join(PROJECT_ROOT, ".env");
 
 /**
