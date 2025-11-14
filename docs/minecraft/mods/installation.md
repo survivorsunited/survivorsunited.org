@@ -55,7 +55,7 @@ First, you need to locate your Minecraft installation folder:
 
 ### Step 3: Extract Mods
 
-1. Right-click the downloaded `client-mod-all-*.zip` file
+1. Right-click the downloaded modpack archive from the link above (`modpack.zip`)
 2. Select "Extract All" or "Extract Here"
 3. Extract the contents directly into your **Mods Folder**
 4. **Important**: Overwrite any existing mods when prompted
@@ -97,7 +97,7 @@ Your mods folder should now contain many `.jar` files, including:
 
 ### When Updates Are Available
 1. Check the Discord server for update announcements
-2. Download the new modpack from Google Drive
+2. Download the new modpack using the [site download link](${DOWNLOAD_LINK_MODPACK}) or visit the [Survivors United Mod Manager](./mod-manager.md)
 3. Replace all mods in your mods folder
 4. Overwrite existing files when prompted
 
