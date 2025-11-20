@@ -88,7 +88,9 @@ const LATEST_RELEASE_URL = `https://api.github.com/repos/${MOD_MANAGER_REPOSITOR
 const README_PATH = path.join(PROJECT_ROOT, "README.md");
 const FAQ_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "faq.md");
 const INSTALLATION_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "mods", "installation.md");
+const FABRIC_INSTALLATION_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "installation", "fabric.md");
 const MOD_MANAGER_DOC_PATH = path.join(PROJECT_ROOT, "docs", "tools", "mod-manager.md");
+const SUPPORTED_MODS_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "supported-mods", "index.md");
 const ENV_FILE_PATH = path.join(PROJECT_ROOT, ".env");
 
 /**
@@ -291,6 +293,270 @@ const updateEnvFile = async (downloadUrl: string): Promise<FileUpdateResult> => 
 };
 
 /**
+ * Downloads README.md directly from release assets.
+ */
+const downloadReadmeFromRelease = async (release: ReleaseResponse): Promise<string | null> => {
+  const readmeAsset = release.assets.find((asset) => asset.name === "README.md");
+
+  if (!readmeAsset) {
+    return null;
+  }
+
+  const headers: Record<string, string> = {
+    Accept: "text/markdown",
+    "User-Agent": "survivorsunited-modpack-sync",
+  };
+
+  const token = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.GITHUB_PAT;
+  if (isNonEmptyString(token)) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(readmeAsset.browser_download_url, { headers });
+
+  if (!response.ok) {
+    throw new Error(`Failed to download README.md: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.text();
+};
+
+/**
+ * Parses mod information from the README content.
+ */
+interface ModInfo {
+  readonly name: string;
+  readonly id: string;
+  readonly version: string;
+  readonly description: string;
+  readonly category: string;
+}
+
+/**
+ * Category icon mapping (can be configured later)
+ */
+const CATEGORY_ICONS: Record<string, string> = {
+  "Core & Utility": "",
+  "World & Exploration": "",
+  "Multiplayer & Server": "",
+  "Infrastructure": "",
+  "Recycling": "",
+  "Inventory Enhancements": "",
+  "Performance": "",
+  "Shaders": "",
+  "Storage": "",
+  "Protection": "",
+  "Admin": "",
+  "Miscellaneous": "",
+};
+
+const parseModListFromReadme = (readmeContent: string): ModInfo[] => {
+  const mods: ModInfo[] = [];
+  const lines = readmeContent.split(/\r?\n/);
+
+  let inModsTable = false;
+  let headerSkipped = false;
+  let categoryColumnIndex = -1;
+  let typeColumnIndex = -1;
+
+  for (const line of lines) {
+    // Look for "Mods Table" section
+    if (line.includes("## Mods Table") || (line.includes("| Name |") && line.includes("| ID |") && line.includes("| Category |"))) {
+      inModsTable = true;
+      headerSkipped = false;
+      
+      // Find column indices from header
+      if (line.includes("|")) {
+        const headerParts = line.split("|").map((p) => p.trim().toLowerCase());
+        categoryColumnIndex = headerParts.findIndex((p) => p.includes("category"));
+        typeColumnIndex = headerParts.findIndex((p) => p.includes("type"));
+      }
+      continue;
+    }
+
+    if (inModsTable) {
+      // Skip the separator row (|---|---|)
+      if (line.startsWith("|") && line.includes("---")) {
+        continue;
+      }
+      
+      // Process header row to find column indices
+      if (line.startsWith("|") && !headerSkipped && (line.includes("Name") || line.includes("ID"))) {
+        const headerParts = line.split("|").map((p) => p.trim().toLowerCase());
+        categoryColumnIndex = headerParts.findIndex((p) => p.includes("category"));
+        typeColumnIndex = headerParts.findIndex((p) => p.includes("type"));
+        headerSkipped = true;
+        continue;
+      }
+
+      if (line.startsWith("|") && headerSkipped) {
+        const parts = line.split("|").map((p) => p.trim());
+        
+        // Extract values by position (Name, ID, Version, Description, Category, Type)
+        if (parts.length >= 6) {
+          const name = parts[1] || "";
+          const id = parts[2] || "";
+          const version = parts[3] || "";
+          const description = parts[4] || "";
+          const category = parts[5] || "Miscellaneous";
+          const type = parts[6] || "";
+          
+          // Only include Mandatory mods
+          if (type.toLowerCase() === "mandatory" && name.length > 0) {
+            mods.push({
+              name: name,
+              id: id,
+              version: version,
+              description: description,
+              category: category,
+            });
+          }
+        }
+      }
+
+      // Stop at next section
+      if (line.startsWith("##") && !line.includes("Mods Table")) {
+        break;
+      }
+    }
+  }
+
+  return mods;
+};
+
+/**
+ * Groups mods by category and generates formatted sections.
+ */
+const groupModsByCategory = (mods: ModInfo[]): Map<string, ModInfo[]> => {
+  const grouped = new Map<string, ModInfo[]>();
+  
+  for (const mod of mods) {
+    const category = mod.category || "Miscellaneous";
+    if (!grouped.has(category)) {
+      grouped.set(category, []);
+    }
+    grouped.get(category)!.push(mod);
+  }
+  
+  return grouped;
+};
+
+/**
+ * Updates the supported mods documentation with the mod list from the README.
+ */
+const updateSupportedModsDoc = async (mods: ModInfo[], downloadUrl: string): Promise<FileUpdateResult> => {
+  if (mods.length === 0) {
+    return { filePath: SUPPORTED_MODS_PATH, updated: false };
+  }
+
+  const existingContent = existsSync(SUPPORTED_MODS_PATH)
+    ? await readFile(SUPPORTED_MODS_PATH, { encoding: "utf8" })
+    : `---
+sidebar_position: 4
+title: Supported Mods
+description: Complete list of mods supported on the Survivors United server
+---
+
+# Supported Mods
+
+This setup supports a curated collection of Fabric-compatible mods. These mods enhance gameplay, improve performance, support anti-cheat enforcement, and add helpful features for exploration, inventory, multiplayer, and server stability.
+
+## Mandatory Mods
+
+This list is automatically synchronized from the latest modpack release. All mods listed here are required to connect to the Survivors United server.
+
+> **Note:** This list is automatically updated from the latest modpack release. For the complete list with all details including licenses, homepages, and contact information, see the [modpack README](https://github.com/survivorsunited/minecraft-mods-manager/releases/latest).
+
+---
+
+For more information about mod categories, features, updates, and troubleshooting, see the [About Supported Mods](./supported-mods/about) page.
+`;
+
+  const groupedMods = groupModsByCategory(mods);
+
+  // Category order (can be configured)
+  const categoryOrder = [
+    "Core & Utility",
+    "World & Exploration",
+    "Multiplayer & Server",
+    "Infrastructure",
+    "Recycling",
+    "Inventory Enhancements",
+    "Performance",
+    "Shaders",
+    "Storage",
+    "Protection",
+    "Admin",
+    "Miscellaneous",
+  ];
+
+  // Generate sections for each category
+  const categorySections: string[] = [];
+  
+  for (const category of categoryOrder) {
+    const categoryMods = groupedMods.get(category);
+    if (categoryMods && categoryMods.length > 0) {
+      const icon = CATEGORY_ICONS[category] || "";
+      const sectionTitle = icon ? `## ${icon} ${category}` : `## ${category}`;
+      
+      const modList = categoryMods
+        .map((mod) => {
+          return `- **${mod.name}** – ${mod.version} – ${mod.description}`;
+        })
+        .join("\n");
+      
+      categorySections.push(`${sectionTitle}\n\n${modList}\n`);
+    }
+  }
+
+  // Add any remaining categories not in the order list
+  for (const [category, categoryMods] of groupedMods.entries()) {
+    if (!categoryOrder.includes(category)) {
+      const sectionTitle = `## ${category}`;
+      const modList = categoryMods
+        .map((mod) => {
+          return `- **${mod.name}** – ${mod.version} – ${mod.description}`;
+        })
+        .join("\n");
+      
+      categorySections.push(`${sectionTitle}\n\n${modList}\n`);
+    }
+  }
+
+  const modsSection = `## Mandatory Mods
+
+This list is automatically synchronized from the latest modpack release. All mods listed here are required to connect to the Survivors United server.
+
+${categorySections.join("\n")}
+
+> **Note:** This list is automatically updated from the latest modpack release. For the complete list with all details including licenses, homepages, and contact information, see the [modpack README](${downloadUrl}).
+
+`;
+
+  // Replace the mods section (everything from "## Mandatory Mods" to the "---" separator or end)
+  let updatedContent: string;
+  if (existingContent.includes("## Mandatory Mods")) {
+    // Replace from "## Mandatory Mods" to the "---" separator or end of file
+    updatedContent = existingContent.replace(
+      /## Mandatory Mods[\s\S]*?(?=---|$)/,
+      modsSection
+    );
+  } else {
+    // If the section doesn't exist, insert it before the "---" separator or at the end
+    if (existingContent.includes("---")) {
+      updatedContent = existingContent.replace(
+        /(---)/,
+        `${modsSection}\n$1`
+      );
+    } else {
+      updatedContent = `${existingContent}\n\n${modsSection}`;
+    }
+  }
+
+  return writeIfChanged(SUPPORTED_MODS_PATH, updatedContent);
+};
+
+/**
  * Persists GitHub Actions outputs to the GITHUB_OUTPUT file when available.
  */
 const writeActionOutput = async (entries: Record<string, string>): Promise<void> => {
@@ -346,20 +612,37 @@ const main = async (): Promise<void> => {
   console.log(`Detected new modpack asset: ${zipAsset.name}`);
   console.log(`Using remote download URL: ${zipAsset.browser_download_url}`);
 
-  const [readmeResult, faqResult, modManagerResult, installationResult, envResult] = await Promise.all([
-    updateReadme(zipAsset.name, zipAsset.browser_download_url),
-    updateFaq(zipAsset.name),
-    updateModManagerDoc(zipAsset.name, zipAsset.browser_download_url, hashAsset),
-    updateInstallationDoc(),
-    updateEnvFile(zipAsset.browser_download_url),
-  ]);
+  console.log("Downloading README.md from release assets...");
+  const readmeContent = await downloadReadmeFromRelease(release);
 
-  const updates = [readmeResult, faqResult, modManagerResult, installationResult, envResult];
-  updates.forEach((result) => {
-    if (result.updated) {
-      console.log(`Updated ${path.relative(PROJECT_ROOT, result.filePath)}`);
+  let supportedModsResult: FileUpdateResult = { filePath: SUPPORTED_MODS_PATH, updated: false };
+
+  if (readmeContent) {
+    console.log("Parsing mod list from README...");
+    const mods = parseModListFromReadme(readmeContent);
+    console.log(`Found ${mods.length} mandatory mods in README`);
+
+    if (mods.length > 0) {
+      supportedModsResult = await updateSupportedModsDoc(mods, zipAsset.browser_download_url);
     }
-  });
+  } else {
+    console.log("Warning: README.md not found in release assets");
+  }
+
+    const [readmeResult, faqResult, modManagerResult, installationResult, envResult] = await Promise.all([
+      updateReadme(zipAsset.name, zipAsset.browser_download_url),
+      updateFaq(zipAsset.name),
+      updateModManagerDoc(zipAsset.name, zipAsset.browser_download_url, hashAsset),
+      updateInstallationDoc(),
+      updateEnvFile(zipAsset.browser_download_url),
+    ]);
+
+    const updates = [readmeResult, faqResult, modManagerResult, installationResult, envResult, supportedModsResult];
+    updates.forEach((result) => {
+      if (result.updated) {
+        console.log(`Updated ${path.relative(PROJECT_ROOT, result.filePath)}`);
+      }
+    });
 
   const summary: ReleaseSummary = {
     releaseTag: release.tag_name,
