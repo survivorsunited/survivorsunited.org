@@ -64,14 +64,14 @@ If you encounter any issues:
 - **Setup Problems**: Check our [Troubleshooting Guide](./minecraft/troubleshooting/errors)
 - **General Questions**: Visit our [FAQ](./faq) page
 - **Community Support**: Join our [Discord Server](./minecraft/server/discord)
-- **Mod Information**: See our [Supported Mods](./supported-mods) list
+- **Mod Information**: See our [Supported Mods](./minecraft/supported-mods/index) list
 
 ## Next Steps
 
 Ready to dive deeper? Check out:
 
 - **[FAQ](./faq)** - Common questions and answers
-- **[Supported Mods](./supported-mods)** - Complete mod list with descriptions
+- **[Supported Mods](./minecraft/supported-mods/index)** - Complete mod list with descriptions
 - **[Terminology](./terminology)** - Minecraft and community terms
 - **[Minecraft Setup Guides](./minecraft/getting-started)** - Detailed installation instructions
 

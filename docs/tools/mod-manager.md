@@ -17,7 +17,7 @@ The Survivors United Mod Manager streamlines distribution of the curated modpack
 - **Consistent releases**: Every release bundles the exact set of mods validated for the Survivors United server.
 - **Integrity checked**: Each asset ships with MD5, SHA1, SHA256, and SHA512 hashes so players can verify downloads.
 - **Documentation ready**: Release assets include installation notes and configuration presets used throughout this site.
-- **Automated updates**: A scheduled workflow (see the [Modpack Release Automation Plan](../modpack-release-automation-plan.md)) checks for new releases daily and refreshes documentation automatically.
+- **Automated updates**: A scheduled workflow (see the [Modpack Release Sync Workflow](./modpack-release-sync.md)) checks for new releases daily and refreshes documentation automatically.
 
 ## Latest Release Snapshot
 
@@ -25,8 +25,8 @@ The Survivors United Mod Manager streamlines distribution of the curated modpack
 | --- | --- |
 | Release Repository | [`survivorsunited/minecraft-mods-manager`](https://github.com/survivorsunited/minecraft-mods-manager/releases) |
 | Latest Filename | `modpack.zip` *(resolved at build time)* |
-| Direct Download | [modpack.zip](${DOWNLOAD_LINK_MODPACK}) |
-| Hash Summary | Refer to release assets for checksum files |
+| Direct Download | [modpack-1.21.8.zip](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2025.11.15-031133/modpack-1.21.8.zip) |
+| Hash Summary | [release-hashes.txt](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2025.11.15-031133/release-hashes.txt) |
 
 ## Release Lifecycle
 

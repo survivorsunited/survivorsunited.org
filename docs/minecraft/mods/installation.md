@@ -10,23 +10,36 @@ To play on the Survivors United server, you need to install the required mods. T
 
 ## Download Mods
 
-### Step 1: Download the Latest Modpack
+:::tip 📦 Download the Latest Modpack
 
-Download the latest modpack and extract it into mods folder `%appdata%\.minecraft\mods` (create it if it doesn't exist, folder should just have .jar files):  
-[modpack.zip](${DOWNLOAD_LINK_MODPACK})
+**Click the button below to download the latest modpack for the Survivors United server:**
 
+<div style={{textAlign: 'center', margin: '20px 0'}}>
+<a 
+  href="${DOWNLOAD_LINK_MODPACK}" 
+  style={{
+    display: 'inline-block', 
+    padding: '14px 28px', 
+    fontSize: '18px', 
+    fontWeight: 'bold', 
+    color: '#fff', 
+    backgroundColor: '#25c2a0', 
+    textDecoration: 'none', 
+    borderRadius: '6px',
+    transition: 'background-color 0.2s'
+  }}
+  onMouseEnter={(e) => e.target.style.backgroundColor = '#21af90'}
+  onMouseLeave={(e) => e.target.style.backgroundColor = '#25c2a0'}
+>
+    <span>⬇️ Download Latest Modpack</span>
+</a>
+</div>
 
-### Step 2: Download Shader Packs
+After downloading, extract the contents into your mods folder: `%appdata%\.minecraft\mods` (create it if it doesn't exist; the folder should contain only `.jar` files).
 
-For enhanced graphics these shader packs and put them into shaderpacks folder `%appdata%\.minecraft\shaderpacks` (create it if it doesn't exist, folder should just have .zip files not need to extract these):
+:::
 
-**Recommended:**
-- **Complementary Unbound** - [/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip](/mods/shaderpacks/ComplementaryUnbound_r5.5.1.zip)
-
-**Alternative Options:**
-- **Complementary Reimagined** - [/mods/shaderpacks/ComplementaryReimagined_r5.5.1.zip](/mods/shaderpacks/ComplementaryReimagined_r5.5.1.zip)
-- **BSL Shaders** - [/mods/shaderpacks/BSL_v10.0.zip](/mods/shaderpacks/BSL_v10.0.zip)
-- **AstraLex** - [/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip](/mods/shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip)
+> **Note:** The modpack includes shader packs in the `shaderpacks/` folder. Extract them to `%appdata%\.minecraft\shaderpacks` if you want to use shaders.
 
 ## Install Mods
 

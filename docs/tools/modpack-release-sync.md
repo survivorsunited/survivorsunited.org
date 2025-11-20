@@ -27,6 +27,7 @@ The Modpack Release Sync pipeline keeps this site aligned with the latest public
 | `docs/minecraft/faq.md` | Refreshes the filename referenced in the FAQ. |
 | `docs/tools/mod-manager.md` | Updates the release snapshot table (filename, download link, hash reference). |
 | `docs/minecraft/mods/installation.md` | Keeps the `${DOWNLOAD_LINK_MODPACK}` token in place for dynamic rendering. |
+| `docs/minecraft/supported-mods/index.md` | Downloads README.md from release assets and updates the mod list grouped by category. |
 
 If no new release is detected (matching filename and URL), the workflow exits without committing changes.
 
@@ -68,6 +69,6 @@ Before merging or when troubleshooting:
 
 ## Related Resources
 
-- [`docs/modpack-release-automation-plan.md`](../modpack-release-automation-plan.md): Detailed implementation plan.
 - GitHub Actions workflow: [`.github/workflows/modpack-sync.yml`](../../.github/workflows/modpack-sync.yml)
 - Mod Manager overview: [`docs/tools/mod-manager.md`](./mod-manager.md)
+- Implementation plan: [`docs/modpack-release-automation-plan.md`](../modpack-release-automation-plan.md) *(historical reference)*
