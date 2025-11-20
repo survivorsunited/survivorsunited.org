@@ -119,7 +119,7 @@ const config = {
           },
           {
             type: "doc",
-            docId: "supported-mods",
+            docId: "minecraft/supported-mods/index",
             label: "Supported Mods",
             position: "left",
           },

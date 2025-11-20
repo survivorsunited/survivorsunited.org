@@ -3,8 +3,34 @@ const sidebars = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
   tutorialSidebar: [
     "getting-started",
+    {
+      type: "category",
+      label: "Installation",
+      collapsed: false,
+      items: [
+        "minecraft/installation/java",
+        "minecraft/installation/minecraft",
+        "minecraft/installation/fabric"
+      ]
+    },
+    {
+      type: "category",
+      label: "Get the Mods",
+      collapsed: false,
+      items: [
+        "minecraft/mods/installation",
+        "minecraft/mods/folder-setup"
+      ]
+    },
     "faq",
-    "supported-mods",
+    {
+      type: "category",
+      label: "Supported Mods",
+      items: [
+        "minecraft/supported-mods/index",
+        "minecraft/supported-mods/about"
+      ]
+    },
     "terminology",
     {
       type: "category",
@@ -15,28 +41,20 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Installation",
-      items: [
-        "minecraft/installation/java",
-        "minecraft/installation/minecraft",
-        "minecraft/installation/fabric"
-      ]
-    },
-    {
-      type: "category",
-      label: "Mods",
-      items: [
-        "minecraft/mods/installation",
-        "minecraft/mods/folder-setup"
-      ]
-    },
-    {
-      type: "category",
       label: "Tools",
       items: [
         "tools/mod-manager",
         "tools/modpack-release-sync",
         "tools/journeymap-export"
+      ]
+    },
+    {
+      type: "category",
+      label: "Our Mods",
+      items: [
+        "minecraft/our-mods/index",
+        "minecraft/our-mods/mods-su-compostables",
+        "minecraft/our-mods/mods-su-craftable-name-tag"
       ]
     },
     {
