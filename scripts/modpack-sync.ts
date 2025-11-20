@@ -452,7 +452,7 @@ const updateSupportedModsDoc = async (mods: ModInfo[], downloadUrl: string): Pro
   const existingContent = existsSync(SUPPORTED_MODS_PATH)
     ? await readFile(SUPPORTED_MODS_PATH, { encoding: "utf8" })
     : `---
-sidebar_position: 4
+sidebar_position: 1
 title: Supported Mods
 description: Complete list of mods supported on the Survivors United server
 ---
@@ -469,7 +469,7 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 ---
 
-For more information about mod categories, features, updates, and troubleshooting, see the [About Supported Mods](./supported-mods/about) page.
+For more information about mod categories, features, updates, and troubleshooting, see the [About Supported Mods](./about) page.
 `;
 
   const groupedMods = groupModsByCategory(mods);
