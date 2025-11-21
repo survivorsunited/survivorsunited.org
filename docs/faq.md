@@ -78,7 +78,7 @@ Absolutely! We welcome new players. Just make sure they follow our setup guide a
 ## Mod Questions
 
 ### What mods are required?
-See our complete [Supported Mods](./minecraft/supported-mods/index) list for all required and optional mods.
+See our complete [Supported Mods](./minecraft/supported-mods) list for all required and optional mods.
 
 ### Can I add my own mods?
 No, please only use the mods we've approved to ensure compatibility and fair play.

@@ -61,7 +61,7 @@ For a complete setup with all options and troubleshooting, follow these guides i
 ### Support
 - **[Troubleshooting](/docs/minecraft/troubleshooting/errors)** - Fix common issues
 - **[FAQ](/docs/minecraft/faq)** - Frequently asked questions
-- **[Supported Mods](/docs/minecraft/supported-mods/index)** - List of server mods
+- **[Supported Mods](/docs/minecraft/supported-mods)** - List of server mods
 - **[Terminology](/docs/minecraft/terminology)** - Minecraft and mod terminology
 
 ## Server Information

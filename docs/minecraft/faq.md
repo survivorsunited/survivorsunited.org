@@ -138,7 +138,7 @@ Join the appropriate Discord channels:
 - **Server Problems**: Report in the support channel
 
 ### Can I suggest new mods?
-Yes! Check the mod guidelines in the [Supported Mods](/docs/minecraft/supported-mods/index) page and discuss with the community.
+Yes! Check the mod guidelines in the [Supported Mods](/docs/minecraft/supported-mods) page and discuss with the community.
 
 ## Performance Questions
 
