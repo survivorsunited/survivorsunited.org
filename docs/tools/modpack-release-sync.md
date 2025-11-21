@@ -69,6 +69,6 @@ Before merging or when troubleshooting:
 
 ## Related Resources
 
-- GitHub Actions workflow: [`.github/workflows/modpack-sync.yml`](../../.github/workflows/modpack-sync.yml)
+- GitHub Actions workflow: [`.github/workflows/modpack-sync.yml`](https://github.com/survivorsunited/survivorsunited.org/blob/main/.github/workflows/modpack-sync.yml)
 - Mod Manager overview: [`docs/tools/mod-manager.md`](./mod-manager.md)
 - Implementation plan: [`docs/modpack-release-automation-plan.md`](../modpack-release-automation-plan.md) *(historical reference)*

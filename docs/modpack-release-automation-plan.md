@@ -10,7 +10,7 @@ tags:
 # Modpack Release Automation Plan
 
 > **Status**: ✅ **Implementation Complete**  
-> This plan has been fully implemented. See the [Modpack Release Sync Workflow](./tools/modpack-release-sync.md) for current documentation, or the [GitHub Actions workflow](.github/workflows/modpack-sync.yml) for the implementation.
+> This plan has been fully implemented. See the [Modpack Release Sync Workflow](./tools/modpack-release-sync.md) for current documentation, or the [GitHub Actions workflow](https://github.com/survivorsunited/survivorsunited.org/blob/main/.github/workflows/modpack-sync.yml) for the implementation.
 
 This document originally outlined the plan for introducing a daily GitHub Actions workflow that keeps the Survivors United documentation site synchronized with the latest modpack release published in the [`survivorsunited/minecraft-mods-manager`](https://github.com/survivorsunited/minecraft-mods-manager) repository. The workflow runs **daily at 04:00 UTC** and executes the following stages.
 
