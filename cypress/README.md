@@ -191,14 +191,14 @@ The test suite covers all major pages:
 - `/` - Homepage
 - `/docs/getting-started` - Getting Started
 - `/docs/faq` - FAQ
-- `/docs/supported-mods` - Supported Mods
+- `/docs/minecraft/supported-mods/index` - Supported Mods
 - `/docs/terminology` - Terminology
 
 #### Minecraft Pages
 - `/docs/minecraft/getting-started` - Minecraft Setup Guide
 - `/docs/minecraft/faq` - Minecraft FAQ
 - `/docs/minecraft/server-info` - Server Information
-- `/docs/minecraft/supported-mods` - Minecraft Supported Mods
+- `/docs/minecraft/supported-mods/index` - Minecraft Supported Mods
 - `/docs/minecraft/terminology` - Minecraft Terminology
 
 ### Content Keywords

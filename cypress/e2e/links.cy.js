@@ -7,12 +7,12 @@ describe("Link Validation Tests", () => {
     const internalLinks = [
       "/docs/getting-started",
       "/docs/faq",
-      "/docs/supported-mods",
+      "/docs/minecraft/supported-mods/index",
       "/docs/terminology",
       "/docs/minecraft/getting-started",
       "/docs/minecraft/faq",
       "/docs/minecraft/server-info",
-      "/docs/minecraft/supported-mods",
+      "/docs/minecraft/supported-mods/index",
       "/docs/minecraft/terminology"
     ];
 
@@ -234,7 +234,7 @@ describe("Link Validation Tests", () => {
     const pagesToTest = [
       "/docs/getting-started",
       "/docs/faq",
-      "/docs/supported-mods",
+      "/docs/minecraft/supported-mods/index",
       "/docs/minecraft/getting-started"
     ];
 

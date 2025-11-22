@@ -94,7 +94,7 @@ Our comprehensive documentation is organized into several sections:
 #### 🏗️ Community Resources
 - **[Server Information](./docs/minecraft/server-info.md)**: Server details, rules, and features
 - **[Community Farms](./docs/minecraft/community-farms.md)**: Shared infrastructure and farm locations
-- **[Supported Mods](./docs/minecraft/supported-mods.md)**: Complete mod list with descriptions
+- **[Supported Mods](./docs/minecraft/supported-mods/index.md)**: Complete mod list with descriptions
 - **[Configuration Guides](./docs/minecraft/configuration/)**: Keybinds, shaders, and optimization
 
 #### 🛠️ Technical Support

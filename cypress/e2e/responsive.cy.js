@@ -53,7 +53,7 @@ describe("Responsive Design Tests", () => {
 
   it("should handle responsive tables", () => {
     // Visit a page that might have tables
-    cy.visit("/docs/supported-mods");
+    cy.visit("/docs/minecraft/supported-mods/index");
     cy.get("main").should("be.visible");
     // Check if tables exist and are responsive
     cy.get("table").should("exist");
@@ -71,7 +71,7 @@ describe("Responsive Design Tests", () => {
     const pages = [
       "/docs/getting-started",
       "/docs/faq",
-      "/docs/supported-mods",
+      "/docs/minecraft/supported-mods/index",
       "/docs/terminology"
     ];
 

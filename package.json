@@ -32,7 +32,8 @@
     "test:record": "cypress run --record",
     "test:parallel": "cypress run --parallel",
     "test:ci": "start-server-and-test start http://localhost:3000 test:headless",
-    "modpack:sync": "tsx scripts/modpack-sync.ts"
+    "modpack:sync": "tsx scripts/modpack-sync.ts",
+    "modpack:sync:force": "tsx scripts/modpack-sync.ts --force-sync"
   },
   "dependencies": {
     "@docusaurus/core": "3.1.1",
@@ -50,7 +51,6 @@
     "@docusaurus/types": "3.1.1",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
-    "adm-zip": "^0.5.16",
     "cypress": "^14.5.0",
     "nodemon": "^3.0.3",
     "sharp": "^0.34.2",

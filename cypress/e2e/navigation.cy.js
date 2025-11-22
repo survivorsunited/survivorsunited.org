@@ -34,7 +34,7 @@ describe("Navigation Tests", () => {
 
   it("should navigate to Supported Mods page", () => {
     cy.get("nav").contains("Supported Mods").click();
-    cy.url().should("include", "/docs/supported-mods");
+    cy.url().should("include", "/docs/minecraft/supported-mods/index");
     cy.get("main").should("be.visible");
   });
 
@@ -123,7 +123,7 @@ describe("Navigation Tests", () => {
     cy.visit("/docs/faq");
     cy.get("nav").should("be.visible");
     
-    cy.visit("/docs/supported-mods");
+    cy.visit("/docs/minecraft/supported-mods/index");
     cy.get("nav").should("be.visible");
   });
 

@@ -41,8 +41,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 - **oωo** – 0.12.23+1.21.8 – yes its bad i know thanks
 - **Syncmatica** – 0.3.15 – Server-wide shared litematics.
 - **Waystones** – 21.8.5 – Teleport back to activated waystones. For Survival, Adventure or Servers.
-- **Xaero's Minimap** – 25.2.16 – The most vanilla-looking minimap for Minecraft.
-- **Xaero's World Map** – 1.39.13 – A self-writing fullscreen map which also works as an add-on to Xaero's Minimap.
 
 ## Multiplayer & Server
 
@@ -100,9 +98,14 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 - **InertiaAntiCheat** – 1.1.0.4 – Stop people from using unwanted mods on your server!
 
-> **Note:** This list is automatically updated from the latest modpack release. For the complete list with all details including licenses, homepages, and contact information, see the [modpack README](https://github.com/survivorsunited/minecraft-mods-manager/releases/latest).
+## World & Exploration World & Exploration
+
+- **Xaero's Minimap** – 25.2.16 – The most vanilla-looking minimap for Minecraft.
+- **Xaero's World Map** – 1.39.13 – A self-writing fullscreen map which also works as an add-on to Xaero's Minimap.
+
+
+> **Note:** This list is automatically updated from the latest modpack release. For the complete list with all details including licenses, homepages, and contact information, see the [modpack README](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/v2025.11.19/modpack-1.21.8.zip).
 
 ---
 
 For more information about mod categories, features, updates, and troubleshooting, see the [About Supported Mods](./about) page.
-

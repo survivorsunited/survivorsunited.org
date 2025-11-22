@@ -85,7 +85,7 @@ Our comprehensive documentation is organized into several sections:
 #### 🏗️ Community Resources
 - **[Server Information](https://survivorsunited.org/docs/minecraft/server-info)**: Server details, rules, and features
 - **[Community Farms](https://survivorsunited.org/docs/minecraft/community-farms)**: Shared infrastructure and farm locations
-- **[Supported Mods](https://survivorsunited.org/docs/minecraft/supported-mods)**: Complete mod list with descriptions
+- **[Supported Mods](https://survivorsunited.org/docs/minecraft/supported-mods/index)**: Complete mod list with descriptions
 - **[Configuration Guides](https://survivorsunited.org/docs/minecraft/configuration/)**: Keybinds, shaders, and optimization
 
 #### 🛠️ Technical Support

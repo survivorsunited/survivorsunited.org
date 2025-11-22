@@ -8,10 +8,15 @@
  * 3. Updates documentation and environment variables to reference the latest release
  *    download URLs and filenames.
  * 4. Reports actionable outputs back to GitHub Actions via the GITHUB_OUTPUT file.
+ *
+ * Usage:
+ *   npm run modpack:sync           - Sync only if new release detected
+ *   npm run modpack:sync:force     - Force sync regardless of current reference
+ *   npm run modpack:sync -- --force-sync - Alternative force option
  */
 
 import { appendFile, readFile, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -82,9 +87,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 
-const MOD_MANAGER_REPOSITORY = "survivorsunited/minecraft-mods-manager";
-const LATEST_RELEASE_URL = `https://api.github.com/repos/${MOD_MANAGER_REPOSITORY}/releases/latest`;
-
 const README_PATH = path.join(PROJECT_ROOT, "README.md");
 const FAQ_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "faq.md");
 const INSTALLATION_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "mods", "installation.md");
@@ -94,10 +96,50 @@ const SUPPORTED_MODS_PATH = path.join(PROJECT_ROOT, "docs", "minecraft", "suppor
 const ENV_FILE_PATH = path.join(PROJECT_ROOT, ".env");
 
 /**
+ * Gets modpack configuration from .env file, environment variables, or defaults.
+ * This allows the script to use API URL/repository from .env to determine download URL.
+ */
+const getModpackConfig = async (): Promise<{ repository: string; apiUrl: string }> => {
+  let repository = "survivorsunited/minecraft-mods-manager";
+  let apiUrl = `https://api.github.com/repos/${repository}/releases/latest`;
+  
+  // Read from .env file first
+  if (existsSync(ENV_FILE_PATH)) {
+    const envContent = await readFile(ENV_FILE_PATH, { encoding: "utf8" });
+    const repositoryMatch = envContent.match(/^MODPACK_REPOSITORY=(.*)$/m);
+    const apiUrlMatch = envContent.match(/^MODPACK_API_URL=(.*)$/m);
+    
+    if (repositoryMatch?.[1]) {
+      repository = repositoryMatch[1].trim();
+    }
+    if (apiUrlMatch?.[1]) {
+      apiUrl = apiUrlMatch[1].trim();
+    } else if (repositoryMatch?.[1]) {
+      // If repository is set but API URL isn't, construct it
+      apiUrl = `https://api.github.com/repos/${repository}/releases/latest`;
+    }
+  }
+  
+  // Override with environment variables if set
+  repository = process.env.MODPACK_REPOSITORY || process.env.MODPACK_REPO || repository;
+  apiUrl = process.env.MODPACK_API_URL || 
+           (process.env.MODPACK_REPOSITORY ? `https://api.github.com/repos/${process.env.MODPACK_REPOSITORY}/releases/latest` : apiUrl);
+  
+  return { repository, apiUrl };
+};
+
+// Will be initialized in main() after reading .env
+let MOD_MANAGER_REPOSITORY: string;
+let LATEST_RELEASE_URL: string;
+
+/**
  * Fetches the latest release metadata from GitHub.
+ * @param apiUrl Optional API URL. If not provided, uses LATEST_RELEASE_URL.
  * @throws Error when the response cannot be parsed or is unsuccessful.
  */
-const fetchLatestRelease = async (): Promise<ReleaseResponse> => {
+const fetchLatestRelease = async (apiUrl?: string): Promise<ReleaseResponse> => {
+  const url = apiUrl || LATEST_RELEASE_URL;
+  
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "User-Agent": "survivorsunited-modpack-sync",
@@ -108,7 +150,7 @@ const fetchLatestRelease = async (): Promise<ReleaseResponse> => {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(LATEST_RELEASE_URL, {
+  const response = await fetch(url, {
     headers,
   });
 
@@ -127,8 +169,24 @@ const fetchLatestRelease = async (): Promise<ReleaseResponse> => {
 
 /**
  * Determines the currently referenced modpack filename by inspecting tracked files.
+ * ALWAYS fetches from API to determine current release - release tag is determined from API when needed.
  */
 const determineCurrentReference = async (): Promise<CurrentReference | null> => {
+  // Always fetch from API to determine current release - release tag MUST be from API call
+  try {
+    const release = await fetchLatestRelease();
+    const { zipAsset } = selectRelevantAssets(release);
+    
+    return {
+      filename: zipAsset.name,
+      downloadUrl: zipAsset.browser_download_url,
+    };
+  } catch (error) {
+    console.log(`Warning: Could not fetch from API to determine current reference: ${error instanceof Error ? error.message : String(error)}`);
+    // Fall through to check DOWNLOAD_LINK_MODPACK for backward compatibility
+  }
+  
+  // Fallback: check DOWNLOAD_LINK_MODPACK if API call failed
   if (existsSync(ENV_FILE_PATH)) {
     const envFile = await readFile(ENV_FILE_PATH, { encoding: "utf8" });
     const envMatch = envFile.match(/^DOWNLOAD_LINK_MODPACK=(.*)$/m);
@@ -141,6 +199,7 @@ const determineCurrentReference = async (): Promise<CurrentReference | null> => 
     }
   }
 
+  // Last fallback: check README.md
   if (existsSync(README_PATH)) {
     const readmeContent = await readFile(README_PATH, { encoding: "utf8" });
     const readmeMatch = readmeContent.match(/\[Download ([^\]]+\.zip)\]\(([^\)]+)\)/);
@@ -266,28 +325,57 @@ const updateInstallationDoc = async (): Promise<FileUpdateResult> => {
 };
 
 /**
- * Rewrites or appends the DOWNLOAD_LINK_MODPACK entry in the .env file.
+ * Updates the .env file with API-based variables and derived download URL.
+ * Stores repository info to determine download URL dynamically from API.
+ * Release tag is determined from API call when needed, not stored in .env.
  */
-const updateEnvFile = async (downloadUrl: string): Promise<FileUpdateResult> => {
+const updateEnvFile = async (
+  repository: string,
+  releaseTag: string,
+  downloadUrl: string,
+  apiUrl: string,
+): Promise<FileUpdateResult> => {
   const envContent = existsSync(ENV_FILE_PATH)
     ? await readFile(ENV_FILE_PATH, { encoding: "utf8" })
     : "";
 
   const lines = envContent.length > 0 ? envContent.split(/\r?\n/) : [];
-  let found = false;
-  const processedLines = lines.map((line) => {
-    if (line.startsWith("DOWNLOAD_LINK_MODPACK=")) {
-      found = true;
-      return `DOWNLOAD_LINK_MODPACK=${downloadUrl}`;
+  
+  // Variables to update/add
+  // Store API URL/repository for dynamic resolution, and DOWNLOAD_LINK_MODPACK for build-time use
+  // Release tag is always determined from API call when needed, not stored in .env
+  const envVars: Record<string, string> = {
+    MODPACK_REPOSITORY: repository,
+    MODPACK_API_URL: apiUrl,
+    DOWNLOAD_LINK_MODPACK: downloadUrl, // Derived from API - used by Docusaurus build-time preprocessor
+  };
+  
+  // Remove MODPACK_RELEASE_TAG if it exists (no longer needed)
+  const processedLines = lines.filter((line) => !line.startsWith("MODPACK_RELEASE_TAG="));
+  
+  // Track which variables we found
+  const foundVars: Set<string> = new Set();
+  
+  // Update existing variables or mark as found
+  const updatedLines = processedLines.map((line) => {
+    for (const [key, value] of Object.entries(envVars)) {
+      if (line.startsWith(`${key}=`)) {
+        foundVars.add(key);
+        return `${key}=${value}`;
+      }
     }
     return line;
   });
-
-  if (!found) {
-    processedLines.push(`DOWNLOAD_LINK_MODPACK=${downloadUrl}`);
+  
+  // Add missing variables at the end
+  const finalLines = [...updatedLines];
+  for (const [key, value] of Object.entries(envVars)) {
+    if (!foundVars.has(key)) {
+      finalLines.push(`${key}=${value}`);
+    }
   }
 
-  const sanitizedLines = processedLines.filter((line, index) => !(line === "" && index === processedLines.length - 1));
+  const sanitizedLines = finalLines.filter((line, index) => !(line === "" && index === finalLines.length - 1));
   const nextContent = `${sanitizedLines.join("\n")}\n`;
   return writeIfChanged(ENV_FILE_PATH, nextContent);
 };
@@ -360,17 +448,10 @@ const parseModListFromReadme = (readmeContent: string): ModInfo[] => {
   let typeColumnIndex = -1;
 
   for (const line of lines) {
-    // Look for "Mods Table" section
-    if (line.includes("## Mods Table") || (line.includes("| Name |") && line.includes("| ID |") && line.includes("| Category |"))) {
+    // Look for "Mods Table" section - only match the heading, not the header row
+    if (line.includes("## Mods Table")) {
       inModsTable = true;
       headerSkipped = false;
-      
-      // Find column indices from header
-      if (line.includes("|")) {
-        const headerParts = line.split("|").map((p) => p.trim().toLowerCase());
-        categoryColumnIndex = headerParts.findIndex((p) => p.includes("category"));
-        typeColumnIndex = headerParts.findIndex((p) => p.includes("type"));
-      }
       continue;
     }
 
@@ -381,7 +462,7 @@ const parseModListFromReadme = (readmeContent: string): ModInfo[] => {
       }
       
       // Process header row to find column indices
-      if (line.startsWith("|") && !headerSkipped && (line.includes("Name") || line.includes("ID"))) {
+      if (line.startsWith("|") && !headerSkipped && (line.includes("| Name |") || (line.includes("Name") && line.includes("ID") && line.includes("Category")))) {
         const headerParts = line.split("|").map((p) => p.trim().toLowerCase());
         categoryColumnIndex = headerParts.findIndex((p) => p.includes("category"));
         typeColumnIndex = headerParts.findIndex((p) => p.includes("type"));
@@ -393,7 +474,9 @@ const parseModListFromReadme = (readmeContent: string): ModInfo[] => {
         const parts = line.split("|").map((p) => p.trim());
         
         // Extract values by position (Name, ID, Version, Description, Category, Type)
-        if (parts.length >= 6) {
+        // parts[0] is empty (before first |), parts[1-6] are data columns, parts[7] is empty (after last |)
+        // So we need at least 7 elements to have all 6 data columns
+        if (parts.length >= 7) {
           const name = parts[1] || "";
           const id = parts[2] || "";
           const version = parts[3] || "";
@@ -595,11 +678,35 @@ const finish = async (summary: ReleaseSummary | null): Promise<void> => {
 };
 
 const main = async (): Promise<void> => {
+  // Load config from .env file or environment - this allows us to use API URL from .env
+  const config = await getModpackConfig();
+  MOD_MANAGER_REPOSITORY = config.repository;
+  LATEST_RELEASE_URL = config.apiUrl;
+  
+  console.log(`Using repository: ${MOD_MANAGER_REPOSITORY}`);
+  console.log(`Using API URL: ${LATEST_RELEASE_URL}`);
+  
+  // Check for force flag via command-line args or environment variable
+  // Support both --force-sync flag and FORCE_SYNC env var
+  const allArgs = process.argv.slice(2);
+  const forceSync = 
+    allArgs.includes("--force-sync") || 
+    allArgs.includes("--force") || 
+    allArgs.includes("-f") ||
+    process.argv.some((arg) => arg === "--force-sync" || arg === "--force" || arg === "-f") ||
+    process.env.FORCE_SYNC === "true" ||
+    process.env.FORCE_SYNC === "1";
+  
+  if (forceSync) {
+    console.log("Force mode enabled - will sync regardless of current reference");
+  }
+
   const release = await fetchLatestRelease();
   const { zipAsset, hashAsset } = selectRelevantAssets(release);
 
   const currentReference = await determineCurrentReference();
   const shouldSkip =
+    !forceSync &&
     currentReference !== null &&
     currentReference.filename === zipAsset.name &&
     currentReference.downloadUrl === zipAsset.browser_download_url;
@@ -607,6 +714,10 @@ const main = async (): Promise<void> => {
   if (shouldSkip) {
     await finish(null);
     return;
+  }
+  
+  if (forceSync && currentReference !== null && currentReference.filename === zipAsset.name) {
+    console.log("Force mode: Syncing even though release matches current reference");
   }
 
   console.log(`Detected new modpack asset: ${zipAsset.name}`);
@@ -634,7 +745,7 @@ const main = async (): Promise<void> => {
       updateFaq(zipAsset.name),
       updateModManagerDoc(zipAsset.name, zipAsset.browser_download_url, hashAsset),
       updateInstallationDoc(),
-      updateEnvFile(zipAsset.browser_download_url),
+      updateEnvFile(MOD_MANAGER_REPOSITORY, release.tag_name, zipAsset.browser_download_url, LATEST_RELEASE_URL),
     ]);
 
     const updates = [readmeResult, faqResult, modManagerResult, installationResult, envResult, supportedModsResult];

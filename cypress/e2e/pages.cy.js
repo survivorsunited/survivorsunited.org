@@ -16,7 +16,7 @@ describe("Page Content Tests", () => {
       contentChecks: ["frequently asked", "questions", "help"]
     },
     {
-      path: "/docs/supported-mods",
+      path: "/docs/minecraft/supported-mods/index",
       title: "Supported Mods",
       contentChecks: ["mods", "fabric", "compatibility"]
     },
@@ -41,7 +41,7 @@ describe("Page Content Tests", () => {
       contentChecks: ["server", "address", "rules"]
     },
     {
-      path: "/docs/minecraft/supported-mods",
+      path: "/docs/minecraft/supported-mods/index",
       title: "Supported Mods",
       contentChecks: ["mods", "fabric", "server"]
     },
