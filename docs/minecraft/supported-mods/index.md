@@ -14,11 +14,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 ## Core & Utility
 
-- **Amecs Reborn** – 2.0.2+mc1.21.5 – Allows you to set modifier keys for keybinds, and provides some additional utilities
-- **Architectury** – 17.0.8 – A intermediary api aimed to ease developing multiplatform mods.
-- **Balm** – 21.8.10 – Abstraction Layer (but not really) for Blay's multiplatform mods
-- **Cloth Config v19** – 19.0.147 – An API for config screens.
-- **Collective** – 8.11 – Collective is a shared library with common code for all of Serilum's mods.
 - **CraterLib** – 2.1.5 – A library mod used by First Dark Development and HypherionSA Mods
 - **Fabric API** – 0.136.1+1.21.8 – Core API module providing key hooks and intercompatibility features.
 - **Fabric Language Kotlin** – 1.13.7+kotlin.2.2.21 – Fabric language module for Kotlin.
@@ -41,8 +36,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 - **oωo** – 0.12.23+1.21.8 – yes its bad i know thanks
 - **Syncmatica** – 0.3.15 – Server-wide shared litematics.
 - **Waystones** – 21.8.5 – Teleport back to activated waystones. For Survival, Adventure or Servers.
-- **Xaero's Minimap** – 25.2.16 – The most vanilla-looking minimap for Minecraft.
-- **Xaero's World Map** – 1.39.13 – A self-writing fullscreen map which also works as an add-on to Xaero's Minimap.
 
 ## Multiplayer & Server
 
@@ -52,8 +45,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 ## Recycling
 
-- **Better Gold Recycling** – 2.4.1 – Smelt larger gold items for ingots and smaller items for nuggets
-- **Copper Recycling** – 2.4.1 – Recycle a variety of copper blocks into copper ingots
 - **Diamond Recycling** – 1.3.2 – Recycle diamond tools, diamond armor, and smithing templates into diamonds through crafting.
 - **MasterCutter** – 1.5.2-mc1.21.6 – The stonecutter is now more useful than ever with over 500 new recipes including woodcutting, enhanced base stonecutting, recycling and "un-crafting".
 - **Netherite Recycling** – 1.4 – Recycle netherite tools and armor into netherite scraps via smelting or blasting.
@@ -64,9 +55,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 ## Inventory Enhancements
 
-- **AppleSkin** – 3.0.6+mc1.21.6 – Adds various food-related HUD improvements
-- **Armored Elytra** – 1.9.0 – All in one elytra and chestplate combiner mod!
-- **CraftableNameTag** – 1.21.8-0.1 – Makes the Name Tag craftable
 - **Inventory HUD +** – 3.4.27 – This mod will show you your inventory while playing. Enjoy!
 - **Inventory Management** – 1.6.0 – Sort and transfer items with the click of a button.  Built with RoundaLib Gradle plugin v1.0.0 and RoundaLib library v3.2.0.
 - **ItemLocks** – 1.21.8-1.3.11 – Enables the client to lock slots to prevent accidental loss of items. Does not bypass server behavior.
@@ -75,10 +63,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 ## Performance
 
-- **BetterF3** – 15.0.0 – Replaces Minecraft's original debug HUD with a highly customizable, more human-readable HUD.
-- **BLAST** – 1.13.3-1.21.7 – A mod about bombs.
-- **Concurrent Chunk Management Engine** – 0.3.5+alpha.0.8+1.21.8 – A Fabric mod designed to improve the chunk performance of Minecraft.
-- **Clumps** – 26.0.0.1 – Clumps xp orbs together.
 - **FerriteCore** – 8.0.0 – Reduces memory usage
 - **Lithium** – 0.18.1+mc1.21.8 – Lithium is a free and open-source optimization mod for Minecraft which makes a wide range of performance improvements to the game.
 - **Sodium** – 0.7.3+mc1.21.8 – Sodium is a powerful rendering engine for Minecraft which greatly improves frame rates and micro-stutter, while fixing many graphical issues
@@ -90,8 +74,6 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 ## Storage
 
-- **Bale of Sugar Cane** – 1.0.0 – This mod adds a bale of sugar cane!
-- **Basic Storage** – 1.1.2+1.21.8 – Vanilla-friendly mass item storage
 - **Reinforced Chests** – 3.3.3+1.21.8 – Adds reinforced chests.
 - **Tom's Simple Storage Mod** – 2.5.1 – Simple storage mod for Minecraft
 - **Traveler's Backpack** – 10.8.4 – Unique and upgradeable backpacks with customisation, Trinkets/Accessories integration and more!
@@ -100,7 +82,13 @@ This list is automatically synchronized from the latest modpack release. All mod
 
 - **InertiaAntiCheat** – 1.1.0.4 – Stop people from using unwanted mods on your server!
 
-> **Note:** This list is automatically updated from the latest modpack release. For the complete list with all details including licenses, homepages, and contact information, see the [modpack README](https://github.com/survivorsunited/minecraft-mods-manager/releases/latest).
+## World & Exploration World & Exploration
+
+- **Xaero's Minimap** – 25.2.16 – The most vanilla-looking minimap for Minecraft.
+- **Xaero's World Map** – 1.39.13 – A self-writing fullscreen map which also works as an add-on to Xaero's Minimap.
+
+
+> **Note:** This list is automatically updated from the latest modpack release. For the complete list with all details including licenses, homepages, and contact information, see the [modpack README](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/v2025.11.19/modpack-1.21.8.zip).
 
 ---
 
