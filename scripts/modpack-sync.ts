@@ -461,8 +461,8 @@ const parseModListFromReadme = (readmeContent: string): ModInfo[] => {
         continue;
       }
       
-      // Process header row to find column indices
-      if (line.startsWith("|") && !headerSkipped && (line.includes("| Name |") || (line.includes("Name") && line.includes("ID") && line.includes("Category")))) {
+      // Process header row to find column indices - be more flexible with header detection
+      if (line.startsWith("|") && !headerSkipped && line.includes("Name") && line.includes("ID")) {
         const headerParts = line.split("|").map((p) => p.trim().toLowerCase());
         categoryColumnIndex = headerParts.findIndex((p) => p.includes("category"));
         typeColumnIndex = headerParts.findIndex((p) => p.includes("type"));

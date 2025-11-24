@@ -43,7 +43,7 @@ if ($exitCode -eq 0) {
     Write-Host "✅ Modpack synchronization completed successfully!" -ForegroundColor Green
     Write-Host ""
     Write-Host "📄 Updated files:" -ForegroundColor Cyan
-    Write-Host "   - docs/minecraft/supported-mods.md" -ForegroundColor White
+    Write-Host "   - docs/minecraft/supported-mods/index.md" -ForegroundColor White
     Write-Host "   - docs/minecraft/mods/installation.md" -ForegroundColor White
     Write-Host "   - .env" -ForegroundColor White
     Write-Host "   - README.md" -ForegroundColor White
