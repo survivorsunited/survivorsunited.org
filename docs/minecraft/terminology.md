@@ -39,7 +39,7 @@ Here is a comprehensive list of terms you will encounter when setting up and pla
 | Term | Definition |
 |------|------------|
 | **Server** | A multiplayer Minecraft world hosted remotely. Players connect using an IP address. |
-| **IP Address** | A numerical label (e.g. `server.survivorsunited.org`) used to connect to a Minecraft server. |
+| **IP Address** | A numerical label (e.g. `minecarft.survivorsunited.org`) used to connect to a Minecraft server. |
 | **Whitelist** | A list of usernames allowed to join a server. Only whitelisted players can connect if enabled. |
 | **Anti-Cheat** | A required mod (e.g. *InertiaAntiCheat*) that prevents cheating. You may be kicked from the server if it's not installed. |
 | **Land Claims** | A multiplayer feature (enabled by mods like Open Parties and Claims) that lets players mark and protect areas they control. |

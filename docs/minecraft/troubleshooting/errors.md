@@ -81,7 +81,7 @@ java -version
 
 **Solution**:
 1. Check your internet connection
-2. Verify the server address: `server.survivorsunited.org`
+2. Verify the server address: `minecarft.survivorsunited.org`
 3. Make sure you're using the Fabric profile
 4. Check your firewall settings
 

@@ -66,7 +66,7 @@ For a complete setup with all options and troubleshooting, follow these guides i
 
 ## Server Information
 
-- **Server Address**: `server.survivorsunited.org`
+- **Server Address**: `minecarft.survivorsunited.org`
 - **Minecraft Version**: 1.21.5
 - **Mod Loader**: Fabric
 - **Discord**: [Join our community](${DISCORD_LOBBY})

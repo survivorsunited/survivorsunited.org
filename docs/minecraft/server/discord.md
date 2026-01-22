@@ -47,6 +47,8 @@ The Survivors United Discord server is the central hub for our community. Join u
 - **#whitelist-applications** - Apply for server access
 
 ### Game Channels
+- **Minecraft channel** - Server announcements, help, and mod updates
+- **Hytale channel** - Early access updates, server info, and mod announcements
 - **#minecraft-chat** - In-game chat relay
 - **#builds** - Share your builds and projects
 - **#screenshots** - Share screenshots and videos

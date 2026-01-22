@@ -190,6 +190,8 @@ The test suite covers all major pages:
 #### Root Pages
 - `/` - Homepage
 - `/docs/getting-started` - Getting Started
+- `/docs/hytale/getting-started` - Hytale Getting Started
+- `/docs/hytale/mods` - Hytale Mods
 - `/docs/faq` - FAQ
 - `/docs/minecraft/supported-mods/index` - Supported Mods
 - `/docs/terminology` - Terminology

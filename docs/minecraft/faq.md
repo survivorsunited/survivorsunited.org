@@ -56,7 +56,7 @@ Download the latest modpack from the shared Google Drive:
 ## Server Questions
 
 ### What's the server IP address?
-The server address is: `server.survivorsunited.org`
+The server address is: `minecarft.survivorsunited.org`
 
 ### How do I connect to the server?
 1. Open Minecraft with Fabric selected
@@ -64,7 +64,7 @@ The server address is: `server.survivorsunited.org`
 3. Click **Add Server**
 4. Enter:
    - **Server Name**: SurvivorsUnited
-   - **Server Address**: `server.survivorsunited.org`
+   - **Server Address**: `minecarft.survivorsunited.org`
 
 ### What version of Minecraft do I need?
 Minecraft 1.21.5 with Fabric mods

@@ -5,7 +5,7 @@ describe("Navigation Tests", () => {
 
   it("should load the homepage successfully", () => {
     cy.get("body").should("be.visible");
-    cy.title().should("contain", "Survivors United");
+    cy.title().should("contain", "Survivors United Hub");
   });
 
   it("should have main navigation visible", () => {
@@ -14,15 +14,19 @@ describe("Navigation Tests", () => {
   });
 
   it("should have navigation links", () => {
-    cy.get("nav").should("contain.text", "Getting Started");
-    cy.get("nav").should("contain.text", "FAQ");
-    cy.get("nav").should("contain.text", "Supported Mods");
-    cy.get("nav").should("contain.text", "Terminology");
+    cy.get("nav").should("contain.text", "Minecraft");
+    cy.get("nav").should("contain.text", "Hytale");
   });
 
-  it("should navigate to Getting Started page", () => {
-    cy.get("nav").contains("Getting Started").click();
+  it("should navigate to Minecraft getting started page", () => {
+    cy.get("nav").contains("Minecraft").click();
     cy.url().should("include", "/docs/getting-started");
+    cy.get("main").should("be.visible");
+  });
+
+  it("should navigate to Hytale getting started page", () => {
+    cy.get("nav").contains("Hytale").click();
+    cy.url().should("include", "/docs/hytale/getting-started");
     cy.get("main").should("be.visible");
   });
 

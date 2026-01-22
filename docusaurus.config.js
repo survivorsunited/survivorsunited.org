@@ -11,8 +11,8 @@ require("dotenv").config();
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Survivors United",
-  tagline: "A Minecraft survival community",
+  title: "Survivors United Hub",
+  tagline: "A multi-game survival community",
   favicon: "img/favicon.svg",
 
   // Set the production url of your site here
@@ -106,28 +106,14 @@ const config = {
         },
         items: [
           {
-            type: "doc",
-            docId: "getting-started",
-            label: "Getting Started",
+            label: "Minecraft",
             position: "left",
+            to: "/docs/minecraft/getting-started",
           },
           {
-            type: "doc",
-            docId: "faq",
-            label: "FAQ",
+            label: "Hytale",
             position: "left",
-          },
-          {
-            type: "doc",
-            docId: "minecraft/supported-mods/index",
-            label: "Supported Mods",
-            position: "left",
-          },
-          {
-            type: "doc",
-            docId: "terminology",
-            label: "Terminology",
-            position: "left",
+            to: "/docs/hytale/getting-started",
           },
           {
             href: "https://github.com/survivorsunited/survivorsunited.org",

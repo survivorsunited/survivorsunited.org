@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-label="Minecraft">
+  <rect width="800" height="500" fill="#2e7d32" />
+  <rect x="60" y="60" width="680" height="380" fill="#388e3c" />
+  <g fill="#1b5e20">
+    <rect x="120" y="120" width="120" height="120" />
+    <rect x="280" y="120" width="120" height="120" />
+    <rect x="440" y="120" width="120" height="120" />
+    <rect x="600" y="120" width="120" height="120" />
+    <rect x="120" y="280" width="120" height="120" />
+    <rect x="280" y="280" width="120" height="120" />
+    <rect x="440" y="280" width="120" height="120" />
+    <rect x="600" y="280" width="120" height="120" />
+  </g>
+  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="56" fill="#ffffff">
+    Minecraft
+  </text>
+</svg>

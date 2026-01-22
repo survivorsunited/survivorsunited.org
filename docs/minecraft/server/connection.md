@@ -11,7 +11,7 @@ Once you have Minecraft, Fabric, and mods installed, you can connect to the Surv
 ## Server Information
 
 ### Primary Connection
-- **Server Address**: `server.survivorsunited.org`
+- **Server Address**: `minecarft.survivorsunited.org`
 - **Server Port**: `25565` (default)
 - **Server Version**: Minecraft 1.21.5 with Fabric
 
@@ -63,12 +63,12 @@ Our server now uses a **Velocity proxy** that provides:
 ### Step 3: Enter Server Details
 
 **For Direct Connect:**
-- **Server Address**: `server.survivorsunited.org`
+- **Server Address**: `minecarft.survivorsunited.org`
 - **Server Port**: `25565` (leave blank if using default)
 
 **For Saved Server:**
 - **Server Name**: `Survivors United`
-- **Server Address**: `server.survivorsunited.org`
+- **Server Address**: `minecarft.survivorsunited.org`
 
 ![Server Configuration](/img/minecraft/server-configuration.png)
 

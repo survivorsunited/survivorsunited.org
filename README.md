@@ -1,6 +1,6 @@
-# Survivors United
+# Survivors United Hub
 
-A supportive Minecraft survival community website built with Docusaurus and deployed on GitHub Pages.
+A multi-game survival community website built with Docusaurus and deployed on GitHub Pages.
 
 ## 🙋‍♀️ A short introduction - what is your organization all about?
 
@@ -24,7 +24,7 @@ A supportive Minecraft survival community website built with Docusaurus and depl
 We welcome contributions from all community members! Here's how you can get involved:
 
 ### 🎮 Minecraft Community Contributions
-- **Join Our Server**: Connect to `server.survivorsunited.org` and start building
+- **Join Our Server**: Connect to `minecarft.survivorsunited.org` and start building
 - **Participate in Events**: Join community build days and resource gathering sessions
 - **Share Knowledge**: Help new players and contribute to our documentation
 - **Build Community Farms**: Design and maintain shared infrastructure

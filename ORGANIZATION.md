@@ -40,7 +40,7 @@
 We welcome contributions from all community members! Here's how you can get involved:
 
 ### 🎮 Minecraft Community Contributions
-- **Join Our Server**: Connect to `server.survivorsunited.org` and start building
+- **Join Our Server**: Connect to `minecarft.survivorsunited.org` and start building
 - **Participate in Events**: Join community build days and resource gathering sessions
 - **Share Knowledge**: Help new players and contribute to our documentation
 - **Build Community Farms**: Design and maintain shared infrastructure
@@ -97,12 +97,12 @@ Our comprehensive documentation is organized into several sections:
 ### 🚀 Community Resources
 - **Live Website**: [survivorsunited.org](https://survivorsunited.org)
 - **Discord Server**: [Join our community](https://discord.gg/kwdaEmmv)
-- **Minecraft Server**: `server.survivorsunited.org`
+- **Minecraft Server**: `minecarft.survivorsunited.org`
 - **GitHub Organization**: [survivorsunited](https://github.com/survivorsunited)
 - **Issue Tracker**: [GitHub Issues](https://github.com/survivorsunited/survivorsunited.org/issues)
 
 ### 🎮 Server Information
-- **Server Address**: `server.survivorsunited.org`
+- **Server Address**: `minecarft.survivorsunited.org`
 - **Game Mode**: Survival with mods
 - **Version**: Minecraft 1.21.5 with Fabric
 - **Max Players**: 50
@@ -188,7 +188,7 @@ This organization README is built with the power of Markdown and showcases how w
 
 - **Discord**: [Join our community](https://discord.gg/kwdaEmmv)
 - **Website**: [survivorsunited.org](https://survivorsunited.org)
-- **Minecraft Server**: `server.survivorsunited.org`
+- **Minecraft Server**: `minecarft.survivorsunited.org`
 - **Email**: Contact through Discord for now
 - **GitHub**: [survivorsunited](https://github.com/survivorsunited)
 

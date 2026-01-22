@@ -23,3 +23,57 @@
   gap: 1rem;
   flex-wrap: wrap;
 } 
+
+.heroIntro {
+  margin: 1rem auto 0;
+  max-width: 640px;
+}
+
+.gamesSection {
+  padding: 3rem 0 1rem;
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.gamesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.gameCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.gameImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.gameTitle {
+  margin-bottom: 0.5rem;
+}
+
+.buttonContent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.buttonIcon {
+  width: 24px;
+  height: 24px;
+}
+
+@media screen and (max-width: 996px) {
+  .gamesGrid {
+    grid-template-columns: 1fr;
+  }
+}

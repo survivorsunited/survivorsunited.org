@@ -95,6 +95,19 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 3px solid var(--minecraft-dark-green);
 }
 
+/* Highlight active game in top nav */
+.navbar__link--active {
+  background-color: var(--minecraft-grass);
+  color: #fff !important;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  box-shadow: 2px 2px 0px var(--minecraft-dark-green);
+}
+
+.navbar__link--active:hover {
+  color: #fff !important;
+}
+
 .navbar__title {
   font-family: 'Press Start 2P', cursive;
   color: var(--minecraft-grass);

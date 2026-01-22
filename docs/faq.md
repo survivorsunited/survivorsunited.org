@@ -44,7 +44,7 @@ Yes! We support shaders, but they may impact performance. We recommend starting 
 ## Server Questions
 
 ### What's the server address?
-`server.survivorsunited.org`
+`minecarft.survivorsunited.org`
 
 ### How many players can join?
 The server supports up to 50 players simultaneously.

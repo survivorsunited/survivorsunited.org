@@ -44,7 +44,7 @@ Once you're set up:
 
 ### 3. Start Playing
 
-- **Server Address**: `server.survivorsunited.org`
+- **Server Address**: `minecarft.survivorsunited.org`
 - **Game Mode**: Survival with mods
 - **Difficulty**: Normal
 - **Max Players**: 50

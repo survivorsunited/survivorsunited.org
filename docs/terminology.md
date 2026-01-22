@@ -77,7 +77,7 @@ A glossary of Minecraft and community-specific terms used on Survivors United.
 ### Connection
 
 **Server Address**
-- `server.survivorsunited.org`
+- `minecarft.survivorsunited.org`
 - The address to connect to our server
 - Used in multiplayer menu
 
