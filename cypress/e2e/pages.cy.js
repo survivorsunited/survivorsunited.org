@@ -2,7 +2,7 @@ describe("Page Content Tests", () => {
   const pages = [
     {
       path: "/",
-      title: "Survivors United",
+      title: "Survivors United Hub",
       contentChecks: ["Minecraft", "survival", "community"]
     },
     {
@@ -14,6 +14,16 @@ describe("Page Content Tests", () => {
       path: "/docs/faq",
       title: "FAQ",
       contentChecks: ["frequently asked", "questions", "help"]
+    },
+    {
+      path: "/docs/hytale/getting-started",
+      title: "Getting Started",
+      contentChecks: ["Hytale", "Server Address", "Early Access"]
+    },
+    {
+      path: "/docs/hytale/mods",
+      title: "Mods",
+      contentChecks: ["Hytale", "Mods", "listing"]
     },
     {
       path: "/docs/minecraft/supported-mods/index",
