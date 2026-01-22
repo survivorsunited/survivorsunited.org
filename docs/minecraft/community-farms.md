@@ -34,6 +34,8 @@ The main farming area with extensive automated and manual farms:
 
 #### Resource Farms
 
+- **Dual EOL Iron Farm (Portal Spawn)** - Unique Nether and Overworld setup
+- **Overworld EOL Iron Farm (Portal Spawn)** - Overworld-only iron production
 - **Item Vault** - Infinite catalog of all mined items in the game
 - **Iron Farm** - Automated iron ingot production
 - **Fishing Farm** - Automated fishing for fish, treasure, and junk
