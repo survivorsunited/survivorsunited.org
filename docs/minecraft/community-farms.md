@@ -87,6 +87,7 @@ Farms located in the Nether dimension:
 - **Hoglin Farm** - Food and leather
 - **Gold Farm** - Gold ingots and XP
 - **Wither Skull Farm** - Wither skeleton skulls
+- **Wither Skeleton Melter** - Nether-based wither skeleton kill chamber
 - **Blaze Rod Farm** - Blaze rods for brewing
 
 ### Other Locations
