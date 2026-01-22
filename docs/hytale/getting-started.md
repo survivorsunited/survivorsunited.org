@@ -16,6 +16,7 @@ Announcement: https://hytale.com/news/2025/11/hytale-early-access-january-13-202
 ## Requirements
 
 - **Hytale Early Access** (official release)
+- **Purchase and Download**: https://hytale.com/download
 - **Internet connection** for multiplayer
 - **Discord** for announcements and support: [${DISCORD_LOBBY}](${DISCORD_LOBBY})
 
