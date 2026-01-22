@@ -14,7 +14,7 @@ const FeatureList: Array<{
     title: "Modded Survival",
     Svg: require("@site/static/img/undraw_community.svg").default,
     description:
-      "Experience enhanced Minecraft gameplay with carefully curated mods for better performance, exploration, and community features.",
+      "Experience enhanced survival gameplay with carefully curated mods for better performance, exploration, and community features.",
   },
   {
     title: "Community Farms",
@@ -58,10 +58,15 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
+        <Heading as="h2" className={styles.featuresTitle}>
+          Why Join Survivors United
+        </Heading>
+        <div className={styles.featuresGroup}>
         <div className="row">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
+        </div>
         </div>
       </div>
     </section>

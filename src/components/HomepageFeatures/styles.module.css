@@ -10,6 +10,19 @@
   width: 100%;
 }
 
+.featuresTitle {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.featuresGroup {
+  padding: 2rem;
+  border-radius: 16px;
+  background: #f7f5f0;
+  border: 2px solid var(--minecraft-dark-green);
+  box-shadow: 4px 4px 0px var(--minecraft-dark-green);
+}
+
 .featureSvg {
   height: 200px;
   width: 200px;
