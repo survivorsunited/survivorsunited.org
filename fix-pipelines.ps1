@@ -43,3 +43,5 @@ Write-Host "`n📊 Checking pipeline status..." -ForegroundColor Cyan
 & "$PSScriptRoot\check-pipelines.ps1"
 
 
+
+
