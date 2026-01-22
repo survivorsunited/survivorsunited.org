@@ -2,6 +2,7 @@
 sidebar_position: 2
 title: Mods
 description: Approved mods and install steps for Hytale Early Access
+sidebar: hytaleSidebar
 ---
 
 # Hytale Mods

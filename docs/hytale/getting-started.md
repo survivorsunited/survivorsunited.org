@@ -2,6 +2,7 @@
 sidebar_position: 1
 title: Getting Started
 description: Connect to the Survivors United Hytale server
+sidebar: hytaleSidebar
 ---
 
 # Hytale Getting Started
