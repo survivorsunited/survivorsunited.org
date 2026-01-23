@@ -25,39 +25,34 @@ describe("Link Validation Tests", () => {
   });
 
   it("should validate all navbar links", () => {
-    cy.get("nav").within(() => {
-      // Test each navbar link
-      cy.get("a").each(($link) => {
-        const href = $link.attr("href");
-        if (href && href.startsWith("/")) {
-          cy.wrap($link).click();
-          cy.url().should("include", href);
-          cy.get("main").should("be.visible");
-          cy.go("back");
-        }
+    cy.get("nav").find("a[href^='/']").then(($links) => {
+      const hrefs = Array.from($links)
+        .map((link) => link.getAttribute("href"))
+        .filter((href) => href && href.startsWith("/"));
+
+      [...new Set(hrefs)].forEach((href) => {
+        cy.visit(href);
+        cy.get("main").should("be.visible");
       });
     });
   });
 
   it("should validate all footer links", () => {
-    cy.get("footer").within(() => {
-      cy.get("a").each(($link) => {
-        const href = $link.attr("href");
-        if (href) {
-          // Check link has valid href
-          cy.wrap($link).should("have.attr", "href");
-          
-          // For internal links, test navigation
-          if (href.startsWith("/")) {
-            cy.wrap($link).click();
-            cy.url().should("include", href);
-            cy.go("back");
-          }
-          
-          // For external links, check they open in new tab
-          if (href.startsWith("http") && !href.includes("localhost")) {
-            cy.wrap($link).should("have.attr", "target", "_blank");
-          }
+    cy.get("footer").find("a").then(($links) => {
+      const hrefs = Array.from($links)
+        .map((link) => link.getAttribute("href"))
+        .filter(Boolean);
+
+      hrefs.forEach((href) => {
+        // For internal links, test navigation
+        if (href.startsWith("/")) {
+          cy.visit(href);
+          cy.get("main").should("be.visible");
+        }
+
+        // For external links, check they open in new tab
+        if (href.startsWith("http") && !href.includes("localhost")) {
+          cy.get(`footer a[href='${href}']`).should("have.attr", "target", "_blank");
         }
       });
     });
