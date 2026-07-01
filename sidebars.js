@@ -61,7 +61,10 @@ const sidebars = {
       label: "Server",
       items: [
         "minecraft/server/connection",
-        "minecraft/server/discord"
+        "minecraft/server/discord",
+        "minecraft/server/claims-and-parties",
+        "minecraft/server/configuration",
+        "minecraft/server/admin-runbook"
       ]
     },
     {
