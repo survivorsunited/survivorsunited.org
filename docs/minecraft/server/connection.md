@@ -11,9 +11,9 @@ Once you have Minecraft, Fabric, and mods installed, you can connect to the Surv
 ## Server Information
 
 ### Primary Connection
-- **Server Address**: `minecarft.survivorsunited.org`
+- **Server Address**: `minecraft.survivorsunited.org`
 - **Server Port**: `25565` (default)
-- **Server Version**: Minecraft 1.21.5 with Fabric
+- **Server Version**: Minecraft 1.21.11 with Fabric
 
 ### Velocity Proxy Network
 Our server now uses a **Velocity proxy** that provides:
@@ -24,7 +24,7 @@ Our server now uses a **Velocity proxy** that provides:
 
 ## Available Servers
 
-### Lobby Server (PaparMC)
+### Lobby Server (PaperMC)
 - **Purpose**: Community meetup and adventure coordination
 - **Game Mode**: Adventure Mode
 - **Features**: 
@@ -63,12 +63,12 @@ Our server now uses a **Velocity proxy** that provides:
 ### Step 3: Enter Server Details
 
 **For Direct Connect:**
-- **Server Address**: `minecarft.survivorsunited.org`
+- **Server Address**: `minecraft.survivorsunited.org`
 - **Server Port**: `25565` (leave blank if using default)
 
 **For Saved Server:**
 - **Server Name**: `Survivors United`
-- **Server Address**: `minecarft.survivorsunited.org`
+- **Server Address**: `minecraft.survivorsunited.org`
 
 ![Server Configuration](/img/minecraft/server-configuration.png)
 
@@ -97,15 +97,15 @@ Our server now uses a **Velocity proxy** that provides:
 
 ### Lobby Server Capabilities
 - **Safe Environment**: No PvP, protected spawn area
-- **Community Coordination**: Central hub for organizing adventures
+- **Community Coordination**: Central hub for organising adventures
 - **Portal System**: Easy access to different server modes
-- **Information Center**: Server rules, guides, and announcements
+- **Information Centre**: Server rules, guides, and announcements
 
 ### Adventure Planning
 - **Group Formation**: Meet up with other players before adventures
 - **Resource Sharing**: Coordinate supplies and equipment
 - **Strategy Discussion**: Plan expeditions and builds
-- **Event Coordination**: Organize community events and activities
+- **Event Coordination**: Organise community events and activities
 
 ## First Time Setup
 
@@ -133,12 +133,12 @@ When you first join:
 - Check that all mods are installed
 
 ### "Outdated Client" Error
-- Ensure you're using Minecraft 1.21.5
+- Ensure you're using Minecraft 1.21.11
 - Check that Fabric is installed correctly
 - Verify all mods are up to date
 
 ### "Missing Mods" Error
-- Download the latest modpack from Google Drive
+- Download the latest modpack from the [mod installation guide](/docs/minecraft/mods/installation)
 - Replace all mods in your mods folder
 - Restart Minecraft
 
@@ -208,7 +208,7 @@ When you first join:
 
 ### Land Protection (Survival Server)
 - Claim land to protect your builds
-- Set permissions for other players
+- Set permissions for parties and allied parties
 - Prevent griefing and theft
 
 ### Community Areas
@@ -221,5 +221,6 @@ When you first join:
 
 Once connected to the server:
 - [Join Discord](/docs/minecraft/server/discord)
+- [Learn how claims and parties work](/docs/minecraft/server/claims-and-parties)
 - [Configure Keybinds](/docs/minecraft/configuration/keybinds)
-- [Install Shaders](/docs/minecraft/configuration/shaders) 
+- [Install Shaders](/docs/minecraft/configuration/shaders)
