@@ -12,7 +12,7 @@ To play on the Survivors United server, you need to install the required mods. T
 
 :::tip 📦 Download the Latest Modpack
 
-**Click the button below to download the latest modpack for the Survivors United server:**
+**Open the latest release and download its modpack ZIP for the Survivors United server:**
 
 <div style={{textAlign: 'center', margin: '20px 0'}}>
 <a 
@@ -31,7 +31,7 @@ To play on the Survivors United server, you need to install the required mods. T
   onMouseEnter={(e) => e.target.style.backgroundColor = '#21af90'}
   onMouseLeave={(e) => e.target.style.backgroundColor = '#25c2a0'}
 >
-    <span>⬇️ Download Latest Modpack</span>
+    <span>⬇️ Get Latest Modpack</span>
 </a>
 </div>
 
@@ -67,7 +67,7 @@ First, you need to locate your Minecraft installation folder:
 
 ### Step 3: Extract Mods
 
-1. Right-click the downloaded modpack archive from the link above (`modpack.zip`)
+1. Right-click the modpack ZIP downloaded from the latest release
 2. Select "Extract All" or "Extract Here"
 3. Extract the contents directly into your **Mods Folder**
 4. **Important**: Overwrite any existing mods when prompted
@@ -92,7 +92,7 @@ Your mods folder should now contain many `.jar` files, including:
 ### Minecraft Won't Start
 - Check that Fabric is selected in the launcher
 - Verify all mods are in the correct folder
-- Check that you have Java 21+ installed
+- Check that you have the Java version required for the current Minecraft release
 - Try removing and reinstalling mods
 
 ### Missing Mods Error
