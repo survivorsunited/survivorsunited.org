@@ -16,7 +16,7 @@
  */
 
 import { appendFile, readFile, writeFile } from "node:fs/promises";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -168,46 +168,28 @@ const fetchLatestRelease = async (apiUrl?: string): Promise<ReleaseResponse> => 
 };
 
 /**
- * Determines the currently referenced modpack filename by inspecting tracked files.
- * ALWAYS fetches from API to determine current release - release tag is determined from API when needed.
+ * Reads the release currently published by the site, rather than fetching the
+ * latest release again. Otherwise every new release appears already installed.
  */
 const determineCurrentReference = async (): Promise<CurrentReference | null> => {
-  // Always fetch from API to determine current release - release tag MUST be from API call
-  try {
-    const release = await fetchLatestRelease();
-    const { zipAsset } = selectRelevantAssets(release);
-    
-    return {
-      filename: zipAsset.name,
-      downloadUrl: zipAsset.browser_download_url,
-    };
-  } catch (error) {
-    console.log(`Warning: Could not fetch from API to determine current reference: ${error instanceof Error ? error.message : String(error)}`);
-    // Fall through to check DOWNLOAD_LINK_MODPACK for backward compatibility
-  }
-  
-  // Fallback: check DOWNLOAD_LINK_MODPACK if API call failed
   if (existsSync(ENV_FILE_PATH)) {
     const envFile = await readFile(ENV_FILE_PATH, { encoding: "utf8" });
     const envMatch = envFile.match(/^DOWNLOAD_LINK_MODPACK=(.*)$/m);
     if (envMatch) {
       const currentUrl = envMatch[1].trim();
-      const currentCandidate = path.basename(currentUrl);
-      if (isNonEmptyString(currentCandidate)) {
-        return { filename: currentCandidate, downloadUrl: currentUrl };
+      const filename = path.basename(currentUrl);
+      if (isNonEmptyString(currentUrl) && filename.endsWith(".zip")) {
+        return { filename, downloadUrl: currentUrl };
       }
     }
   }
 
-  // Last fallback: check README.md
+  // Older installations may only have a direct link in README.md.
   if (existsSync(README_PATH)) {
     const readmeContent = await readFile(README_PATH, { encoding: "utf8" });
     const readmeMatch = readmeContent.match(/\[Download ([^\]]+\.zip)\]\(([^\)]+)\)/);
     if (readmeMatch) {
-      return {
-        filename: readmeMatch[1],
-        downloadUrl: readmeMatch[2],
-      };
+      return { filename: readmeMatch[1], downloadUrl: readmeMatch[2] };
     }
   }
 
