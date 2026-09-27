@@ -684,6 +684,10 @@ const main = async (): Promise<void> => {
   }
 
   const release = await fetchLatestRelease();
+  const expectedTag = process.env.MODPACK_EXPECTED_TAG;
+  if (isNonEmptyString(expectedTag) && release.tag_name !== expectedTag) {
+    throw new Error(`Expected stable release ${expectedTag}, but GitHub latest is ${release.tag_name}. Refusing to publish a different release.`);
+  }
   const { zipAsset, hashAsset } = selectRelevantAssets(release);
 
   const currentReference = await determineCurrentReference();
