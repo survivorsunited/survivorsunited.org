@@ -8,6 +8,14 @@ const server = 'minecraft.survivorsunited.org';
 const macJavaArm = 'https://api.adoptium.net/v3/installer/latest/21/ga/mac/aarch64/jdk/hotspot/normal/eclipse';
 const macJavaIntel = 'https://api.adoptium.net/v3/installer/latest/21/ga/mac/x64/jdk/hotspot/normal/eclipse';
 const titles = ['Download the modpack', 'Install Fabric', 'Back up your old mods', 'Copy the new mods', 'Launch Minecraft', 'Join Survivors United'];
+const confirmations = [
+  'I downloaded and extracted the modpack',
+  'I installed Fabric for Minecraft 1.21.11 with Loader 0.19.5',
+  'I backed up my old mods, or confirmed there are no old mods',
+  'I copied the new client mods and optional mods into the mods folder',
+  'I launched the new Fabric profile and reached the main menu',
+  'I connected to Survivors United',
+];
 const stepContent = [1, 4, 5, 6, 7, 8];
 type Requirement = 'launcher' | 'account' | 'java';
 const requirements: {id: Requirement; label: string; action: string}[] = [
@@ -137,8 +145,7 @@ function Step({computer, step}: {computer: Computer; step: number}) {
 }
 
 export function AutomaticSetup({computer}: {computer: Computer}) {
-  const [origin, setOrigin] = useState('https://survivorsunited.org');
-  useEffect(() => {setOrigin(window.location.origin);}, []);
+  const origin = 'https://survivorsunited.org';
   const windows = computer === 'windows';
   const command = windows ? `iwr -UseBasicParsing '${origin}/setup/windows.ps1' | iex` : `bash -c "$(curl -fsSL '${origin}/setup/mac.sh')"`;
   return <>
@@ -146,6 +153,7 @@ export function AutomaticSetup({computer}: {computer: Computer}) {
     <ol><li>Open <strong>{windows ? 'PowerShell from the Start menu' : 'Terminal from Applications → Utilities'}</strong>.</li><li>Copy this command, paste it, and press <strong>Enter</strong>:</li></ol>
     <CopyValue value={command}/>
     <p>Follow the prompts. The script prints each check, sets up Java and Fabric, and backs up your old mods before installing the new pack.</p>
+    <p>If setup fails, choose <strong>Restore</strong> when prompted to recover your previous mods and launcher profiles. You can also run this same command again and choose <strong>Restore</strong>.</p>
     <p>You will sign in and open Java Edition when asked. At the end, select the new profile, press Play, and join Survivors United. Your worlds and settings stay in place.</p>
     <Help><p><a href={windows ? '/setup/windows.ps1' : '/setup/mac.sh'}>Read the setup script</a>. It saves a log, keeps dated mod backups, and checks downloaded files. Enter your old profile’s full Game Directory when asked if you use a custom folder.</p><p>The script never asks for your password. If a check fails, it stops and tells you what to fix. You can use the manual path at any time.</p></Help>
   </>;
@@ -154,16 +162,17 @@ export function AutomaticSetup({computer}: {computer: Computer}) {
 export default function InstallWizard({initialComputer}: {initialComputer?: Computer}) {
   const [computer, setComputer] = useState<Computer | null>(initialComputer ?? null);
   const [step, setStep] = useState(0);
+  const [confirmed, setConfirmed] = useState(false);
   const [checks, setChecks] = useState({launcher: false, account: false, java: false, launched: false});
   const [branch, setBranch] = useState<Requirement | null>(null);
   const [loaded, setLoaded] = useState(false);
-  const [automatic, setAutomatic] = useState(false);
+  const [automatic, setAutomatic] = useState(true);
   const [moved, setMoved] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const ready = checks.launcher && checks.account && checks.java && checks.launched;
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
-    setAutomatic(query.get('method') === 'automatic');
+    setAutomatic(query.get('method') !== 'manual');
     const savedComputer = initialComputer ?? query.get('computer');
     if (savedComputer === 'windows' || savedComputer === 'mac') {
       setComputer(savedComputer);
@@ -186,13 +195,15 @@ export default function InstallWizard({initialComputer}: {initialComputer?: Comp
     if (moved) heading.current?.focus();
   }, [computer, step, branch, automatic, moved]);
   const move = (nextComputer: Computer | null, nextStep: number) => {
+    setConfirmed(false);
     if (computer !== nextComputer) setChecks({launcher: false, account: false, java: false, launched: false});
     setComputer(nextComputer); setStep(nextStep); setBranch(null); setMoved(true);
-    setAutomatic(false);
+    const nextAutomatic = computer !== nextComputer;
+    setAutomatic(nextAutomatic);
     const url = new URL(window.location.href);
     url.searchParams.delete('minecraft-os');
     url.searchParams.delete('method');
-    if (nextComputer) {url.searchParams.set('computer', nextComputer); url.searchParams.set('step', String(nextStep));}
+    if (nextComputer) {url.searchParams.set('computer', nextComputer); url.searchParams.set('step', String(nextStep)); url.searchParams.set('method', nextAutomatic ? 'automatic' : 'manual');}
     else {url.searchParams.delete('computer'); url.searchParams.delete('step');}
     window.history.replaceState(window.history.state, '', url.toString());
   };
@@ -200,14 +211,14 @@ export default function InstallWizard({initialComputer}: {initialComputer?: Comp
   const chooseMethod = (value: boolean) => {
     setAutomatic(value); setBranch(null); setMoved(true);
     const url = new URL(window.location.href);
-    if (value) url.searchParams.set('method', 'automatic'); else url.searchParams.delete('method');
+    url.searchParams.set('method', value ? 'automatic' : 'manual');
     window.history.replaceState(window.history.state, '', url.toString());
   };
   return <section className={styles.wizard} aria-label="Minecraft setup wizard">
     <h1>Setup Wizard</h1>
     {!computer ? <>
       <h2 ref={heading} tabIndex={-1}>Which computer do you use?</h2>
-      <p>Check what you already have, then follow six steps to install or upgrade and join Survivors United.</p>
+      <p>Choose your computer to install or upgrade with automatic setup. You can also choose manual steps.</p>
       <p>You will need internet access throughout setup.</p>
       <div className={styles.choices}>
         <button type="button" className={styles.choice} onClick={() => move('windows', 0)}><strong>I use Windows →</strong><span>Windows PC or laptop</span></button>
@@ -216,7 +227,7 @@ export default function InstallWizard({initialComputer}: {initialComputer?: Comp
       <p>For both <strong>first-time installs</strong> and <strong>upgrades from 1.21.8 or another older version</strong>.</p>
     </> : <>
       <div className={styles.progress}><span>{computer === 'windows' ? 'Windows' : 'Mac'} · {step === 0 ? 'Before you start' : `Step ${step} of ${titles.length}`}</span>{initialComputer ? <Link to="/docs/minecraft/installation">Change computer</Link> : <button type="button" className={styles.textButton} onClick={() => move(null, 0)}>Change computer</button>}</div>
-      {step === 0 && <div className={styles.choices}><button type="button" className={styles.choice} aria-pressed={!automatic} onClick={() => chooseMethod(false)}>Manual · Follow the steps</button><button type="button" className={styles.choice} aria-pressed={automatic} onClick={() => chooseMethod(true)}>Automatic · Run the setup script</button></div>}
+      {step === 0 && <div className={styles.choices}><button type="button" className={styles.choice} aria-pressed={automatic} onClick={() => chooseMethod(true)}>Automatic · Run the setup script</button><button type="button" className={styles.choice} aria-pressed={!automatic} onClick={() => chooseMethod(false)}>Manual · Follow the steps</button></div>}
       {step === 0 ? automatic ? <><h2 ref={heading} tabIndex={-1}>Let the setup script help</h2><AutomaticSetup computer={computer}/></> : branch ? <>
         <h2 ref={heading} tabIndex={-1}>{requirements.find(item => item.id === branch)?.action}</h2>
         {branch === 'account' ? <>
@@ -244,14 +255,15 @@ export default function InstallWizard({initialComputer}: {initialComputer?: Comp
         <p className={styles.caption}>Tick all three prerequisites and confirm the quick check to continue. We remember your checklist in this browser tab.</p>
       </> : <>
         <progress max={titles.length} value={step} aria-label={`Step ${step} of ${titles.length}`}/>
-        <h2 ref={heading} tabIndex={-1}>({step}) {titles[step - 1]}</h2>
+        <h2 ref={heading} tabIndex={-1}>{titles[step - 1]}</h2>
         <div key={`${computer}-${step}`}><Step computer={computer} step={stepContent[step - 1]}/></div>
+        <label className={styles.confirm}><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)}/><span>{confirmations[step - 1]}</span></label>
         <div className={styles.navigation}>
           <button type="button" className="button button--secondary" onClick={() => move(computer, step - 1)}>← {step === 1 ? 'Checklist' : 'Back'}</button>
-          {step < titles.length ? <button type="button" className="button button--primary" onClick={() => move(computer, step + 1)}>Next →</button> : <Link className="button button--primary" to="/docs/minecraft/first-steps/things-to-do-first">What to do after joining →</Link>}
+          {step < titles.length ? <button type="button" className="button button--primary" disabled={!confirmed} onClick={() => move(computer, step + 1)}>Next →</button> : confirmed ? <Link className="button button--primary" to="/docs/minecraft/first-steps/things-to-do-first">What to do after joining →</Link> : <button type="button" className="button button--primary" disabled>What to do after joining →</button>}
         </div>
         <button type="button" className={styles.textButton} onClick={() => move(computer, 0)}>Check prerequisites</button>
-        <p className={styles.caption}>Finish the actions above, then choose Next. Back lets you check an earlier step.</p>
+        <p className={styles.caption}>Finish the actions above and tick the confirmation to continue. Back lets you check an earlier step.</p>
       </>}
     </>}
     <p className={styles.support}><Link to="/docs/minecraft/server/discord">Ask us for help on Discord</Link>{computer && <> — tell us {computer === 'windows' ? 'Windows' : 'Mac'}, {step === 0 ? 'the prerequisite you need help with' : `step ${step}`}, and the exact message you see.</>}</p>

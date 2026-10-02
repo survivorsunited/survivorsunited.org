@@ -46,3 +46,35 @@ mv() {
 if set_mods "$fixture/clean-pack" "$rollback_game"; then printf 'Expected activation failure\n'; exit 1; fi
 [ "$(cat "$rollback_game/mods/old.jar")" = rollback-old ]
 say 'Bash activation failure restored the original mods.'
+unset -f mv
+restore_game="$fixture/restore game"
+restore_work="$fixture/restore work"
+mkdir -p "$restore_game/mods" "$restore_work/restore"
+printf restore-old > "$restore_game/mods/old.jar"
+printf original-profile > "$restore_game/launcher_profiles.json"
+cp "$restore_game/launcher_profiles.json" "$restore_work/restore/launcher_profiles.json"
+printf '%s' "$restore_game" > "$restore_work/root.path"
+printf '%s' "$restore_game" > "$restore_work/game.path"
+set_mods "$fixture/clean-pack" "$restore_game" "$restore_work"
+printf new-profile > "$restore_game/launcher_profiles.json"
+restore_setup "$restore_work"
+[ "$(cat "$restore_game/mods/old.jar")" = restore-old ]
+[ "$(cat "$restore_game/launcher_profiles.json")" = original-profile ]
+[ "$(find "$restore_game" -maxdepth 1 -type d -name 'mods.su-before-restore-*' | wc -l)" -eq 1 ]
+[ "$(find "$restore_game" -maxdepth 1 -type d -name 'mods.su-backup-*' | wc -l)" -eq 1 ]
+# A first install has no old mods to recover; retain the installed folder aside.
+: > "$restore_work/mods-backup.path"
+sleep 1
+restore_setup "$restore_work"
+[ ! -e "$restore_game/mods" ]
+say 'Bash explicit restore fixtures passed.'
+script_path="$(cd "$(dirname "$0")/../.." && pwd)/static/setup/mac.sh"
+# A real ERR trap offers recovery and invokes it after a failed setup action.
+set +e
+printf 'y\n' | bash -c 'source "$1"; closed() { :; }; RECOVERY_WORK="$2"; trap '\''setup_failed "$LINENO"'\'' ERR; false' -- "$script_path" "$restore_work" > "$fixture/failure-recovery.log" 2>&1
+failure_status=$?
+set -e
+[ "$failure_status" -eq 1 ]
+grep -q 'Restore your previous mods' "$fixture/failure-recovery.log"
+grep -q 'Previous mods and launcher profiles restored' "$fixture/failure-recovery.log"
+say 'Bash failure prompt recovery fixture passed.'

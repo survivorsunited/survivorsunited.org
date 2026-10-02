@@ -1,6 +1,6 @@
 # Survivors United Windows setup. Compatible with Windows PowerShell 5.1 and PowerShell 7.
 [CmdletBinding()]
-param([switch]$CheckOnly, [string]$GameDirectory)
+param([switch]$CheckOnly, [string]$GameDirectory, [string]$RestoreBackup)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $MinecraftVersion = '1.21.11'
@@ -8,6 +8,7 @@ $LoaderVersion = '0.19.5'
 $PackUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip'
 $PackHash = 'BCB3FCF4815EDD3CAC38A6C9258802758B05B0C92FE6F5260370BD064D8CCABC'
 $ServerAddress = 'minecraft.survivorsunited.org'
+$script:RecoveryWork = ''
 function Say([string]$Message) { Write-Host "[Survivors United] $Message" }
 function Confirm-Step([string]$Message) {
     if ((Read-Host "$Message [y/N]") -notmatch '^(y|yes)$') { throw 'Stopped at your request. Run the script again when ready.' }
@@ -75,7 +76,7 @@ function Get-ModFiles([string]$Pack) {
     if (@($files | Group-Object Name | Where-Object Count -gt 1).Count) { throw 'Duplicate mod filenames in the pack. No mods replaced.' }
     return $files
 }
-function Set-Mods([string]$Pack, [string]$Game) {
+function Set-Mods([string]$Pack, [string]$Game, [string]$RecoveryFolder = '') {
     Assert-PlainPath $Game
     $mods = Join-Path $Game 'mods'
     Assert-PlainPath $mods
@@ -93,6 +94,9 @@ function Set-Mods([string]$Pack, [string]$Game) {
     Assert-Closed
     Assert-PlainPath $mods
     $moved = $false
+    if ($RecoveryFolder) {
+        [IO.File]::WriteAllText((Join-Path $RecoveryFolder 'mods-backup.path'), $(if (Test-Path -LiteralPath $mods) {$backup} else {''}))
+    }
     try {
         if (Test-Path -LiteralPath $mods) { [IO.Directory]::Move($mods, $backup); $moved = $true; Say "Old mods backed up to $backup" }
         [IO.Directory]::Move($stage, $mods)
@@ -114,6 +118,57 @@ function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$Backu
     [IO.File]::Replace($temp, $File, "$File.su-backup-$([Guid]::NewGuid().ToString('N'))")
     Say "Launcher profile saved; original backed up in $BackupFolder"
 }
+function Ensure-WinGet {
+    if (Get-Command winget -ErrorAction SilentlyContinue) { return }
+    Say 'WinGet is missing. Installing Microsoft WinGet and its required package provider.'
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force | Out-Null
+    Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Scope CurrentUser -Force | Out-Null
+    Import-Module Microsoft.WinGet.Client
+    Repair-WinGetPackageManager -Latest
+    $env:PATH += ";$env:LOCALAPPDATA\Microsoft\WindowsApps"
+    if (!(Get-Command winget -ErrorAction SilentlyContinue)) { throw 'WinGet installation could not complete. Keep the log for support.' }
+}
+function Restore-Setup([string]$Work) {
+    Assert-Closed
+    Assert-PlainPath $Work
+    $root = Get-Content -LiteralPath (Join-Path $Work 'root.path') -Raw
+    $game = Get-Content -LiteralPath (Join-Path $Work 'game.path') -Raw
+    Assert-PlainPath $root
+    Assert-PlainPath $game
+    $mods = Join-Path $game 'mods'
+    Assert-PlainPath $mods
+    $record = Join-Path $Work 'mods-backup.path'
+    if (Test-Path -LiteralPath $record) {
+        $backup = Get-Content -LiteralPath $record -Raw
+        $stamp = [Guid]::NewGuid().ToString('N')
+        $stage = Join-Path $game "mods.su-restoring-$stamp"
+        if ($backup) {
+            Assert-PlainPath $backup
+            if (Test-Path -LiteralPath $backup -PathType Container) {
+                Copy-Item -LiteralPath $backup -Destination $stage -Recurse
+                if (Test-Path -LiteralPath $mods) { [IO.Directory]::Move($mods, (Join-Path $game "mods.su-before-restore-$stamp")) }
+                try { [IO.Directory]::Move($stage, $mods) } catch {
+                    $previous = Join-Path $game "mods.su-before-restore-$stamp"
+                    if (!(Test-Path -LiteralPath $mods) -and (Test-Path -LiteralPath $previous)) { [IO.Directory]::Move($previous, $mods) }
+                    throw
+                }
+            } else { Say 'Mods activation already rolled back, or never began; leaving active mods in place.' }
+        } elseif (Test-Path -LiteralPath $mods) { [IO.Directory]::Move($mods, (Join-Path $game "mods.su-before-restore-$stamp")) }
+    }
+    foreach ($name in @('launcher_profiles.json','launcher_profiles_microsoft_store.json')) {
+        $saved = Join-Path $Work "restore/$name"
+        if (Test-Path -LiteralPath $saved) {
+            Assert-PlainPath $saved
+            $target = Join-Path $root $name
+            Assert-PlainPath $target
+            $temp = "$target.su-restoring-$([Guid]::NewGuid().ToString('N'))"
+            Copy-Item -LiteralPath $saved -Destination $temp
+            [IO.File]::Replace($temp, $target, "$target.su-before-restore-$([Guid]::NewGuid().ToString('N'))")
+        }
+    }
+    Say 'Previous mods and launcher profiles restored. Backups and replaced files retained; worlds and settings untouched.'
+}
 function Main {
     if ($env:OS -ne 'Windows_NT' -or ![Environment]::Is64BitOperatingSystem) { throw 'This script requires 64-bit Windows. Use the manual wizard on other systems.' }
     $root = Join-Path $env:APPDATA '.minecraft'
@@ -127,9 +182,15 @@ function Main {
         Assert-Closed
         return
     }
-    Confirm-Step 'Proceed with Launcher/Java setup, Fabric installation and a backed-up mod replacement?'
     $cache = Join-Path $env:LOCALAPPDATA 'SurvivorsUnited/setup'
     Assert-PlainPath $cache
+    if ($RestoreBackup) { Restore-Setup $RestoreBackup; return }
+    $previous = @(Get-ChildItem -LiteralPath $cache -Directory -ErrorAction SilentlyContinue | Where-Object {Test-Path -LiteralPath (Join-Path $_.FullName 'root.path')} | Sort-Object LastWriteTime -Descending)
+    if ($previous.Count) {
+        Say "Previous setup backup: $($previous[0].FullName)"
+        if ((Read-Host 'Install/update or restore the previous setup? [I/r]') -match '^(r|restore)$') { Restore-Setup $previous[0].FullName; return }
+    }
+    Confirm-Step 'Proceed with Launcher/Java setup, Fabric installation and a backed-up mod replacement?'
     $work = Join-Path $cache ([Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $work -Force | Out-Null
     Start-Transcript -Path (Join-Path $work 'setup.log') | Out-Null
@@ -137,8 +198,8 @@ function Main {
         Say "Log and retained downloads: $work"
         Say '(1/6) Checking Minecraft Launcher.'
         if (!(Get-AppxPackage -Name Microsoft.4297127D64EC6) -and !(Test-Path -LiteralPath "${env:ProgramFiles(x86)}\Minecraft Launcher\MinecraftLauncher.exe")) {
-            if (!(Get-Command winget -ErrorAction SilentlyContinue)) { throw 'Install Minecraft Launcher from https://www.minecraft.net/download, then rerun. WinGet is unavailable.' }
-            & winget install --exact --id Mojang.MinecraftLauncher --source winget
+            Ensure-WinGet
+            & winget install --exact --id Mojang.MinecraftLauncher --source winget --accept-source-agreements --accept-package-agreements
             if ($LASTEXITCODE -ne 0) { throw 'Launcher installation did not complete. Install it manually and rerun.' }
         }
         Say 'Open Minecraft Launcher, sign in to the account that owns Java Edition, and launch to the main menu once. Then close the game and launcher.'
@@ -157,6 +218,11 @@ function Main {
         if (!(Test-Path -LiteralPath $game -PathType Container)) { throw 'Game Directory does not exist. Check the path in the old launcher profile.' }
         Say "Mods will go in: $game"
         Confirm-Step 'Is this the Game Directory you want to install/update?'
+        New-Item -ItemType Directory -Path (Join-Path $work 'restore') | Out-Null
+        foreach ($file in $profileFiles) { Copy-Item -LiteralPath $file -Destination (Join-Path $work "restore/$([IO.Path]::GetFileName($file))") }
+        [IO.File]::WriteAllText((Join-Path $work 'game.path'), $game)
+        [IO.File]::WriteAllText((Join-Path $work 'root.path'), $root)
+        $script:RecoveryWork = $work
         Say '(2/6) Checking or downloading Java 21.'
         $java = Get-Java21 $work
         Say '(3/6) Downloading and verifying the pinned modpack.'
@@ -175,14 +241,21 @@ function Main {
         if (!(Test-Path -LiteralPath $versionFile)) { throw 'Fabric version verification failed.' }
         foreach ($file in $profileFiles) { Set-Profile $file $game $java $work }
         Say '(5/6) Staging new mods, verifying each copy, and backing up the old folder.'
-        Set-Mods $pack $game
+        Set-Mods $pack $game $work
         Say '(6/6) Setup complete. Open Launcher and choose Survivors United 1.21.11, then Play.'
         Say "In the game: Multiplayer > Add Server > Survivors United > $ServerAddress > Done > Join Server."
         Set-Clipboard -Value $ServerAddress
         Say 'The server address has been copied. Your account and connection are checked when you launch and join; this script never asks for a password.'
+    } catch {
+        Say "Setup failed: $($_.Exception.Message)"
+        if ($script:RecoveryWork) {
+            Say "Recovery backup: $script:RecoveryWork. Rerun this same command and choose Restore if you prefer to restore later."
+            if ((Read-Host 'Restore your previous mods and launcher profiles now? [y/N]') -match '^(y|yes)$') { Restore-Setup $script:RecoveryWork }
+        } else { Say 'Your mods and launcher profiles have not been changed.' }
+        throw
     } finally { Stop-Transcript | Out-Null }
 }
 if ($MyInvocation.InvocationName -ne '.') {
-    try { Main } catch { Write-Host "[STOPPED] $($_.Exception.Message)" -ForegroundColor Red; exit 1 }
+    try { Main } catch { Write-Host "[STOPPED] $($_.Exception.Message)" -ForegroundColor Red }
 }
 

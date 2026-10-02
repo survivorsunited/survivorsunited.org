@@ -60,3 +60,34 @@ try { Set-Mods $pack $rollbackGame } catch { $failed = $true } finally { if ($sc
 Assert $failed 'Expected activation failure was not detected'
 Assert ((Get-Content "$rollbackGame/mods/old.jar" -Raw) -eq 'rollback-old') 'Rollback failed to restore old mods'
 Say 'Windows activation failure restored the original mods.'
+function Assert-Closed { }
+$restoreGame = Join-Path $fixture 'restore game'
+$restoreWork = Join-Path $fixture 'restore work'
+New-Item -ItemType Directory -Path "$restoreGame/mods", "$restoreWork/restore" -Force | Out-Null
+[IO.File]::WriteAllText("$restoreGame/mods/old.jar", 'restore-old')
+[IO.File]::WriteAllText("$restoreGame/launcher_profiles.json", '{"profiles":{"old":{"name":"Original"}}}')
+Copy-Item "$restoreGame/launcher_profiles.json" "$restoreWork/restore/launcher_profiles.json"
+[IO.File]::WriteAllText("$restoreWork/root.path", $restoreGame)
+[IO.File]::WriteAllText("$restoreWork/game.path", $restoreGame)
+Set-Mods $pack $restoreGame $restoreWork
+[IO.File]::WriteAllText("$restoreGame/launcher_profiles.json", '{"profiles":{"new":{}}}')
+Restore-Setup $restoreWork
+Assert ((Get-Content "$restoreGame/mods/old.jar" -Raw) -eq 'restore-old') 'Explicit restore lost original mods'
+Assert ((Get-Content "$restoreGame/launcher_profiles.json" -Raw) -match 'Original') 'Explicit restore lost original profile'
+Assert (@(Get-ChildItem $restoreGame -Directory -Filter 'mods.su-before-restore-*').Count -eq 1) 'Restore did not retain replaced mods'
+Assert (@(Get-ChildItem $restoreGame -Directory -Filter 'mods.su-backup-*').Count -eq 1) 'Restore consumed original backup'
+# A first install has no prior mods folder: restore moves new mods aside.
+[IO.File]::WriteAllText("$restoreWork/mods-backup.path", '')
+Restore-Setup $restoreWork
+Assert (!(Test-Path "$restoreGame/mods")) 'First install restore left new mods active'
+$script:wingetReady = $false
+$script:repairCalled = $false
+function Get-Command { param($Name,$ErrorAction); if ($Name -eq 'winget' -and $script:wingetReady) { [pscustomobject]@{Source='mock-winget'} } }
+function Install-PackageProvider { param($Name,$MinimumVersion,$Scope,[switch]$Force); Assert ($Scope -eq 'CurrentUser') 'Provider install must use current user' }
+function Install-Module { param($Name,$Repository,$Scope,[switch]$Force); Assert ($Name -eq 'Microsoft.WinGet.Client') 'Wrong bootstrap module' }
+function Import-Module { param($Name) }
+function Repair-WinGetPackageManager { param([switch]$Latest); $script:repairCalled = $true; $script:wingetReady = $true }
+$oldPath = $env:PATH
+try { Ensure-WinGet } finally { $env:PATH = $oldPath }
+Assert $script:repairCalled 'Missing WinGet was not bootstrapped'
+Say 'Windows explicit restore and missing WinGet bootstrap fixtures passed.'

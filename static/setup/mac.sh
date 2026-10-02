@@ -6,6 +6,7 @@ LOADER_VERSION=0.19.5
 PACK_URL=https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip
 PACK_HASH=bcb3fcf4815edd3cac38a6c9258802758b05b0c92fe6f5260370bd064d8ccabc
 SERVER=minecraft.survivorsunited.org
+RECOVERY_WORK=''
 say() { printf '[Survivors United] %s\n' "$*"; }
 fail() { say "STOPPED: $*" >&2; return 1; }
 confirm() {
@@ -60,6 +61,9 @@ set_mods() {
   [ "$found" -gt 0 ] || { fail 'No client mods found. Old mods remain in place.'; return 1; }
   closed || return 1
   plain_path "$game/mods" || return 1
+  if [ -n "${3:-}" ]; then
+    if [ -d "$game/mods" ]; then printf '%s' "$backup" > "$3/mods-backup.path"; else : > "$3/mods-backup.path"; fi
+  fi
   if [ -d "$game/mods" ]; then
     mv "$game/mods" "$backup"
     say "Old mods backed up to $backup"
@@ -105,11 +109,65 @@ function run(args) {
 }
 JS
 }
+restore_setup() {
+  local work="$1" root game mods backup stage previous name
+  closed
+  plain_path "$work"
+  root=$(cat "$work/root.path")
+  game=$(cat "$work/game.path")
+  plain_path "$root"
+  plain_path "$game"
+  mods="$game/mods"
+  plain_path "$mods"
+  if [ -f "$work/mods-backup.path" ]; then
+    backup=$(cat "$work/mods-backup.path")
+    previous="$game/mods.su-before-restore-$(date +%Y%m%d-%H%M%S)-$$"
+    if [ -n "$backup" ]; then
+      plain_path "$backup"
+      if [ -d "$backup" ]; then
+        stage=$(mktemp -d "$game/mods.su-restoring-XXXXXXXX")
+        cp -pR "$backup/." "$stage/"
+        if [ -e "$mods" ]; then mv "$mods" "$previous"; fi
+        if ! mv "$stage" "$mods"; then
+          if [ -d "$previous" ] && [ ! -e "$mods" ]; then mv "$previous" "$mods"; fi
+          fail 'Could not activate restored mods. Keep the backup and log for support.'; return 1
+        fi
+      else say 'Mods activation already rolled back, or never began; leaving active mods in place.'; fi
+    elif [ -e "$mods" ]; then mv "$mods" "$previous"; fi
+  fi
+  for name in launcher_profiles.json launcher_profiles_microsoft_store.json; do
+    if [ -f "$work/restore/$name" ]; then
+      plain_path "$work/restore/$name"
+      plain_path "$root/$name"
+      if [ -f "$root/$name" ]; then cp -p "$root/$name" "$work/$name.before-restore-$(date +%Y%m%d-%H%M%S)-$$"; fi
+      stage=$(mktemp "$root/$name.su-restoring-XXXXXXXX")
+      cp -p "$work/restore/$name" "$stage"
+      mv -f "$stage" "$root/$name"
+    fi
+  done
+  say 'Previous mods and launcher profiles restored. Backups and replaced files retained; worlds and settings untouched.'
+}
+setup_failed() {
+  local line="$1" answer
+  trap - ERR
+  say "STOPPED at line $line. Keep the log for support." >&2
+  # Let the parent handle recovery once when a command substitution fails.
+  if [ "$BASH_SUBSHELL" -gt 0 ]; then exit 1; fi
+  if [ -n "$RECOVERY_WORK" ]; then
+    say "Recovery backup: $RECOVERY_WORK. Rerun this same command and choose Restore if you prefer to restore later."
+    printf 'Restore your previous mods and launcher profiles now? [y/N] '
+    if read -r answer && { [ "$answer" = y ] || [ "$answer" = Y ] || [ "$answer" = yes ]; }; then
+      (set -e; restore_setup "$RECOVERY_WORK") || say 'Restore did not complete. Keep all backups and the log for support.'
+    fi
+  else say 'Your mods and launcher profiles have not been changed.'; fi
+  exit 1
+}
 main() {
-  local root="$HOME/Library/Application Support/minecraft" game='' check=0 arch work java='' candidate package_url package_hash launcher mount
+  local root="$HOME/Library/Application Support/minecraft" game='' check=0 arch work java='' candidate package_url package_hash launcher mount restore='' previous='' answer saved
   while [ "$#" -gt 0 ]; do
     case "$1" in
       --check-only) check=1; shift;;
+      --restore) [ "$#" -ge 2 ] || { fail 'Missing restore backup folder.'; return 1; }; restore="$2"; shift 2;;
       --game-directory) [ "$#" -ge 2 ] || { fail 'Missing Game Directory.'; return 1; }; game="$2"; shift 2;;
       *) fail "Unknown option: $1"; return 1;;
     esac
@@ -127,9 +185,20 @@ main() {
     closed
     return
   fi
-  confirm 'Proceed with Launcher/Java setup, Fabric installation and a backed-up mod replacement?'
+  if [ -n "$restore" ]; then restore_setup "$restore"; return; fi
   plain_path "$HOME/Library/Application Support/SurvivorsUnited"
   mkdir -p "$HOME/Library/Application Support/SurvivorsUnited"
+  for saved in "$HOME/Library/Application Support/SurvivorsUnited/"setup-*/root.path; do
+    [ -f "$saved" ] || continue
+    if [ -z "$previous" ] || [ "$saved" -nt "$previous/root.path" ]; then previous=$(dirname "$saved"); fi
+  done
+  if [ -n "$previous" ]; then
+    say "Previous setup backup: $previous"
+    printf 'Install/update or restore the previous setup? [I/r] '
+    read -r answer
+    case "$answer" in r|R|restore) restore_setup "$previous"; return;; esac
+  fi
+  confirm 'Proceed with Launcher/Java setup, Fabric installation and a backed-up mod replacement?'
   work=$(mktemp -d "$HOME/Library/Application Support/SurvivorsUnited/setup-XXXXXXXX")
   exec > >(tee -a "$work/setup.log") 2>&1
   say "Log and retained downloads: $work"
@@ -166,6 +235,11 @@ main() {
   game=$(cd "$game" && pwd -P)
   say "Mods will go in: $game"
   confirm 'Is this the Game Directory you want to install/update?'
+  mkdir "$work/restore"
+  cp -p "$root/launcher_profiles.json" "$work/restore/launcher_profiles.json"
+  printf '%s' "$game" > "$work/game.path"
+  printf '%s' "$root" > "$work/root.path"
+  RECOVERY_WORK="$work"
   say '(2/6) Checking or downloading Java 21.'
   candidate=$(/usr/libexec/java_home -v 21 2>/dev/null || true)
   if [ -n "$candidate" ] && "$candidate/bin/java" -version 2>&1 | grep -q 'version "21[.\"]'; then java="$candidate/bin/java"; fi
@@ -193,13 +267,13 @@ main() {
   [ -f "$root/versions/fabric-loader-$LOADER_VERSION-$MC_VERSION/fabric-loader-$LOADER_VERSION-$MC_VERSION.json" ] || { fail 'Fabric version verification failed.'; return 1; }
   set_profile "$root/launcher_profiles.json" "$game" "$java" "$work"
   say '(5/6) Staging new mods, verifying each copy, and backing up the old folder.'
-  set_mods "$work/pack" "$game"
+  set_mods "$work/pack" "$game" "$work"
   say '(6/6) Setup complete. Open Launcher and choose Survivors United 1.21.11, then Play.'
   printf '%s' "$SERVER" | pbcopy
   say "In the game: Multiplayer > Add Server > Survivors United > $SERVER > Done > Join Server."
   say 'Server address copied. Your account and connection are checked when you launch and join; this script never asks for a password.'
 }
 if [ "${BASH_SOURCE[0]:-$0}" = "$0" ]; then
-  trap 'say "STOPPED at line $LINENO. Keep the log and any backup folders; use the manual wizard or ask Discord for help." >&2' ERR
+  trap 'setup_failed "$LINENO"' ERR
   main "$@"
 fi
