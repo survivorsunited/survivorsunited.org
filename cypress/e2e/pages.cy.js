@@ -13,7 +13,7 @@ describe("Page Content Tests", () => {
   const pages = [
     {
       path: "/",
-      title: "Survivors United Hub",
+      title: "Survivors United",
       contentChecks: ["Minecraft", "survival", "community"]
     },
     {
@@ -194,4 +194,4 @@ describe("Page Content Tests", () => {
     // Should show 404 page
     cy.get("body").should("contain.text", "404");
   });
-}); 
+});

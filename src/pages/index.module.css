@@ -10,6 +10,17 @@
   overflow: hidden;
 }
 
+.brandTitle {
+  margin: 0 auto 1.5rem;
+}
+
+.brandLogo {
+  display: block;
+  width: min(100%, 640px);
+  height: auto;
+  margin: 0 auto;
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
