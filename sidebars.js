@@ -2,10 +2,11 @@
 const sidebars = {
   minecraftSidebar: [
     "minecraft/getting-started",
+    "minecraft/installation",
     {
       type: "category",
-      label: "Installation",
-      collapsed: false,
+      label: "Setup Reference",
+      collapsed: true,
       items: [
         "minecraft/installation/java",
         "minecraft/installation/minecraft",
@@ -15,7 +16,7 @@ const sidebars = {
     {
       type: "category",
       label: "Get the Mods",
-      collapsed: false,
+      collapsed: true,
       items: [
         "minecraft/mods/installation",
         "minecraft/mods/folder-setup"
@@ -104,4 +105,4 @@ const sidebars = {
   ],
 };
 
-module.exports = sidebars; 
+module.exports = sidebars;

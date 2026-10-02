@@ -15,23 +15,14 @@ Survivors United is a **Minecraft survival community** where players come togeth
 Before joining our server, please ensure you have:
 
 - **Minecraft Java Edition**: A valid, purchased copy of Minecraft Java Edition
-- **Java**: Latest version of Java 20 or higher
+- **Computer**: A Windows PC or Mac
 - **Time**: About 30-45 minutes for initial setup
 
 ## First Steps
 
 ### 1. Complete Setup Process
 
-Follow our comprehensive setup guide:
-
-1. **[Install Java](./minecraft/installation/java)** - Required runtime for Minecraft
-2. **[Install Minecraft](./minecraft/installation/minecraft)** - The base game
-3. **[Install Fabric](./minecraft/installation/fabric)** - Mod loader for enhanced gameplay
-4. **[Install Mods](./minecraft/mods/installation)** - Performance and quality-of-life improvements
-5. **[Configure Settings](./minecraft/configuration/keybinds)** - Optimize for our server
-6. **[Connect to Server](./minecraft/server/connection)** - Join our community
-7. **[First Steps](./minecraft/first-steps/things-to-do-first)** - Get started on the server
-8. **[Things to Visit](./minecraft/first-steps/things-to-visit)** - Explore the server
+**[Open the Windows or Mac installation guide](/docs/minecraft/installation)** and follow steps **(1)–(7)**. It covers both a first installation and upgrading from an older version, all the way through joining the server.
 
 ### 2. Join Our Community
 
