@@ -12,9 +12,10 @@ describe('Setup Wizard', () => {
       cy.visit(`/docs/minecraft/installation/${computer}`);
       cy.get('main').contains('button', 'Automatic ·').click();
       cy.get('main').contains('h2', 'Let the setup script help');
-      cy.get('main').should('contain.text', computer === 'windows' ? 'iwr -UseBasicParsing' : 'curl --fail');
-      cy.get('main').should('contain.text', computer === 'windows' ? '-CheckOnly' : '--check-only');
-      cy.get('main').contains('a', 'Read or download the script').should('have.attr', 'href', computer === 'windows' ? '/setup/windows.ps1' : '/setup/mac.sh');
+      cy.get('main').should('contain.text', computer === 'windows' ? 'iwr -UseBasicParsing' : 'curl -fsSL');
+      cy.get('main').find('code').should('have.length', 1);
+      cy.get('main').should('contain.text', computer === 'windows' ? '| iex' : 'bash -c');
+      cy.get('main').contains('a', 'Read the setup script').should('have.attr', 'href', computer === 'windows' ? '/setup/windows.ps1' : '/setup/mac.sh');
       cy.request(computer === 'windows' ? '/setup/windows.ps1' : '/setup/mac.sh').its('status').should('eq', 200);
       cy.reload();
       cy.get('main').contains('h2', 'Let the setup script help');
@@ -37,14 +38,14 @@ describe('Setup Wizard', () => {
     it(`returns from all ${computer} prerequisite branches without claiming completion`, () => {
       cy.visit(`/docs/minecraft/installation/${computer}`);
       cy.get('main').contains('button', 'Install the launcher').click();
-      cy.get('main').should('contain.text', computer === 'mac' ? '.dmg' : 'downloaded installer');
+      cy.get('main').should('contain.text', computer === 'mac' ? '.dmg' : 'winget install');
       cy.get('main').contains('button', 'Return to checklist').click();
       cy.get('main').contains('label', 'I have Minecraft Launcher installed').find('input').should('not.be.checked');
       cy.get('main').contains('button', 'Check my account').click();
       cy.get('main').should('contain.text', 'Play Demo');
       cy.get('main').contains('button', 'Return to checklist').click();
       cy.get('main').contains('button', 'Install Java /').click();
-      cy.get('main').should('contain.text', computer === 'mac' ? 'Apple silicon' : 'Windows x64 .msi');
+      cy.get('main').should('contain.text', computer === 'mac' ? 'Apple silicon' : 'EclipseAdoptium.Temurin.21.JDK');
       if (computer === 'mac') cy.get('main').should('contain.text', 'Intel');
       cy.get('main').contains('button', 'Return to checklist').click();
       cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
@@ -135,12 +136,13 @@ describe('Setup Wizard', () => {
 
   it('provides independent platform reference guides with existing illustrations', () => {
     cy.visit('/docs/minecraft/installation/fabric');
-    cy.get('main').contains('h2', 'Install Fabric');
-    cy.get('main').contains('button', /^Mac$/).click();
+    cy.get('main').contains('h2', '(3) Configure and install');
+    cy.get('main').should('contain.text', 'powershell.exe');
+    cy.get('main').should('contain.text', '-mcversion 1.21.11 -loader 0.19.5');
     cy.get('main').should('contain.text', 'fabric-installer-1.1.0.jar');
-    cy.get('main').find('img[src="/img/minecraft/fabric-selection.png"]').should('be.visible');
+    cy.get('main').find('img[alt="Java Edition, Fabric profile selector and Play button highlighted"]').should('be.visible');
     cy.get('main').should('contain.text', 'choose 1.21.11');
     cy.visit('/docs/minecraft/installation/minecraft');
-    cy.get('main').find('img[src="/img/minecraft/minecraft-launcher.png"]').should('exist');
+    cy.get('main').find('img[alt="Minecraft Launcher signing in"]').should('exist');
   });
 });

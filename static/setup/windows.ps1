@@ -1,4 +1,4 @@
-﻿# Survivors United Windows setup. Compatible with Windows PowerShell 5.1 and PowerShell 7.
+# Survivors United Windows setup. Compatible with Windows PowerShell 5.1 and PowerShell 7.
 [CmdletBinding()]
 param([switch]$CheckOnly, [string]$GameDirectory)
 Set-StrictMode -Version Latest

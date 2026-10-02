@@ -22,10 +22,14 @@ plain_path() {
   done
 }
 closed() {
-  if pgrep -f '(/Minecraft.app/|net.minecraft.client|fabricmc.*KnotClient)' >/dev/null; then
-    fail 'Close Minecraft and Minecraft Launcher, then run again. Nothing will be force-closed.'
-    return 1
-  fi
+  local pid
+  for pid in $(pgrep -f '(/Minecraft.app/|net.minecraft.client|fabricmc.*KnotClient)' || true); do
+    # bash -c includes the script text in its own command line.
+    if [ "$pid" != "$$" ] && [ "$pid" != "$PPID" ]; then
+      fail 'Close Minecraft and Minecraft Launcher, then run again. Nothing will be force-closed.'
+      return 1
+    fi
+  done
 }
 verified_download() {
   local url="$1" target="$2" expected="$3" actual
@@ -195,7 +199,7 @@ main() {
   say "In the game: Multiplayer > Add Server > Survivors United > $SERVER > Done > Join Server."
   say 'Server address copied. Your account and connection are checked when you launch and join; this script never asks for a password.'
 }
-if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+if [ "${BASH_SOURCE[0]:-$0}" = "$0" ]; then
   trap 'say "STOPPED at line $LINENO. Keep the log and any backup folders; use the manual wizard or ask Discord for help." >&2' ERR
   main "$@"
 fi

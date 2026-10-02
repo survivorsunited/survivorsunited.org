@@ -5,6 +5,8 @@ import styles from './styles.module.css';
 type Computer = 'windows' | 'mac';
 const packUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip';
 const server = 'minecraft.survivorsunited.org';
+const macJavaArm = 'https://api.adoptium.net/v3/installer/latest/21/ga/mac/aarch64/jdk/hotspot/normal/eclipse';
+const macJavaIntel = 'https://api.adoptium.net/v3/installer/latest/21/ga/mac/x64/jdk/hotspot/normal/eclipse';
 const titles = ['Download the modpack', 'Install Fabric', 'Back up your old mods', 'Copy the new mods', 'Launch Minecraft', 'Join Survivors United'];
 const stepContent = [1, 4, 5, 6, 7, 8];
 type Requirement = 'launcher' | 'account' | 'java';
@@ -50,7 +52,8 @@ function Step({computer, step}: {computer: Computer; step: number}) {
     </>;
     case 2: return <>
       <p><strong>Already have the launcher? Keep it.</strong> You do not need to reinstall it when upgrading from 1.21.8.</p>
-      <p>If you do not have it yet, <a href="https://www.minecraft.net/en-us/download">download Minecraft Launcher</a> for <strong>{mac ? 'Mac' : 'Windows'}</strong>. {mac ? <>Open the <strong>.dmg</strong> and drag <strong>Minecraft</strong> into <strong>Applications</strong>.</> : <>Open the downloaded installer and follow its prompts.</>}</p>
+      {!mac && <><p>To install it, open <strong>PowerShell</strong> and run:</p><CopyValue value="winget install --exact --id Mojang.MinecraftLauncher --source winget"/></>}
+      {mac && <p><a href="https://launcher.mojang.com/download/Minecraft.dmg">Download Minecraft Launcher for Mac (.dmg)</a>. Open the download and drag <strong>Minecraft</strong> into <strong>Applications</strong>.</p>}
       <ol>
         <li>Open <strong>Minecraft Launcher</strong> and sign in with the Microsoft account that owns the game.</li>
         <li>Select <strong>Minecraft: Java Edition</strong> and launch the game once. Stop at the main menu.</li>
@@ -61,16 +64,18 @@ function Step({computer, step}: {computer: Computer; step: number}) {
     </>;
     case 3: return <>
       <p>Java opens the Fabric installer. <strong>If Java 21 is already installed, you can skip installing it.</strong> If you are unsure, use the installer below.</p>
+      {!mac && <><p>In <strong>PowerShell</strong>, install Java 21 with:</p><CopyValue value="winget install --exact --id EclipseAdoptium.Temurin.21.JDK --source winget"/><p>Close and reopen PowerShell.</p></>}
+      <p>To check the installed version in {mac ? 'Terminal' : 'PowerShell'}, run:</p>
+      <CopyValue value="java -version"/>
+      <p>The version should start with <strong>21</strong>.</p>
       {mac ? <>
         <p>Open <strong>Apple menu → About This Mac</strong> and check the chip or processor:</p>
         <ul>
-          <li><strong>Apple M1, M2, M3, or another Apple M chip:</strong> <a href="https://adoptium.net/temurin/releases/?version=21&os=mac&arch=aarch64&package=jdk">get Java 21 for Apple silicon</a>.</li>
-          <li><strong>Intel processor:</strong> <a href="https://adoptium.net/temurin/releases/?version=21&os=mac&arch=x64&package=jdk">get Java 21 for Intel</a>.</li>
+          <li><strong>Apple M1, M2, M3, or another Apple M chip:</strong> <a href={macJavaArm}>Download Java 21 for Apple silicon (.pkg)</a>.</li>
+          <li><strong>Intel processor:</strong> <a href={macJavaIntel}>Download Java 21 for Intel (.pkg)</a>.</li>
         </ul>
         <p>Choose the <strong>.pkg</strong> download, open it, and follow the prompts. Keep the default settings.</p>
-      </> : <>
-        <p><a href="https://adoptium.net/temurin/releases/?version=21&os=windows&arch=x64&package=jdk">Get Java 21 for Windows</a>. Choose the <strong>Windows x64 .msi</strong> download, open it, and follow the prompts. Keep the default settings.</p>
-      </>}
+      </> : <p>WinGet installs Java for you. If WinGet is unavailable, open Microsoft Store and update <strong>App Installer</strong>, then retry the command.</p>}
       <Help><p>Having Minecraft installed does not always mean you have Java installed for opening installers. The Minecraft Launcher manages its own Java for playing the game.</p></Help>
     </>;
     case 4: return <>
@@ -131,40 +136,18 @@ function Step({computer, step}: {computer: Computer; step: number}) {
   }
 }
 
-export function SetupReference({kind}: {kind: 'java' | 'minecraft' | 'fabric' | 'mods'}) {
-  const [computer, setComputer] = useState<Computer>('windows');
-  const content = kind === 'java' ? [3] : kind === 'minecraft' ? [2] : kind === 'fabric' ? [1, 4, 7] : [1, 5, 6];
-  const labels: Record<number, string> = {1: 'Download the modpack', 2: 'Install Minecraft Launcher', 3: 'Install Java 21', 4: 'Install Fabric', 5: 'Find your folder and back up old mods', 6: 'Copy the new mods', 7: 'Select your Fabric profile'};
-  return <section className={styles.wizard} aria-label="Setup reference">
-    <p>For guided setup, use the <Link to="/docs/minecraft/installation">Setup Wizard</Link>. This page lets you follow just this part of the process.</p>
-    <div className={styles.choices}>{(['windows', 'mac'] as const).map(value => <button type="button" key={value} className={styles.choice} aria-pressed={computer === value} onClick={() => setComputer(value)}>{value === 'windows' ? 'Windows' : 'Mac'}{computer === value && ' ✓'}</button>)}</div>
-    {content.map(value => <section key={`${computer}-${value}`}><h2>{labels[value]}</h2><Step computer={computer} step={value}/></section>)}
-  </section>;
-}
-
 export function AutomaticSetup({computer}: {computer: Computer}) {
   const [origin, setOrigin] = useState('https://survivorsunited.org');
   useEffect(() => {setOrigin(window.location.origin);}, []);
   const windows = computer === 'windows';
-  const download = windows ? `$setup = Join-Path $env:TEMP ('survivors-united-' + [guid]::NewGuid() + '.ps1'); iwr -UseBasicParsing '${origin}/setup/windows.ps1' -OutFile $setup` : `setup=$(mktemp /tmp/survivors-united-setup.XXXXXXXX); curl --fail --location '${origin}/setup/mac.sh' -o "$setup"`;
-  const run = windows ? '& ([scriptblock]::Create((Get-Content -LiteralPath $setup -Raw)))' : 'bash "$setup"';
+  const command = windows ? `iwr -UseBasicParsing '${origin}/setup/windows.ps1' | iex` : `bash -c "$(curl -fsSL '${origin}/setup/mac.sh')"`;
   return <>
     <h3>Automatic setup for {windows ? 'Windows' : 'Mac'}</h3>
-    <p>The script checks your setup, installs the launcher if missing, finds or downloads Java 21, installs Fabric, creates a Survivors United profile, and replaces the mods after backing them up. Each stage prints its progress and saves a log.</p>
-    <p><strong>You still sign in yourself.</strong> The script pauses while you open Java Edition once, then close the game and launcher. At the end, select the new profile, press Play, and join the server. It never asks for your password or buys the game.</p>
-    <ol>
-      <li>Open <strong>{windows ? 'PowerShell from the Start menu' : 'Terminal from Applications → Utilities'}</strong>. Use your normal account.</li>
-      <li>Copy and run the download command:</li>
-    </ol>
-    <CopyValue value={download}/>
-    <p><a href={windows ? '/setup/windows.ps1' : '/setup/mac.sh'}>Read or download the script</a> before running it. Run the following commands in the same window you used for the download.</p>
-    <p>For a check without installing or changing files, run:</p>
-    <CopyValue value={`${run} ${windows ? '-CheckOnly' : '--check-only'}`}/>
-    <p>To install or upgrade, run:</p>
-    <CopyValue value={run}/>
-    <p>Follow the prompts. If you used a custom Game Directory, enter the full path from your old launcher profile when asked.</p>
-    <p className={styles.note}>Old mods stay in a dated backup beside the new mods folder. Launcher profiles are backed up in the setup log folder. Keep these until you have joined successfully. Worlds, maps, config and settings stay in place.</p>
-    <Help><p>If a check fails, the script stops and prints what to fix. Use the manual wizard or ask us on Discord with the message. Do not send passwords or account tokens. Windows needs 64-bit Windows and WinGet to install a missing launcher. Mac supports Intel and Apple silicon. Linked game folders use the manual path.</p></Help>
+    <ol><li>Open <strong>{windows ? 'PowerShell from the Start menu' : 'Terminal from Applications → Utilities'}</strong>.</li><li>Copy this command, paste it, and press <strong>Enter</strong>:</li></ol>
+    <CopyValue value={command}/>
+    <p>Follow the prompts. The script prints each check, sets up Java and Fabric, and backs up your old mods before installing the new pack.</p>
+    <p>You will sign in and open Java Edition when asked. At the end, select the new profile, press Play, and join Survivors United. Your worlds and settings stay in place.</p>
+    <Help><p><a href={windows ? '/setup/windows.ps1' : '/setup/mac.sh'}>Read the setup script</a>. It saves a log, keeps dated mod backups, and checks downloaded files. Enter your old profile’s full Game Directory when asked if you use a custom folder.</p><p>The script never asks for your password. If a check fails, it stops and tells you what to fix. You can use the manual path at any time.</p></Help>
   </>;
 }
 
