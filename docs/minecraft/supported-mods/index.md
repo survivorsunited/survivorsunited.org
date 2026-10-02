@@ -6,11 +6,13 @@ description: Complete list of mods supported on the Survivors United server
 
 # Supported Mods
 
+For installation, use **[Install or Upgrade](/docs/minecraft/installation)** and its complete GitHub pack. This reference catalogue can lag behind the release; do not choose or download individual versions from the list below.
+
 This setup supports a curated collection of Fabric-compatible mods. These mods enhance gameplay, improve performance, support anti-cheat enforcement, and add helpful features for exploration, inventory, multiplayer, and server stability.
 
 ## Mandatory Mods
 
-This list is automatically synchronized from the latest modpack release. All mods listed here are required to connect to the Survivors United server.
+This reference is maintained by release automation. The downloaded GitHub pack contains the files to install, including the files in its `mods/optional` folder.
 
 ## Core & Utility
 

@@ -2,7 +2,16 @@
 const sidebars = {
   minecraftSidebar: [
     "minecraft/getting-started",
-    "minecraft/installation",
+    {
+      type: "category",
+      label: "Install or Upgrade",
+      link: { type: "doc", id: "minecraft/installation" },
+      collapsed: false,
+      items: [
+        "minecraft/installation/windows",
+        "minecraft/installation/mac"
+      ]
+    },
     {
       type: "category",
       label: "Setup Reference",
@@ -10,14 +19,7 @@ const sidebars = {
       items: [
         "minecraft/installation/java",
         "minecraft/installation/minecraft",
-        "minecraft/installation/fabric"
-      ]
-    },
-    {
-      type: "category",
-      label: "Get the Mods",
-      collapsed: true,
-      items: [
+        "minecraft/installation/fabric",
         "minecraft/mods/installation",
         "minecraft/mods/folder-setup"
       ]
@@ -32,13 +34,6 @@ const sidebars = {
       ]
     },
     "terminology",
-    {
-      type: "category",
-      label: "Getting Started",
-      items: [
-        "minecraft/getting-started"
-      ]
-    },
     {
       type: "category",
       label: "Tools",

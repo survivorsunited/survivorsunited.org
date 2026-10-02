@@ -12,7 +12,7 @@ const gameCards = [
     title: "Minecraft",
     description:
       "Jump into our modded survival community with curated mods, shared farms, and friendly support.",
-    href: "/docs/minecraft/getting-started",
+    href: "/docs/minecraft/installation",
     imageSrc: "/img/games/minecraft/logo.jpg",
     imageAlt: "Minecraft",
   },
@@ -32,7 +32,7 @@ const gameCards = [
  */
 function HomepageHeader(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
-  
+
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className="container">
@@ -53,7 +53,7 @@ function HomepageHeader(): JSX.Element {
  */
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
-  
+
   return (
     <Layout
       title={`Welcome to ${siteConfig.title}`}
@@ -105,4 +105,4 @@ export default function Home(): JSX.Element {
       </main>
     </Layout>
   );
-} 
+}

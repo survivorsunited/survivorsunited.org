@@ -9,7 +9,7 @@ description: Install or update Minecraft on Windows or Mac and join Survivors Un
 
 New player or updating from an older version such as 1.21.8? Our Minecraft installation and setup guide takes you from downloading the game to joining the server, with a separate path for Windows and Mac.
 
-**[Start the numbered setup guide →](/docs/minecraft/installation)**
+**[Choose Windows or Mac →](/docs/minecraft/installation)**
 
 Already connected? Try [things to do first](/docs/minecraft/first-steps/things-to-do-first), adjust your [controls](/docs/minecraft/configuration/keybinds), or explore [shaders](/docs/minecraft/configuration/shaders).
 

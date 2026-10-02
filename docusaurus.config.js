@@ -108,7 +108,7 @@ const config = {
           {
             label: "Minecraft",
             position: "left",
-            to: "/docs/minecraft/getting-started",
+            to: "/docs/minecraft/installation",
           },
           {
             label: "Hytale",
@@ -168,4 +168,4 @@ const config = {
     }),
 };
 
-module.exports = config; 
+module.exports = config;

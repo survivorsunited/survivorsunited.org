@@ -8,71 +8,28 @@ description: Troubleshoot common issues and errors when setting up Minecraft wit
 
 This guide covers the most common errors you might encounter when setting up Minecraft with mods and how to fix them.
 
-## Installation Errors
+## Installation and Mod Errors
 
-### "Java is not recognized"
-**Error**: `'java' is not recognized as an internal or external command`
+Use **[Install or Upgrade](/docs/minecraft/installation)** and choose your computer. Each wizard step has its own **Need help with this step?** section.
 
-**Solution**:
-1. Make sure Java is installed correctly
-2. Check that Java is in your PATH environment variable
-3. Restart your terminal/PowerShell
-4. Try restarting your computer
+### Fabric installer will not open
 
-**Verification**:
-```powershell
-java -version
-```
+Go to step **(3)** and install Java 21, then open the Fabric installer from the extracted GitHub pack in **(4)**. The Windows installer ends in `.exe`; the Mac installer ends in `.jar`.
 
-### "Fabric installer won't run"
-**Error**: Double-clicking the Fabric installer does nothing
+### Minecraft will not start, or reports incompatible mods
 
-**Solution**:
-1. Make sure Java is installed
-2. Try running from command line:
-   ```cmd
-   java -jar fabric-installer-1.0.3.jar
-   ```
-3. Check that the file downloaded completely
-4. Try running as administrator
+Check these in order:
 
-### "Minecraft won't start"
-**Error**: Minecraft crashes or won't launch
+1. Fabric is installed for **Minecraft 1.21.11**, with **Loader 0.19.5**.
+2. Your old mods are outside the game folder as a backup. Do not mix versions.
+3. Both the downloaded **mods** files and the **mods/optional** files are directly in your Minecraft **mods** folder.
+4. The launcher profile you selected contains **Fabric** and **1.21.11**.
 
-**Solution**:
-1. Check that Fabric is selected in the launcher
-2. Verify all mods are in the correct folder
-3. Make sure you have Java 21+ installed
-4. Check the crash logs in `.minecraft/crash-reports/`
+The wizard walks through these checks in **(4)–(7)**. Keep worlds, maps, and settings in place. If it still fails, send the exact error and your computer type to [Discord support](/docs/minecraft/server/discord).
 
-## Mod-Related Errors
+### Minecraft reports missing mods
 
-### "Missing mods" Error
-**Error**: `Missing mods: [mod1, mod2, mod3]`
-
-**Solution**:
-1. Download the complete modpack from Google Drive
-2. Replace all mods in your mods folder
-3. Make sure you're using the latest version
-4. Check that all files were extracted properly
-
-### "Incompatible mod" Error
-**Error**: `Incompatible mod set!`
-
-**Solution**:
-1. Remove all mods from the mods folder
-2. Download the fresh modpack
-3. Extract all mods at once
-4. Don't mix different mod versions
-
-### "Mod loading error"
-**Error**: `Failed to load mod [modname]`
-
-**Solution**:
-1. Check that Fabric API is installed
-2. Verify mod compatibility with Minecraft 1.21.5
-3. Try removing the problematic mod
-4. Check the mod's documentation
+Follow steps **(5)** and **(6)** of the wizard to replace the pack cleanly. Keep the old mods as a backup; copy the new `.jar` files from both download locations. Do not copy the ZIP or create a second mods folder inside the first.
 
 ## Connection Errors
 
@@ -81,15 +38,15 @@ java -version
 
 **Solution**:
 1. Check your internet connection
-2. Verify the server address: `minecarft.survivorsunited.org`
+2. Verify the server address: `minecraft.survivorsunited.org`
 3. Make sure you're using the Fabric profile
 4. Check your firewall settings
 
 ### "Outdated client" Error
-**Error**: `Outdated client! Please use 1.21.5`
+**Error**: `Outdated client! Please use 1.21.11`
 
 **Solution**:
-1. Make sure you're using Minecraft 1.21.5
+1. Make sure you're using Minecraft 1.21.11
 2. Check that Fabric is installed correctly
 3. Verify all mods are up to date
 4. Try reinstalling Fabric
@@ -98,8 +55,8 @@ java -version
 **Error**: `Missing mods on server: [mod1, mod2]`
 
 **Solution**:
-1. Download the latest modpack from Google Drive
-2. Replace all mods in your mods folder
+1. Use the GitHub download in [Install or Upgrade](/docs/minecraft/installation)
+2. Move old mods aside as a backup, then copy the new pack as shown in the wizard
 3. Restart Minecraft
 4. Check Discord for mod updates
 

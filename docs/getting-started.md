@@ -22,7 +22,7 @@ Before joining our server, please ensure you have:
 
 ### 1. Complete Setup Process
 
-**[Open the Windows or Mac installation guide](/docs/minecraft/installation)** and follow steps **(1)–(7)**. It covers both a first installation and upgrading from an older version, all the way through joining the server.
+**[Open Install or Upgrade](/docs/minecraft/installation)** and follow steps **(1)–(8)**. It covers both a first installation and upgrading from an older version, all the way through joining the server.
 
 ### 2. Join Our Community
 
@@ -35,7 +35,7 @@ Once you're set up:
 
 ### 3. Start Playing
 
-- **Server Address**: `minecarft.survivorsunited.org`
+- **Server Address**: `minecraft.survivorsunited.org`
 - **Game Mode**: Survival with mods
 - **Difficulty**: Normal
 - **Max Players**: 50

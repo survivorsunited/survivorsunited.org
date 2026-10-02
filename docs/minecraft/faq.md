@@ -8,55 +8,32 @@ description: Frequently asked questions and troubleshooting for the Survivors Un
 
 This page contains answers to common questions about the Survivors United Minecraft server. If you don't find your answer here, please ask in the Discord support channel.
 
-## Installation Questions
+## Installation and Upgrade Questions
 
-### How do I install Java?
-Run this command in PowerShell:
-```powershell
-winget install --id=Oracle.JDK.22 -e
-```
+### How do I install or upgrade?
 
-### How do I install Minecraft Java Edition?
-You have two options:
-1. **Xbox App**: Search for Minecraft and install it
-2. **Command Line**: Run `winget install -e --id Mojang.MinecraftLauncher`
+Open **[Install or Upgrade](/docs/minecraft/installation)**, choose **Windows** or **Mac**, then follow the wizard. It covers the launcher, Java, Fabric, mods, and joining the server, one step at a time.
 
-### Where do I get the Fabric installer?
-Download `fabric-installer-1.0.3.jar` from:  
-[https://drive.google.com/file/d/1aJLyUVQpBF78CrNiesIKSOuf5Y3MFz-g/view?usp=drive_link](https://drive.google.com/file/d/1aJLyUVQpBF78CrNiesIKSOuf5Y3MFz-g/view?usp=drive_link)
+### I already play on 1.21.8. What do I keep?
 
-### How do I run the Fabric installer?
-If your computer doesn't recognize `.jar` files, run this command:
-```cmd
-Java -jar fabric-installer-1.0.3.jar
-```
+Keep Minecraft Launcher, your worlds, maps, and settings. The wizard shows you how to install Fabric for **1.21.11**, move old mods aside as a backup, copy the new pack, and select the new profile. Updating the launcher alone is not enough.
 
-## Mod Questions
+### Where do I get the modpack and installer?
 
-### Where do I find the mods?
-Download the latest modpack from the shared Google Drive:  
-[Google Drive – Shared Mods and Shaders](https://drive.google.com/drive/folders/1S6SMU223DnPjUVCfcpRXFlnZUHGfjiqk?usp=drive_link)
+Use the **Download modpack ZIP** button in the wizard. It downloads our trusted GitHub release and includes the Fabric installer for both computers.
 
-### How do I install mods?
-1. Find the `mods` folder in the Google Drive
-2. Download the latest `modpack-1.21.8.zip` file
-3. Extract it into your Minecraft mods folder
-4. Overwrite any existing mods
+### Do I copy the optional folder too?
 
-### Where is my Minecraft mods folder?
-- **Windows**: Press `Win + R`, type `%appdata%\.minecraft`, press Enter
-- **MacOS**: In Finder, press `⇧ + ⌘ + G`, go to `~/Library/Application Support/minecraft`
+Copy the `.jar` files from both **mods** and **mods/optional** into your Minecraft **mods** folder. The release client instructions include both. Leave **block** alone.
 
-### How do I install shared shaders for Iris?
-1. Open the shared Google Drive
-2. Look for the `shaders` folder
-3. Copy the entire `shaders` folder into your `.minecraft` folder
-4. The `shaders` folder should be at the same level as your `mods` folder
+### How do I add shaders?
+
+Join the server first. Shaders are optional visual effects; they are not needed for installation. See [shader settings](/docs/minecraft/configuration/shaders) afterward.
 
 ## Server Questions
 
 ### What's the server IP address?
-The server address is: `minecarft.survivorsunited.org`
+The server address is: `minecraft.survivorsunited.org`
 
 ### How do I connect to the server?
 1. Open Minecraft with Fabric selected
@@ -64,10 +41,10 @@ The server address is: `minecarft.survivorsunited.org`
 3. Click **Add Server**
 4. Enter:
    - **Server Name**: SurvivorsUnited
-   - **Server Address**: `minecarft.survivorsunited.org`
+   - **Server Address**: `minecraft.survivorsunited.org`
 
 ### What version of Minecraft do I need?
-Minecraft 1.21.5 with Fabric mods
+Minecraft 1.21.11 with Fabric mods
 
 ### Do I need all the mods to join?
 Yes, you need all the required mods to connect to the server. Missing mods will cause connection errors.
@@ -95,7 +72,7 @@ Yes, you need all the required mods to connect to the server. Missing mods will 
 ## Error Questions
 
 ### I get kicked for "not sending a response to the anti-cheat"
-This means you need to update your mods. Download the latest modpack from the Google Drive and replace all mods in your mods folder.
+This means you need to update your mods. Follow [Install or Upgrade](/docs/minecraft/installation) to replace the mods using the GitHub pack.
 
 ### Minecraft won't start with mods
 1. Make sure you have Java 21+ installed

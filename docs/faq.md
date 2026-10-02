@@ -24,9 +24,9 @@ Yes, our server uses mods to enhance gameplay. We provide step-by-step installat
 
 ### What are the system requirements?
 - **RAM**: At least 4GB available for Minecraft
-- **Java**: Version 17 or higher
+- **Java**: Java 21 (the wizard covers installation)
 - **Minecraft**: Java Edition (not Bedrock)
-- **Operating System**: Windows 10/11 (our guides are optimized for Windows)
+- **Operating System**: Windows PC or Mac (Apple silicon or Intel)
 
 ### How much RAM should I allocate to Minecraft?
 We recommend allocating 4-6GB of RAM to Minecraft for optimal performance with our mods.
@@ -44,7 +44,7 @@ Yes! We support shaders, but they may impact performance. We recommend starting 
 ## Server Questions
 
 ### What's the server address?
-`minecarft.survivorsunited.org`
+`minecraft.survivorsunited.org`
 
 ### How many players can join?
 The server supports up to 50 players simultaneously.
@@ -84,7 +84,7 @@ See our complete [Supported Mods](./minecraft/supported-mods) list for all requi
 No, please only use the mods we've approved to ensure compatibility and fair play.
 
 ### How do I install the mods?
-Follow our [Mod Installation Guide](./minecraft/mods/installation) for step-by-step instructions.
+Choose Windows or Mac in [Install or Upgrade](/docs/minecraft/installation) and follow one step at a time.
 
 ### What if a mod isn't working?
 Check our [Troubleshooting Guide](./minecraft/troubleshooting/errors) or ask for help on Discord.

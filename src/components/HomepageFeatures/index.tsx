@@ -7,24 +7,28 @@ import styles from "./styles.module.css";
  */
 const FeatureList: Array<{
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<"svg">>;
+  imageSrc: string;
+  imageAlt: string;
   description: string;
 }> = [
   {
     title: "Modded Survival",
-    Svg: require("@site/static/img/undraw_community.svg").default,
+    imageSrc: "/img/features/modded-survival.png",
+    imageAlt: "Three Minecraft players with a Survivors United coin",
     description:
       "Experience enhanced survival gameplay with carefully curated mods for better performance, exploration, and community features.",
   },
   {
     title: "Community Farms",
-    Svg: require("@site/static/img/undraw_education.svg").default,
+    imageSrc: "/img/features/community-farms.png",
+    imageAlt: "A shared Minecraft vegetable and wheat farm",
     description:
       "Collaborate on community farms and projects. Share resources, build together, and learn from other players.",
   },
   {
     title: "Safe Environment",
-    Svg: require("@site/static/img/undraw_safe.svg").default,
+    imageSrc: "/img/features/safe-environment.png",
+    imageAlt: "A Minecraft house under a protective green shield",
     description:
       "Join a family-friendly, moderated server with anti-cheat protection and a supportive community of players.",
   },
@@ -33,15 +37,16 @@ const FeatureList: Array<{
 /**
  * Individual feature component
  */
-function Feature({ title, Svg, description }: {
+function Feature({ title, imageSrc, imageAlt, description }: {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<"svg">>;
+  imageSrc: string;
+  imageAlt: string;
   description: string;
 }): JSX.Element {
   return (
     <div className={clsx("col col--4")}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <img src={imageSrc} alt={imageAlt} width={512} height={512} loading="lazy" decoding="async" className={styles.featureImage} />
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
@@ -71,4 +76,4 @@ export default function HomepageFeatures(): JSX.Element {
       </div>
     </section>
   );
-} 
+}
