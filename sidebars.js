@@ -17,6 +17,7 @@ const sidebars = {
       label: "Setup Reference",
       collapsed: true,
       items: [
+        "minecraft/installation/automatic",
         "minecraft/installation/java",
         "minecraft/installation/minecraft",
         "minecraft/installation/fabric",

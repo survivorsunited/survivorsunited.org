@@ -7,6 +7,22 @@ const ready = () => {
 };
 
 describe('Setup Wizard', () => {
+  for (const computer of ['windows', 'mac']) {
+    it(`offers automatic ${computer} setup without making users repeat manual prerequisites`, () => {
+      cy.visit(`/docs/minecraft/installation/${computer}`);
+      cy.get('main').contains('button', 'Automatic ·').click();
+      cy.get('main').contains('h2', 'Let the setup script help');
+      cy.get('main').should('contain.text', computer === 'windows' ? 'iwr -UseBasicParsing' : 'curl --fail');
+      cy.get('main').should('contain.text', computer === 'windows' ? '-CheckOnly' : '--check-only');
+      cy.get('main').contains('a', 'Read or download the script').should('have.attr', 'href', computer === 'windows' ? '/setup/windows.ps1' : '/setup/mac.sh');
+      cy.request(computer === 'windows' ? '/setup/windows.ps1' : '/setup/mac.sh').its('status').should('eq', 200);
+      cy.reload();
+      cy.get('main').contains('h2', 'Let the setup script help');
+      cy.get('main').contains('button', 'Manual ·').click();
+      cy.get('main').contains('h2', 'Let’s check what you already have');
+      cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
+    });
+  }
   it('starts with an explicit computer choice and gated checklist', () => {
     cy.visit('/docs/minecraft/installation');
     cy.get('main').contains('h1', 'Setup Wizard');

@@ -142,17 +142,45 @@ export function SetupReference({kind}: {kind: 'java' | 'minecraft' | 'fabric' | 
   </section>;
 }
 
+export function AutomaticSetup({computer}: {computer: Computer}) {
+  const [origin, setOrigin] = useState('https://survivorsunited.org');
+  useEffect(() => {setOrigin(window.location.origin);}, []);
+  const windows = computer === 'windows';
+  const download = windows ? `$setup = Join-Path $env:TEMP ('survivors-united-' + [guid]::NewGuid() + '.ps1'); iwr -UseBasicParsing '${origin}/setup/windows.ps1' -OutFile $setup` : `setup=$(mktemp /tmp/survivors-united-setup.XXXXXXXX); curl --fail --location '${origin}/setup/mac.sh' -o "$setup"`;
+  const run = windows ? '& ([scriptblock]::Create((Get-Content -LiteralPath $setup -Raw)))' : 'bash "$setup"';
+  return <>
+    <h3>Automatic setup for {windows ? 'Windows' : 'Mac'}</h3>
+    <p>The script checks your setup, installs the launcher if missing, finds or downloads Java 21, installs Fabric, creates a Survivors United profile, and replaces the mods after backing them up. Each stage prints its progress and saves a log.</p>
+    <p><strong>You still sign in yourself.</strong> The script pauses while you open Java Edition once, then close the game and launcher. At the end, select the new profile, press Play, and join the server. It never asks for your password or buys the game.</p>
+    <ol>
+      <li>Open <strong>{windows ? 'PowerShell from the Start menu' : 'Terminal from Applications → Utilities'}</strong>. Use your normal account.</li>
+      <li>Copy and run the download command:</li>
+    </ol>
+    <CopyValue value={download}/>
+    <p><a href={windows ? '/setup/windows.ps1' : '/setup/mac.sh'}>Read or download the script</a> before running it. Run the following commands in the same window you used for the download.</p>
+    <p>For a check without installing or changing files, run:</p>
+    <CopyValue value={`${run} ${windows ? '-CheckOnly' : '--check-only'}`}/>
+    <p>To install or upgrade, run:</p>
+    <CopyValue value={run}/>
+    <p>Follow the prompts. If you used a custom Game Directory, enter the full path from your old launcher profile when asked.</p>
+    <p className={styles.note}>Old mods stay in a dated backup beside the new mods folder. Launcher profiles are backed up in the setup log folder. Keep these until you have joined successfully. Worlds, maps, config and settings stay in place.</p>
+    <Help><p>If a check fails, the script stops and prints what to fix. Use the manual wizard or ask us on Discord with the message. Do not send passwords or account tokens. Windows needs 64-bit Windows and WinGet to install a missing launcher. Mac supports Intel and Apple silicon. Linked game folders use the manual path.</p></Help>
+  </>;
+}
+
 export default function InstallWizard({initialComputer}: {initialComputer?: Computer}) {
   const [computer, setComputer] = useState<Computer | null>(initialComputer ?? null);
   const [step, setStep] = useState(0);
   const [checks, setChecks] = useState({launcher: false, account: false, java: false, launched: false});
   const [branch, setBranch] = useState<Requirement | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [automatic, setAutomatic] = useState(false);
   const [moved, setMoved] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const ready = checks.launcher && checks.account && checks.java && checks.launched;
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
+    setAutomatic(query.get('method') === 'automatic');
     const savedComputer = initialComputer ?? query.get('computer');
     if (savedComputer === 'windows' || savedComputer === 'mac') {
       setComputer(savedComputer);
@@ -173,17 +201,25 @@ export default function InstallWizard({initialComputer}: {initialComputer?: Comp
   }, [checks, computer, loaded]);
   useEffect(() => {
     if (moved) heading.current?.focus();
-  }, [computer, step, branch, moved]);
+  }, [computer, step, branch, automatic, moved]);
   const move = (nextComputer: Computer | null, nextStep: number) => {
     if (computer !== nextComputer) setChecks({launcher: false, account: false, java: false, launched: false});
     setComputer(nextComputer); setStep(nextStep); setBranch(null); setMoved(true);
+    setAutomatic(false);
     const url = new URL(window.location.href);
     url.searchParams.delete('minecraft-os');
+    url.searchParams.delete('method');
     if (nextComputer) {url.searchParams.set('computer', nextComputer); url.searchParams.set('step', String(nextStep));}
     else {url.searchParams.delete('computer'); url.searchParams.delete('step');}
     window.history.replaceState(window.history.state, '', url.toString());
   };
   const showBranch = (value: Requirement | null) => {setBranch(value); setMoved(true);};
+  const chooseMethod = (value: boolean) => {
+    setAutomatic(value); setBranch(null); setMoved(true);
+    const url = new URL(window.location.href);
+    if (value) url.searchParams.set('method', 'automatic'); else url.searchParams.delete('method');
+    window.history.replaceState(window.history.state, '', url.toString());
+  };
   return <section className={styles.wizard} aria-label="Minecraft setup wizard">
     <h1>Setup Wizard</h1>
     {!computer ? <>
@@ -197,7 +233,8 @@ export default function InstallWizard({initialComputer}: {initialComputer?: Comp
       <p>For both <strong>first-time installs</strong> and <strong>upgrades from 1.21.8 or another older version</strong>.</p>
     </> : <>
       <div className={styles.progress}><span>{computer === 'windows' ? 'Windows' : 'Mac'} · {step === 0 ? 'Before you start' : `Step ${step} of ${titles.length}`}</span>{initialComputer ? <Link to="/docs/minecraft/installation">Change computer</Link> : <button type="button" className={styles.textButton} onClick={() => move(null, 0)}>Change computer</button>}</div>
-      {step === 0 ? branch ? <>
+      {step === 0 && <div className={styles.choices}><button type="button" className={styles.choice} aria-pressed={!automatic} onClick={() => chooseMethod(false)}>Manual · Follow the steps</button><button type="button" className={styles.choice} aria-pressed={automatic} onClick={() => chooseMethod(true)}>Automatic · Run the setup script</button></div>}
+      {step === 0 ? automatic ? <><h2 ref={heading} tabIndex={-1}>Let the setup script help</h2><AutomaticSetup computer={computer}/></> : branch ? <>
         <h2 ref={heading} tabIndex={-1}>{requirements.find(item => item.id === branch)?.action}</h2>
         {branch === 'account' ? <>
           <p>Open Minecraft Launcher, sign in with the Microsoft account that owns the game, and select <strong>Minecraft: Java Edition</strong>.</p>
