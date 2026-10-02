@@ -8,6 +8,10 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.55)), url('/img/brand/SurvivorsUnitedBanner.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
 }
 
 .brandTitle {
@@ -16,9 +20,10 @@
 
 .brandLogo {
   display: block;
-  width: min(100%, 640px);
+  width: min(100%, 480px);
   height: auto;
   margin: 0 auto;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
 }
 
 @media screen and (max-width: 996px) {
@@ -38,6 +43,7 @@
 .heroIntro {
   margin: 1rem auto 0;
   max-width: 640px;
+  text-shadow: 0 2px 4px #000;
 }
 
 .gamesSection {
