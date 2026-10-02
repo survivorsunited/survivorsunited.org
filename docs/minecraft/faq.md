@@ -12,7 +12,7 @@ This page contains answers to common questions about the Survivors United Minecr
 
 ### How do I install or upgrade?
 
-Open **[Install or Upgrade](/docs/minecraft/installation)**, choose **Windows** or **Mac**, then follow the wizard. It covers the launcher, Java, Fabric, mods, and joining the server, one step at a time.
+Open **[Setup Wizard](/docs/minecraft/installation)**, choose **Windows** or **Mac**, then follow the wizard. It covers the launcher, Java, Fabric, mods, and joining the server, one step at a time.
 
 ### I already play on 1.21.8. What do I keep?
 
@@ -72,7 +72,7 @@ Yes, you need all the required mods to connect to the server. Missing mods will 
 ## Error Questions
 
 ### I get kicked for "not sending a response to the anti-cheat"
-This means you need to update your mods. Follow [Install or Upgrade](/docs/minecraft/installation) to replace the mods using the GitHub pack.
+This means you need to update your mods. Follow [Setup Wizard](/docs/minecraft/installation) to replace the mods using the GitHub pack.
 
 ### Minecraft won't start with mods
 1. Make sure you have Java 21+ installed

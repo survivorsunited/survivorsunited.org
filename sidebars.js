@@ -4,7 +4,7 @@ const sidebars = {
     "minecraft/getting-started",
     {
       type: "category",
-      label: "Install or Upgrade",
+      label: "Setup Wizard",
       link: { type: "doc", id: "minecraft/installation" },
       collapsed: false,
       items: [

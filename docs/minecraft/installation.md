@@ -1,5 +1,5 @@
 ---
-title: Install or Upgrade
+title: Setup Wizard
 description: One step at a time to install or upgrade Survivors United Minecraft.
 hide_title: true
 hide_table_of_contents: true

@@ -6,7 +6,7 @@ description: Find the Minecraft game folder on Windows or Mac and keep worlds an
 
 # Minecraft Folders
 
-For installation or upgrades, use **[Install or Upgrade](/docs/minecraft/installation)**. Step **(5)** finds your folder and backs up old mods; **(6)** copies the new files. This page is a reference.
+For installation or upgrades, use **[Setup Wizard](/docs/minecraft/installation)**. Step **(3)** finds your folder and backs up old mods; **(4)** copies the new files. This page is a reference.
 
 ## Windows
 

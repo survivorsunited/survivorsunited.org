@@ -22,7 +22,7 @@ Before joining our server, please ensure you have:
 
 ### 1. Complete Setup Process
 
-**[Open Install or Upgrade](/docs/minecraft/installation)** and follow steps **(1)–(8)**. It covers both a first installation and upgrading from an older version, all the way through joining the server.
+**[Open Setup Wizard](/docs/minecraft/installation)** and follow the prerequisite checklist and steps **(1)–(6)**. It covers both a first installation and upgrading from an older version, all the way through joining the server.
 
 ### 2. Join Our Community
 

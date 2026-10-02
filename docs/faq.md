@@ -84,7 +84,7 @@ See our complete [Supported Mods](./minecraft/supported-mods) list for all requi
 No, please only use the mods we've approved to ensure compatibility and fair play.
 
 ### How do I install the mods?
-Choose Windows or Mac in [Install or Upgrade](/docs/minecraft/installation) and follow one step at a time.
+Choose Windows or Mac in [Setup Wizard](/docs/minecraft/installation) and follow one step at a time.
 
 ### What if a mod isn't working?
 Check our [Troubleshooting Guide](./minecraft/troubleshooting/errors) or ask for help on Discord.

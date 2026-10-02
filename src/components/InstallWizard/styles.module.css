@@ -25,4 +25,10 @@
 .navigation { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--ifm-color-emphasis-300); margin-top: 1.5rem; padding-top: 1.25rem; }
 .caption { color: var(--ifm-color-emphasis-700); font-size: .85rem; margin: .75rem 0; }
 .support { border-top: 1px solid var(--ifm-color-emphasis-300); padding-top: 1rem; margin-top: 1.5rem; font-size: .9rem; }
+.checklist { display: grid; gap: .75rem; margin: 1.25rem 0; }
+.checkItem { border: 1px solid var(--ifm-color-emphasis-300); border-radius: .4rem; padding: 1rem; }
+.checkItem label, .confirm { display: flex; align-items: flex-start; gap: .75rem; cursor: pointer; }
+.checkItem input, .confirm input { width: 1.2rem; height: 1.2rem; margin-top: .2rem; flex-shrink: 0; accent-color: #33691e; }
+.checkItem button { margin: .5rem 0 0 1.95rem; text-align: left; }
 @media (max-width: 600px) { .choices { grid-template-columns: 1fr; } .wizard h1 { font-size: 1.7rem; } .wizard h2 { font-size: 1.3rem; } }
+.screenshot { margin: 1rem 0; } .screenshot img { display: block; max-width: 100%; height: auto; border-radius: .4rem; } .screenshot figcaption { font-size: .85rem; margin-top: .5rem; color: var(--ifm-color-emphasis-700); }

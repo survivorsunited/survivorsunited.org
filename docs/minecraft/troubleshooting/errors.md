@@ -10,11 +10,11 @@ This guide covers the most common errors you might encounter when setting up Min
 
 ## Installation and Mod Errors
 
-Use **[Install or Upgrade](/docs/minecraft/installation)** and choose your computer. Each wizard step has its own **Need help with this step?** section.
+Use **[Setup Wizard](/docs/minecraft/installation)** and choose your computer. Each wizard step has its own **Need help with this step?** section.
 
 ### Fabric installer will not open
 
-Go to step **(3)** and install Java 21, then open the Fabric installer from the extracted GitHub pack in **(4)**. The Windows installer ends in `.exe`; the Mac installer ends in `.jar`.
+Open **Check prerequisites** and install Java 21, then open the Fabric installer from the extracted GitHub pack in step **(2)**. The Windows installer ends in `.exe`; the Mac installer ends in `.jar`.
 
 ### Minecraft will not start, or reports incompatible mods
 
@@ -25,11 +25,11 @@ Check these in order:
 3. Both the downloaded **mods** files and the **mods/optional** files are directly in your Minecraft **mods** folder.
 4. The launcher profile you selected contains **Fabric** and **1.21.11**.
 
-The wizard walks through these checks in **(4)–(7)**. Keep worlds, maps, and settings in place. If it still fails, send the exact error and your computer type to [Discord support](/docs/minecraft/server/discord).
+The wizard walks through these checks in **(2)–(5)**. Keep worlds, maps, and settings in place. If it still fails, send the exact error and your computer type to [Discord support](/docs/minecraft/server/discord).
 
 ### Minecraft reports missing mods
 
-Follow steps **(5)** and **(6)** of the wizard to replace the pack cleanly. Keep the old mods as a backup; copy the new `.jar` files from both download locations. Do not copy the ZIP or create a second mods folder inside the first.
+Follow steps **(3)** and **(4)** of the wizard to replace the pack cleanly. Keep the old mods as a backup; copy the new `.jar` files from both download locations. Do not copy the ZIP or create a second mods folder inside the first.
 
 ## Connection Errors
 
@@ -55,7 +55,7 @@ Follow steps **(5)** and **(6)** of the wizard to replace the pack cleanly. Keep
 **Error**: `Missing mods on server: [mod1, mod2]`
 
 **Solution**:
-1. Use the GitHub download in [Install or Upgrade](/docs/minecraft/installation)
+1. Use the GitHub download in [Setup Wizard](/docs/minecraft/installation)
 2. Move old mods aside as a backup, then copy the new pack as shown in the wizard
 3. Restart Minecraft
 4. Check Discord for mod updates

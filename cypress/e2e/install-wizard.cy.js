@@ -1,90 +1,130 @@
-describe('Install or Upgrade wizard', () => {
-  it('asks for a computer before showing any instructions', () => {
+const ready = () => {
+  cy.get('main').contains('label', 'I have Minecraft Launcher installed').find('input').check();
+  cy.get('main').contains('label', 'My account owns Minecraft: Java Edition').find('input').check();
+  cy.get('main').contains('label', 'I have Java 21 installed').find('input').check();
+  cy.get('main').contains('label', 'I reached the main menu').find('input').check();
+  cy.get('main').contains('button', 'Continue to install or upgrade').click();
+};
+
+describe('Setup Wizard', () => {
+  it('starts with an explicit computer choice and gated checklist', () => {
     cy.visit('/docs/minecraft/installation');
-    cy.get('main').contains('h1', 'Install or Upgrade');
-    cy.get('main').contains('button', 'I use Windows').should('be.visible');
-    cy.get('main').contains('button', 'I use a Mac').should('be.visible');
-    cy.get('main').should('not.contain.text', 'Step 1 of 8');
+    cy.get('main').contains('h1', 'Setup Wizard');
+    cy.get('main').contains('button', 'I use Windows').click();
+    cy.get('main').contains('h2', 'Let’s check what you already have');
+    cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
+    cy.get('main').contains('label', 'I reached the main menu').find('input').should('be.disabled');
     cy.get('main').should('not.contain.text', '(1) Download the modpack');
   });
 
   for (const computer of ['windows', 'mac']) {
-    it(`keeps the ${computer} path through Next, Back, and refresh`, () => {
-      cy.visit('/docs/minecraft/installation');
-      cy.get('main').contains('button', computer === 'windows' ? 'I use Windows' : 'I use a Mac').click();
-      cy.get('main').contains('h2', '(1) Download the modpack');
-      cy.get('main').should('contain.text', computer === 'windows' ? 'Extract All' : 'double-click the ZIP');
-      cy.get('main').should('not.contain.text', '(2) Open Minecraft Launcher');
-      cy.get('main').contains('a', 'Download modpack ZIP').should('have.attr', 'href').and('match', /^https:\/\/github\.com\/survivorsunited\/minecraft-mods-manager\/releases\/download\/.+\/modpack-1\.21\.11\.zip$/);
-      cy.get('main').contains('button', 'Next').click();
-      cy.get('main').contains('h2', '(2) Open Minecraft Launcher');
-      cy.reload();
-      cy.get('main').contains('h2', '(2) Open Minecraft Launcher');
-      cy.get('main').contains('button', 'Back').click();
-      cy.get('main').contains('h2', '(1) Download the modpack');
-      cy.get('main').contains('button', 'Change computer').click();
-      cy.get('main').contains('h2', 'Which computer do you use?');
+    it(`returns from all ${computer} prerequisite branches without claiming completion`, () => {
+      cy.visit(`/docs/minecraft/installation/${computer}`);
+      cy.get('main').contains('button', 'Install the launcher').click();
+      cy.get('main').should('contain.text', computer === 'mac' ? '.dmg' : 'downloaded installer');
+      cy.get('main').contains('button', 'Return to checklist').click();
+      cy.get('main').contains('label', 'I have Minecraft Launcher installed').find('input').should('not.be.checked');
+      cy.get('main').contains('button', 'Check my account').click();
+      cy.get('main').should('contain.text', 'Play Demo');
+      cy.get('main').contains('button', 'Return to checklist').click();
+      cy.get('main').contains('button', 'Install Java /').click();
+      cy.get('main').should('contain.text', computer === 'mac' ? 'Apple silicon' : 'Windows x64 .msi');
+      if (computer === 'mac') cy.get('main').should('contain.text', 'Intel');
+      cy.get('main').contains('button', 'Return to checklist').click();
+      cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
     });
 
-    it(`provides the complete ${computer} install and upgrade path`, () => {
-      cy.visit(`/docs/minecraft/installation/${computer}`);
-      for (let step = 1; step < 4; step++) cy.get('main').contains('button', 'Next').click();
-      cy.get('main').contains('h2', '(4) Install Fabric');
+    it(`completes and remembers the shared ${computer} install and upgrade path`, () => {
+      cy.visit('/docs/minecraft/installation');
+      cy.get('main').contains('button', computer === 'windows' ? 'I use Windows' : 'I use a Mac').click();
+      ready();
+      cy.get('main').contains('h2', '(1) Download the modpack');
+      cy.get('main').should('contain.text', computer === 'windows' ? 'Extract All' : 'double-click the ZIP');
+      cy.get('main').contains('button', 'Next').click();
+      cy.reload();
+      cy.get('main').contains('h2', '(2) Install Fabric');
       cy.get('main').should('contain.text', computer === 'windows' ? 'fabric-installer-1.1.0.exe' : 'fabric-installer-1.1.0.jar');
       cy.get('main').should('contain.text', 'Loader Version: 0.19.5');
+      cy.get('main').contains('button', 'Back').click();
+      cy.get('main').contains('h2', '(1) Download the modpack');
       cy.get('main').contains('button', 'Next').click();
-      cy.get('main').contains('h2', '(5) Back up your old mods');
+      cy.get('main').contains('button', 'Next').click();
+      cy.get('main').contains('h2', '(3) Back up your old mods');
       cy.get('main').should('contain.text', 'Keep your worlds and settings.');
       cy.get('main').should('contain.text', computer === 'windows' ? '%appdata%\\.minecraft' : '~/Library/Application Support/minecraft');
       cy.get('main').contains('button', 'Next').click();
-      cy.get('main').contains('h2', '(6) Copy the new mods');
+      cy.get('main').contains('h2', '(4) Copy the new mods');
       cy.get('main').should('contain.text', 'mods → optional');
       cy.get('main').contains('button', 'Next').click();
-      cy.get('main').contains('h2', '(7) Launch Minecraft');
+      cy.get('main').contains('h2', '(5) Launch Minecraft');
       cy.get('main').contains('button', 'Next').click();
-      cy.get('main').contains('h2', '(8) Join Survivors United');
-      cy.get('main').should('contain.text', 'minecraft.survivorsunited.org');
-      cy.get('main').contains('a', 'What to do after joining').should('have.attr', 'href', '/docs/minecraft/first-steps/things-to-do-first');
-      cy.get('main').contains('button', 'Next').should('not.exist');
+      cy.get('main').contains('h2', '(6) Join Survivors United');
+      cy.get('main').contains('a', 'What to do after joining').should('be.visible');
+      cy.get('main').contains('button', 'Check prerequisites').click();
+      cy.get('main').contains('label', 'I have Java 21 installed').find('input').should('be.checked').uncheck();
+      cy.get('main').contains('label', 'I reached the main menu').find('input').should('not.be.checked');
+      cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
+      cy.reload();
+      cy.get('main').contains('label', 'I have Java 21 installed').find('input').should('not.be.checked');
     });
   }
 
-  it('keeps the computer choice usable on a narrow screen', () => {
-    cy.viewport(375, 667);
-    cy.visit('/docs/minecraft/installation');
-    cy.get('main').contains('button', 'I use Windows').should('be.visible');
+  it('does not skip prerequisites via a saved step URL or carry confirmations to another computer', () => {
+    cy.visit('/docs/minecraft/installation?computer=windows&step=6');
+    cy.get('main').contains('h2', 'Let’s check what you already have');
+    ready();
+    cy.get('main').contains('button', 'Change computer').click();
     cy.get('main').contains('button', 'I use a Mac').click();
-    cy.get('main').contains('h2', '(1) Download the modpack');
-    cy.get('main').contains('button', 'Next').should('be.visible');
+    cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
+  });
+
+  it('supports the checklist, branch and steps on a narrow screen', () => {
+    cy.viewport(375, 812);
+    cy.visit('/docs/minecraft/installation/mac');
+    cy.get('main').contains('button', 'Install Java /').click();
+    cy.document().then(doc => expect(doc.documentElement.scrollWidth).to.be.at.most(375));
+    cy.get('main').contains('button', 'Return to checklist').click();
+    ready();
+    for (let i = 1; i < 6; i++) cy.get('main').contains('button', 'Next').click();
+    cy.get('main').contains('h2', '(6) Join Survivors United');
     cy.document().then(doc => expect(doc.documentElement.scrollWidth).to.be.at.most(375));
   });
 
-  it('handles an invalid saved step without blank or missing instructions', () => {
-    cy.visit('/docs/minecraft/installation?computer=windows&step=99');
-    cy.get('main').contains('h2', '(1) Download the modpack');
-    cy.get('main').contains('button', 'Back').should('be.disabled');
-  });
-
-  it('makes choices keyboard reachable and focuses the new step', () => {
+  it('focuses branch, checklist and step headings after keyboard reachable actions', () => {
     cy.visit('/docs/minecraft/installation');
     cy.get('main').contains('button', 'I use Windows').focus();
     cy.press(Cypress.Keyboard.Keys.TAB);
     cy.focused().should('contain.text', 'I use a Mac').click();
+    cy.focused().should('contain.text', 'Let’s check');
+    cy.get('main').contains('button', 'Check my account').click();
+    cy.focused().should('contain.text', 'Check my account');
+    cy.get('main').contains('button', 'Return to checklist').click();
+    cy.focused().should('contain.text', 'Let’s check');
+    ready();
     cy.focused().should('contain.text', '(1) Download the modpack');
-    cy.get('main').contains('button', 'Next').click();
-    cy.focused().should('contain.text', '(2) Open Minecraft Launcher');
   });
 
-  it('copies the server address and offers a fallback when clipboard access fails', () => {
-    cy.visit('/docs/minecraft/installation?computer=mac&step=8');
+  it('copies the address and gives a fallback if clipboard access fails', () => {
+    cy.visit('/docs/minecraft/installation/mac');
+    ready();
+    for (let i = 1; i < 6; i++) cy.get('main').contains('button', 'Next').click();
     cy.window().then(win => cy.stub(win.navigator.clipboard, 'writeText').resolves().as('copy'));
     cy.get('main').contains('button', /^Copy$/).click();
     cy.get('@copy').should('have.been.calledWith', 'minecraft.survivorsunited.org');
-    cy.get('main').contains('button', 'Copied');
     cy.reload();
     cy.window().then(win => cy.stub(win.navigator.clipboard, 'writeText').rejects());
     cy.get('main').contains('button', /^Copy$/).click();
     cy.get('main').contains('button', 'Select and copy the text');
-    cy.get('main').contains('code', 'minecraft.survivorsunited.org').should('be.visible');
+  });
+
+  it('provides independent platform reference guides with existing illustrations', () => {
+    cy.visit('/docs/minecraft/installation/fabric');
+    cy.get('main').contains('h2', 'Install Fabric');
+    cy.get('main').contains('button', /^Mac$/).click();
+    cy.get('main').should('contain.text', 'fabric-installer-1.1.0.jar');
+    cy.get('main').find('img[src="/img/minecraft/fabric-selection.png"]').should('be.visible');
+    cy.get('main').should('contain.text', 'choose 1.21.11');
+    cy.visit('/docs/minecraft/installation/minecraft');
+    cy.get('main').find('img[src="/img/minecraft/minecraft-launcher.png"]').should('exist');
   });
 });
