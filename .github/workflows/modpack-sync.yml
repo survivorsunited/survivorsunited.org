@@ -4,15 +4,24 @@ on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
+  repository_dispatch:
+    types: [modpack-release-published]
 
 permissions:
   contents: write
   pull-requests: write
   id-token: write
+  pages: write
+
+concurrency:
+  group: modpack-release-sync
+  cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.changes.outputs.changes }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -33,6 +42,7 @@ jobs:
         run: npm run modpack:sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODPACK_EXPECTED_TAG: ${{ github.event.client_payload.tag }}
 
       - name: Detect repository changes
         id: changes
@@ -57,8 +67,30 @@ jobs:
           echo "published_at=${{ steps.modpack.outputs.published_at }}" >> "$GITHUB_OUTPUT"
           echo "download_url=${{ steps.modpack.outputs.download_url }}" >> "$GITHUB_OUTPUT"
 
+      - name: Commit published stable release to main
+        if: github.event_name == 'repository_dispatch' && steps.changes.outputs.changes == 'true'
+        env:
+          RELEASE_TAG: ${{ steps.modpack.outputs.release_tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md docs/minecraft/faq.md docs/minecraft/mods/installation.md docs/minecraft/installation/fabric.md docs/tools/mod-manager.md docs/minecraft/supported-mods/index.md .env
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(modpack): sync stable release $RELEASE_TAG"
+          git push origin HEAD:main
+
+      - name: Configure Pages for release deployment
+        if: github.event_name == 'repository_dispatch' && steps.changes.outputs.changes == 'true'
+        uses: actions/configure-pages@v4
+
+      - name: Upload release site
+        if: github.event_name == 'repository_dispatch' && steps.changes.outputs.changes == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./build
+
       - name: Create pull request
-        if: steps.modpack.outputs.should_update == 'true' && steps.changes.outputs.changes == 'true'
+        if: github.event_name != 'repository_dispatch' && steps.modpack.outputs.should_update == 'true' && steps.changes.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -75,3 +107,15 @@ jobs:
 
             _This pull request was generated automatically by the Modpack Release Sync workflow._
           branch: automation/modpack-${{ steps.release.outputs.asset_name }}
+
+  deploy-release:
+    if: github.event_name == 'repository_dispatch' && needs.sync.outputs.changed == 'true'
+    needs: sync
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy release site
+        id: deployment
+        uses: actions/deploy-pages@v4
