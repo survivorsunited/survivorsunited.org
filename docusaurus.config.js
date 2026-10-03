@@ -11,9 +11,14 @@ require("dotenv").config();
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Survivors United Hub",
+  title: "Survivors United",
   tagline: "A multi-game survival community",
-  favicon: "img/favicon.svg",
+  favicon: "img/brand/favicon.ico",
+  headTags: [
+    { tagName: "link", attributes: { rel: "icon", type: "image/png", sizes: "32x32", href: "/img/brand/survivors-united-icon-32.png" } },
+    { tagName: "link", attributes: { rel: "icon", type: "image/png", sizes: "64x64", href: "/img/brand/survivors-united-icon-64.png" } },
+    { tagName: "link", attributes: { rel: "apple-touch-icon", sizes: "256x256", href: "/img/brand/survivors-united-icon-256.png" } },
+  ],
 
   // Set the production url of your site here
   url: "https://survivorsunited.org",
@@ -97,18 +102,18 @@ const config = {
     /** @type {import('@docusaurus/types').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: "img/docusaurus-social-card.jpg",
+      image: "img/brand/survivors-united-icon-512.png",
       navbar: {
         title: "Survivors United",
         logo: {
           alt: "Survivors United Logo",
-          src: "img/logo.svg",
+          src: "img/brand/survivors-united-icon-128.png",
         },
         items: [
           {
             label: "Minecraft",
             position: "left",
-            to: "/docs/minecraft/getting-started",
+            to: "/docs/minecraft/installation",
           },
           {
             label: "Hytale",
@@ -168,4 +173,4 @@ const config = {
     }),
 };
 
-module.exports = config; 
+module.exports = config;

@@ -1,70 +1,91 @@
 ---
-sidebar_position: 1
 title: Install Java
-description: How to install Java for Minecraft and mods
+sidebar_position: 1
+description: Install and verify Java 21 with WinGet on Windows or the direct Mac installer.
 ---
 
-# Install Java
+# Install Java 21
 
-To run mods, you'll need at least **Java 21** installed. We recommend using Java 22.
+Java opens the Fabric installer. If you already have Java 21, keep it.
 
-## Installation Method
+## Windows — PowerShell
 
-Run this in PowerShell to install Java:
+1. Open **PowerShell** from the Start menu.
+2. Run:
 
 ```powershell
-winget install --id=Oracle.JDK.22 -e
+winget install --exact --id EclipseAdoptium.Temurin.21.JDK --source winget
 ```
 
-## Verification
-
-After installation, you can verify Java is installed by running:
+3. Follow the installer prompts.
+4. Close and reopen PowerShell to pick up the installed Java.
+5. Verify:
 
 ```powershell
 java -version
 ```
 
-You should see output similar to:
+The version should start with **21**, for example `openjdk version "21.0.x"`.
+
+### Running from WSL
+
+Install Windows Java for the Windows Minecraft Launcher through PowerShell:
+
+```bash
+powershell.exe -NoProfile -Command 'winget install --exact --id EclipseAdoptium.Temurin.21.JDK --source winget'
 ```
-java version "22.x.x" 2024-xx-xx
-Java(TM) SE Runtime Environment (build 22.x.x+xx-xx)
-Java HotSpot(TM) 64-Bit Server VM (build 22.x.x+xx-xx, mixed mode, sharing)
+
+After reopening your terminal, verify Windows Java:
+
+```bash
+powershell.exe -NoProfile -Command 'java -version'
 ```
 
-## Alternative Installation Methods
+## Mac — direct downloads
 
-### Manual Download
-If the winget command doesn't work, you can:
-1. Visit [Oracle's Java download page](https://www.oracle.com/java/technologies/downloads/)
-2. Download Java 22 for Windows
-3. Run the installer manually
+1. Open **Apple menu → About This Mac**.
+2. Download the installer for the chip shown:
+   - **Apple M1, M2, M3 or another Apple M chip:** [Download Java 21 for Apple silicon (.pkg)](https://api.adoptium.net/v3/installer/latest/21/ga/mac/aarch64/jdk/hotspot/normal/eclipse).
+   - **Intel processor:** [Download Java 21 for Intel (.pkg)](https://api.adoptium.net/v3/installer/latest/21/ga/mac/x64/jdk/hotspot/normal/eclipse).
+3. Open the downloaded `.pkg`, continue through the installer, and keep the default settings.
+4. Open **Terminal** and verify:
 
-### Using Chocolatey
-If you have Chocolatey installed:
+```bash
+java -version
+```
+
+These links download the installers directly.
+
+## Troubleshooting and verification
+
+**Java not recognised on Windows:** reopen PowerShell after installation. If it still cannot find Java, restart the computer and rerun `java -version`.
+
+**Wrong Java version:** check which installation is selected:
+
 ```powershell
-choco install openjdk22
+where.exe java
+$env:JAVA_HOME
 ```
 
-## System Requirements
+On Mac:
 
-- **Windows**: Windows 10 or later (64-bit)
-- **RAM**: At least 4GB available
-- **Storage**: ~500MB free space
+```bash
+/usr/libexec/java_home -V
+/usr/libexec/java_home -v 21
+```
 
-## Troubleshooting
+To use Java 21 for the current Mac Terminal session:
 
-### Java Not Found
-If you get "java is not recognized" after installation:
-1. Restart your terminal/PowerShell
-2. Check that Java is in your PATH environment variable
-3. Try restarting your computer
+```bash
+export JAVA_HOME="$(/usr/libexec/java_home -v 21)"
+export PATH="$JAVA_HOME/bin:$PATH"
+java -version
+```
 
-### Version Conflicts
-If you have multiple Java versions installed:
-1. Check which version is being used: `java -version`
-2. Set JAVA_HOME environment variable to point to Java 22
-3. Ensure Java 22 is first in your PATH
+**WinGet not found:** update **App Installer** in Microsoft Store, reopen PowerShell, and retry.
 
-## Next Steps
+Minecraft Launcher manages its own Java for playing. Installing Minecraft alone does not always make `java` available for opening the Fabric installer.
 
-Once Java is installed, proceed to [Install Minecraft](/docs/minecraft/installation/minecraft). 
+## Next step
+
+[Install Minecraft Launcher](/docs/minecraft/installation/minecraft), or go straight to [Install Fabric](/docs/minecraft/installation/fabric) if you already have it. The [Setup Wizard](/docs/minecraft/installation) keeps these steps together.

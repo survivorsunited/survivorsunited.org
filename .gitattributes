@@ -30,3 +30,4 @@ folderThumbnail -diff -merge -text
 *.wdmg -diff -merge -text
 *.svg -diff -merge -text
 *.sftmp -diff -merge -text
+*.sh text eol=lf

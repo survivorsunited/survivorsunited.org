@@ -1,64 +1,114 @@
 ---
-sidebar_position: 3
 title: Install Fabric
-description: How to install the Fabric mod loader for Minecraft
+sidebar_position: 3
+description: Download, run, configure and verify Fabric for Survivors United.
 ---
 
 # Install Fabric Minecraft Loader
 
-Fabric is a lightweight mod loader that allows you to run mods in Minecraft. It's required for the Survivors United server.
+Fabric Loader lets Minecraft run the Survivors United mods. **Fabric API is already in the modpack**, but you still install Fabric Loader using the included installer.
 
-:::info 📦 Fabric API Included in Modpack
+## (1) Download and extract the installer
 
-**Important:** The Fabric API mod is already included in the Survivors United modpack. However, you still need to install the **Fabric Loader** itself before you can use the modpack.
+[Download Survivors United modpack 1.21.11 ZIP](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip).
 
-The Fabric Loader is the base mod loader that must be installed separately using the Fabric installer. Once installed, you can then use the modpack which contains Fabric API and all other required mods.
+- **Windows:** in Downloads, right-click the ZIP → **Extract All → Extract**.
+- **Mac:** in Finder → Downloads, double-click the ZIP. If already extracted, open the folder.
 
-:::
+Open the extracted folder's **install** folder. It includes:
 
-## Download Fabric Installer
+- `fabric-installer-1.1.0.exe` for Windows.
+- `fabric-installer-1.1.0.jar` for Mac, or for running with Java on either computer.
 
-Download the latest Fabric installer from the official website:  
-[Fabric Installer Download](https://fabricmc.net/use/installer/)
+## (2) Open the installer
 
-Alternatively, download `fabric-installer-1.0.3.jar` from our site:  
-[/install/fabric-installer-1.0.3.jar](/install/fabric-installer-1.0.3.jar)
+Close Minecraft and its launcher first.
 
-## Installation Steps
+- **Windows:** double-click `fabric-installer-1.1.0.exe`.
+- **Mac:** double-click `fabric-installer-1.1.0.jar`.
 
-### Step 1: Run the Installer
+### Command option — Windows PowerShell
 
-If your computer recognizes `.jar` files:
-1. Double-click the downloaded `fabric-installer-*.jar` file
-2. The installer will open automatically
+Open the extracted **install** folder in File Explorer, right-click an empty area, and choose **Open in Terminal**. Run:
 
-If your computer doesn't recognize `.jar` files:
-1. Open Command Prompt or PowerShell
-2. Navigate to the folder containing the installer
-3. Run this command:
-```cmd
-java -jar fabric-installer-1.0.3.jar
+```powershell
+java -jar .\fabric-installer-1.1.0.jar
 ```
 
-### Step 2: Configure Installation
+### Command option — Mac Terminal
 
-1. **Minecraft Version**: Select the version required by the latest modpack (check the [Mod Manager page](/docs/tools/mod-manager) for the current version)
-2. **Loader Version**: Select the **latest** Fabric loader version (the installer will show the recommended version)
-3. **Install Location**: Leave as default (your Minecraft installation)
-4. **Create Profile**: Check this option
-5. Click "Install"
+Type `cd ` in Terminal, drag the extracted **install** folder from Finder into the Terminal window, and press Return. Then run:
 
-### Step 3: Verify Installation
+```bash
+java -jar ./fabric-installer-1.1.0.jar
+```
 
-1. Open the Minecraft Launcher
-2. Look for a new profile called "Fabric (1.21.x)" or similar
-3. Make sure this profile is selected before launching
+### WSL — use Windows Java
 
-![Fabric Selection](/img/minecraft/fabric-selection.png)
+Open the extracted **install** folder in your WSL terminal, then run:
 
-## Next Steps
+```bash
+powershell.exe -NoProfile -Command 'java -jar .\fabric-installer-1.1.0.jar'
+```
 
-Once Fabric Loader is installed:
-1. Proceed to [Install Mods](/docs/minecraft/mods/installation) to download and install the modpack
-2. The modpack includes Fabric API, so you don't need to install it separately
-3. Launch Minecraft using the Fabric profile and connect to the server 
+Use Windows Java and the Windows game folder when setting up the Windows launcher.
+
+## (3) Configure and install
+
+1. Select the **Client** tab.
+2. Set **Minecraft Version** to **1.21.11**.
+3. Set **Loader Version** to **0.19.5**.
+4. Leave the installation location as the launcher folder.
+5. Tick **Create profile**.
+6. Click **Install** and wait for the success message.
+7. Close the installer.
+
+**Upgrading from 1.21.8?** Do this too: your old Fabric profile still launches the old game version.
+
+### Install directly from the command line
+
+From the extracted **install** folder, with Minecraft and the launcher closed:
+
+**Windows PowerShell:**
+
+```powershell
+java -jar .\fabric-installer-1.1.0.jar client -dir "$env:APPDATA\.minecraft" -mcversion 1.21.11 -loader 0.19.5
+```
+
+**Mac Terminal:**
+
+```bash
+java -jar ./fabric-installer-1.1.0.jar client -dir "$HOME/Library/Application Support/minecraft" -mcversion 1.21.11 -loader 0.19.5
+```
+
+**WSL, targeting the Windows launcher:**
+
+```bash
+powershell.exe -NoProfile -Command 'java -jar .\fabric-installer-1.1.0.jar client -dir "$env:APPDATA\.minecraft" -mcversion 1.21.11 -loader 0.19.5'
+```
+
+Set a custom **Game Directory** on the new launcher profile after installation. Fabric's install location remains the launcher folder above.
+
+## (4) Verify the profile
+
+1. Open **Minecraft Launcher → Minecraft: Java Edition**.
+2. Open the profile selector next to **Play**.
+3. Look for **fabric-loader** and **1.21.11**.
+4. If missing, open **Installations** and enable **Modded**.
+5. Install the mods before pressing Play.
+
+![Java Edition, Fabric profile selector and Play button highlighted](/img/minecraft/fabric-selection.png)
+
+The existing screenshot shows **1.21.5**. It demonstrates the button positions; choose **1.21.11** for this setup.
+
+## Troubleshooting
+
+**The JAR will not open:** run `java -version` and check Java 21. Use the `java -jar` command above to see the error in the terminal.
+
+**Wrong profile/version:** rerun the installer with the exact versions above, then choose the new profile.
+
+**Mac blocks the downloaded installer:** open System Settings → Privacy & Security and use the approval for this installer if offered, then reopen it.
+
+## Next step
+
+[Install or Update Mods](/docs/minecraft/mods/installation), then [Connect to Server](/docs/minecraft/server/connection). Use the [Setup Wizard](/docs/minecraft/installation) for the complete guided process.

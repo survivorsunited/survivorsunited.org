@@ -5,7 +5,7 @@ describe("Navigation Tests", () => {
 
   it("should load the homepage successfully", () => {
     cy.get("body").should("be.visible");
-    cy.title().should("contain", "Survivors United Hub");
+    cy.title().should("contain", "Survivors United");
   });
 
   it("should have main navigation visible", () => {
@@ -148,4 +148,4 @@ describe("Navigation Tests", () => {
     cy.get("nav").find("ul").should("exist");
     cy.get("nav").find("li").should("exist");
   });
-}); 
+});

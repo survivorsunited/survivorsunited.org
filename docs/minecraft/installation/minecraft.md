@@ -1,80 +1,64 @@
 ---
-sidebar_position: 2
 title: Install Minecraft
-description: How to install Minecraft Java Edition
+sidebar_position: 2
+description: Install Minecraft Launcher with WinGet on Windows or the direct Mac download.
 ---
 
 # Install Minecraft Java Edition
 
-You have two options for installing Minecraft Java Edition. Choose the method that works best for you.
+Keep an existing launcher when upgrading. Sign in with the account that owns **Minecraft: Java Edition**.
 
-## Option 1: Using Xbox App
+## Windows — WinGet
 
-1. Open the Xbox app on your Windows computer
-2. Search for "Minecraft"
-3. Click on "Minecraft for Windows" (this includes Java Edition)
-
-![Xbox App - Minecraft Launcher](/img/minecraft/xbox-app-installation.png)
-
-4. Click "Install"
-5. Wait for the download and installation to complete
-
-![Xbox App Installation](/img/minecraft/xbox-app-installation.png)
-
-## Option 2: Using Command Line
-
-Alternatively, you can install the Minecraft Launcher via PowerShell:
+1. Open **PowerShell**.
+2. Install the official launcher:
 
 ```powershell
-winget install -e --id Mojang.MinecraftLauncher
+winget install --exact --id Mojang.MinecraftLauncher --source winget
 ```
 
-## Option 3: Manual Download
+3. Follow the installer prompts and open **Minecraft Launcher** from the Start menu.
 
-If the above methods don't work:
+![Minecraft Launcher in the Xbox app](/img/minecraft/xbox-app-installation.png)
 
-1. Visit [Minecraft.net](https://www.minecraft.net/en-us/download)
-2. Click "Download for Windows"
-3. Run the downloaded installer
-4. Follow the installation wizard
+### Running from WSL
 
-## First Launch
+Use the Windows package manager through PowerShell:
 
-After installation:
+```bash
+powershell.exe -NoProfile -Command 'winget install --exact --id Mojang.MinecraftLauncher --source winget'
+```
 
-1. Open the Minecraft Launcher
+Open the Windows Minecraft Launcher from the Start menu once installation completes.
 
-![Minecraft Launcher](/img/minecraft/minecraft-launcher.png)
+## Mac — direct download
 
-2. Sign in with your Microsoft account
-3. Accept the terms and conditions
-4. The launcher will download the latest version of Minecraft
+1. [Download Minecraft Launcher for Mac (.dmg)](https://launcher.mojang.com/download/Minecraft.dmg).
+2. Open the downloaded `.dmg`.
+3. Drag **Minecraft** into **Applications**.
+4. Open **Minecraft** from Applications.
 
-## System Requirements
+## First launch — both computers
 
-- **OS**: Windows 10 or later (64-bit)
-- **RAM**: 4GB minimum, 8GB recommended
-- **Storage**: 1GB free space
-- **Graphics**: Any modern graphics card
-- **Internet**: Required for download and updates
+1. Open Minecraft Launcher.
+
+![Minecraft Launcher signing in](/img/minecraft/minecraft-launcher.png)
+
+2. Sign in with the Microsoft account that owns the game.
+3. Select **Minecraft: Java Edition**.
+4. Click **Play** and wait for the main menu. Keep single-player worlds closed during setup.
+5. Quit the game and close the launcher before installing Fabric.
 
 ## Troubleshooting
 
-### Launcher Won't Start
-- Check that you have the latest version of the launcher
-- Try running as administrator
-- Check Windows Defender/firewall settings
+**Buy Now / Play Demo:** check you used the account that owns Java Edition. Installing the launcher does not purchase a game licence.
 
-### Can't Sign In
-- Ensure you have a valid Microsoft account
-- Check your internet connection
-- Try signing out and back in
+**Launcher will not open:** finish the installer, check your internet connection, then reopen it.
 
-### Installation Fails
-- Check you have enough disk space
-- Try running the installer as administrator
-- Check Windows Update is current
+**WinGet missing:** update **App Installer** in Microsoft Store and reopen PowerShell.
 
-## Next Steps
+**Already running 1.21.8:** keep the launcher and your worlds. Install the new Fabric version and replace the mods using the next guides.
 
-Once Minecraft is installed, proceed to [Install Fabric](/docs/minecraft/installation/fabric). 
+## Next step
+
+[Install Fabric](/docs/minecraft/installation/fabric), then [Install or Update Mods](/docs/minecraft/mods/installation). For a single guided path, use the [Setup Wizard](/docs/minecraft/installation).

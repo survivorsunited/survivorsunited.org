@@ -1,124 +1,105 @@
 ---
+title: Install or Update Mods
 sidebar_position: 1
-title: Install Mods
-description: How to download and install mods for the Survivors United server
+description: Download, back up and install the Survivors United client mods on Windows or Mac.
 ---
 
-# Install Mods
+# Install or Update Mods
 
-To play on the Survivors United server, you need to install the required mods. This guide will walk you through the process.
+Close Minecraft and its launcher before changing mods. Install [Java 21](/docs/minecraft/installation/java) and [Fabric for 1.21.11](/docs/minecraft/installation/fabric) first.
 
-## Download Mods
+## (1) Download and extract the modpack
 
-:::tip 📦 Download the Latest Modpack
+[Download Survivors United modpack 1.21.11 ZIP](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip).
 
-**Open the latest release and download its modpack ZIP for the Survivors United server:**
+- **Windows:** right-click the downloaded ZIP → **Extract All → Extract**.
+- **Mac:** double-click the ZIP in Finder → Downloads.
 
-<div style={{textAlign: 'center', margin: '20px 0'}}>
-<a 
-  href="${DOWNLOAD_LINK_MODPACK}" 
-  style={{
-    display: 'inline-block', 
-    padding: '14px 28px', 
-    fontSize: '18px', 
-    fontWeight: 'bold', 
-    color: '#fff', 
-    backgroundColor: '#25c2a0', 
-    textDecoration: 'none', 
-    borderRadius: '6px',
-    transition: 'background-color 0.2s'
-  }}
-  onMouseEnter={(e) => e.target.style.backgroundColor = '#21af90'}
-  onMouseLeave={(e) => e.target.style.backgroundColor = '#25c2a0'}
->
-    <span>⬇️ Get Latest Modpack</span>
-</a>
-</div>
+Keep the extracted folder open. The client files are in **mods** and **mods → optional**.
 
-After downloading, extract the contents into your mods folder: `%appdata%\.minecraft\mods` (create it if it doesn't exist; the folder should contain only `.jar` files).
+## (2) Find your game folder
 
-:::
+### Windows
 
-> **Note:** The modpack includes shader packs in the `shaderpacks/` folder. Extract them to `%appdata%\.minecraft\shaderpacks` if you want to use shaders.
+Press **Windows + R**, enter this path, and press Enter:
 
-## Install Mods
+```text
+%appdata%\.minecraft
+```
 
-### Step 1: Find Your Minecraft Folder
+![Windows Run dialog opening the Minecraft folder](/img/minecraft/windows-minecraft-folder.png)
 
-First, you need to locate your Minecraft installation folder:
+Or open it from PowerShell:
 
-#### On Windows
-1. Press `Win + R` to open the Run dialog
-2. Type `%appdata%\.minecraft` and press Enter
-3. This will open your Minecraft folder
+```powershell
+explorer.exe "$env:APPDATA\.minecraft"
+```
 
-![Windows Minecraft Folder](/img/minecraft/windows-minecraft-folder.png)
+From WSL:
 
-#### On MacOS
-1. Open Finder
-2. Press `⇧ + ⌘ + G` (Shift + Command + G)
-3. Type `~/Library/Application Support/minecraft` and press Enter
+```bash
+powershell.exe -NoProfile -Command 'explorer.exe "$env:APPDATA\.minecraft"'
+```
 
-### Step 2: Create Mods Folder
+### Mac
 
-1. In your Minecraft folder, look for a folder called `mods`
-2. If it doesn't exist, create a new folder called `mods`
-3. This is your **Mods Folder** - all mods go here
+In Finder, press **Shift + Command + G**, paste this path, and press Return:
 
-### Step 3: Extract Mods
+```text
+~/Library/Application Support/minecraft
+```
 
-1. Right-click the modpack ZIP downloaded from the latest release
-2. Select "Extract All" or "Extract Here"
-3. Extract the contents directly into your **Mods Folder**
-4. **Important**: Overwrite any existing mods when prompted
+Or open it from Terminal:
 
-## Verify Installation
+```bash
+open "$HOME/Library/Application Support/minecraft"
+```
 
-### Check Mods Folder
-Your mods folder should now contain many `.jar` files, including:
-- `fabric-api-*.jar`
-- `sodium-*.jar`
-- `xaeros-world-map-*.jar`
-- And many others
+### Custom Game Directory
 
-### Launch Minecraft
-1. Open the Minecraft Launcher
-2. Make sure **Fabric** is selected
-3. Click "Play"
-4. If everything is installed correctly, Minecraft should start with mods
+If your old launcher profile has a custom folder, read **Installations → old Fabric profile → Edit → Game Directory**. Use that folder for the mods and set the new 1.21.11 profile to it. A blank Game Directory uses the default above.
+
+## (3) Back up the old mods
+
+1. If **mods** exists, move that folder to your Desktop.
+2. Rename it **Survivors United old mods**. Use a new name if a backup already exists.
+3. Create a new, empty **mods** folder inside the game folder.
+
+Only move **mods**. Keep **saves**, **config**, maps, **options.txt**, and all other settings in place. Keep the backup until you have joined successfully.
+
+First install with no mods folder? Create the empty folder and continue.
+
+## (4) Copy the client files
+
+1. Open the extracted download's **mods** folder.
+2. Copy its **.jar files** into your game's empty **mods** folder.
+3. Open the download's **mods → optional** folder.
+4. Copy its **.jar files** into the same game **mods** folder.
+
+The release's client instructions include both sets. Leave **block**, server files, config and shaders in the download alone.
+
+## (5) Verify and launch
+
+Your game **mods** folder must contain the `.jar` files directly. It must not contain the ZIP or another nested **mods** folder. Do not mix in old mod versions.
+
+1. Open Minecraft Launcher → **Java Edition**.
+2. Select the profile with **Fabric** and **1.21.11**.
+3. Click **Play** and wait for the main menu.
+
+![Fabric profile selector and Play button](/img/minecraft/fabric-selection.png)
+
+The screenshot shows an older version. Select **1.21.11** for the current setup.
 
 ## Troubleshooting
 
-### Minecraft Won't Start
-- Check that Fabric is selected in the launcher
-- Verify all mods are in the correct folder
-- Check that you have the Java version required for the current Minecraft release
-- Try removing and reinstalling mods
+**Minecraft fails to start:** check the selected Fabric version, the actual Game Directory, and both sets of client JARs.
 
-### Missing Mods Error
-- Make sure you downloaded the complete modpack
-- Check that all files were extracted properly
-- Verify the mods folder location is correct
+**Missing mods:** make sure you copied the files from both **mods** and **mods/optional**.
 
-### Version Mismatch
-- Ensure you're using the latest modpack
-- Check that mod versions match the server
-- Update your modpack if needed
+**Version mismatch:** use the exact pack above and the matching Fabric profile. Updating the launcher alone does not update your mods.
 
-## Mod Updates
+**Restore a backup:** close the game and launcher, move the new mods folder aside, then move the backed-up old mods folder back as **mods**. Select the old matching Fabric profile if returning to the older game version.
 
-### When Updates Are Available
-1. Check the Discord server for update announcements
-2. Download the new modpack using the [site download link](${DOWNLOAD_LINK_MODPACK}) or visit the [Survivors United Mod Manager](../../tools/mod-manager.md)
-3. Replace all mods in your mods folder
-4. Overwrite existing files when prompted
+## Next step
 
-### Backup Your Mods
-Before updating:
-1. Copy your current mods folder
-2. Rename it to `mods-backup`
-3. This way you can restore if something goes wrong
-
-## Next Steps
-
-Once mods are installed, proceed to [Connect to Server](/docs/minecraft/server/connection). 
+[Connect to Server](/docs/minecraft/server/connection). The [Setup Wizard](/docs/minecraft/installation) guides you through the same process, or choose its Automatic option to run the setup script.

@@ -20,7 +20,7 @@ Here is a comprehensive list of terms you will encounter when setting up and pla
 | **Minecraft Launcher** | The official launcher for Minecraft on PC. Used to run Java Edition, manage versions, and log in. |
 | **Fabric** | A lightweight mod loader used to run mods in Minecraft: Java Edition. Required for this setup. |
 | **Fabric Installer** | A `.jar` setup file that installs the Fabric mod loader into your Minecraft Launcher. |
-| **Launcher Profile** | A selectable version option in the Minecraft Launcher, such as "Fabric (1.21.5)", that includes your mods. |
+| **Launcher Profile** | A selectable version option in the Minecraft Launcher, such as "Fabric (1.21.11)", that includes your mods. |
 
 ## Mod Terms
 
@@ -39,7 +39,7 @@ Here is a comprehensive list of terms you will encounter when setting up and pla
 | Term | Definition |
 |------|------------|
 | **Server** | A multiplayer Minecraft world hosted remotely. Players connect using an IP address. |
-| **IP Address** | A numerical label (e.g. `minecarft.survivorsunited.org`) used to connect to a Minecraft server. |
+| **IP Address** | A numerical label (e.g. `minecraft.survivorsunited.org`) used to connect to a Minecraft server. |
 | **Whitelist** | A list of usernames allowed to join a server. Only whitelisted players can connect if enabled. |
 | **Anti-Cheat** | A required mod (e.g. *InertiaAntiCheat*) that prevents cheating. You may be kicked from the server if it's not installed. |
 | **Land Claims** | A multiplayer feature (enabled by mods like Open Parties and Claims) that lets players mark and protect areas they control. |
@@ -119,7 +119,7 @@ Here is a comprehensive list of terms you will encounter when setting up and pla
 |------|------------|
 | **Client** | The Minecraft game running on your computer. |
 | **Server** | The Minecraft world running on a remote computer that multiple players can connect to. |
-| **Version** | The specific version of Minecraft (e.g., 1.21.5) that the server is running. |
+| **Version** | The specific version of Minecraft (e.g., 1.21.11) that the server is running. |
 | **Compatibility** | Whether different mods, versions, or systems work together without conflicts. |
 | **Crash** | When the game stops working unexpectedly and closes. Can be caused by mod conflicts or other issues. |
 | **Lag** | When the game runs slowly or stutters. Can be caused by performance issues or server problems. |

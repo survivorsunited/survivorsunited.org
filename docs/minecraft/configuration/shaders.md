@@ -57,7 +57,7 @@ Download shader packs directly from our server:
 ### Step 2: Install Shader Packs
 1. Download shader packs from Google Drive
 2. Extract the shader pack folders
-3. Copy the entire shader pack folder to `.minecraft/shaders/`
+3. Copy the entire shader pack folder to `.minecraft/shaderpacks/`
 4. Each shader pack should be in its own folder
 
 ### Step 3: Enable Shaders in Game

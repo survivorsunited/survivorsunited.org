@@ -19,9 +19,9 @@ Our server now uses a **Velocity proxy** that provides:
 
 ### Server Details
 - **Server Name**: SurvivorsUnited
-- **Server Address**: `minecarft.survivorsunited.org`
+- **Server Address**: `minecraft.survivorsunited.org`
 - **Connection Type**: Velocity Proxy Network
-- **Version**: Minecraft 1.21.5 with Fabric mods
+- **Version**: Minecraft 1.21.11 with Fabric mods
 
 ## Available Servers
 
