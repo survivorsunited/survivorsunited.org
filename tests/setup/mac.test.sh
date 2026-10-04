@@ -2,7 +2,8 @@
 set -euo pipefail
 source "$(dirname "$0")/../../static/setup/mac.sh"
 closed() { :; }
-fixture=$(mktemp -d /tmp/su-setup-test-XXXXXXXX)
+test_tmp=$(cd "${TMPDIR:-/tmp}" && pwd -P)
+fixture=$(mktemp -d "$test_tmp/su-setup-test-XXXXXXXX")
 pack="$fixture/pack"
 game="$fixture/game with spaces"
 mkdir -p "$pack/mods/optional" "$game/mods" "$game/saves" "$game/config"
