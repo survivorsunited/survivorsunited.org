@@ -1,0 +1,10 @@
+{
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "Automatic",
+    "description": "Theme choice that follows the device appearance"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Switch between Automatic, Light and Dark themes (currently {mode})",
+    "description": "Accessible label for the three-state theme selector"
+  }
+}
