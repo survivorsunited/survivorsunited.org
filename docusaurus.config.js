@@ -101,6 +101,9 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/types').ThemeConfig} */
     ({
+      colorMode: {
+        respectPrefersColorScheme: true,
+      },
       // Replace with your project's social card
       image: "img/brand/survivors-united-icon-512.png",
       navbar: {
