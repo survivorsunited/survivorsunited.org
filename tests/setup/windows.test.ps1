@@ -91,3 +91,21 @@ $oldPath = $env:PATH
 try { Ensure-WinGet } finally { $env:PATH = $oldPath }
 Assert $script:repairCalled 'Missing WinGet was not bootstrapped'
 Say 'Windows explicit restore and missing WinGet bootstrap fixtures passed.'
+# A downloaded Java runtime must remain outside AppData so Store Launcher can see it.
+function Invoke-RestMethod { param($Uri); @([pscustomobject]@{binary=[pscustomobject]@{package=[pscustomobject]@{link='https://example.test/java.zip';checksum='fixture'}}}) }
+function Get-VerifiedFile { param($Url,$Destination,$Hash); [IO.File]::WriteAllText($Destination,'fixture') }
+function Expand-Archive { param($LiteralPath,$DestinationPath); New-Item -ItemType Directory -Path "$DestinationPath/jdk/bin" -Force|Out-Null; [IO.File]::WriteAllText("$DestinationPath/jdk/bin/java.exe",'fixture') }
+function Read-JavaVersion { param($Java); $global:LASTEXITCODE=0; 'openjdk version "21.0.12"' }
+$oldJavaHome=$env:JAVA_HOME
+$oldUserProfile=$env:USERPROFILE
+try {
+    $env:JAVA_HOME=''
+    $env:USERPROFILE=Join-Path $fixture 'user home'
+    $javaWork=Join-Path $fixture 'java-download-work'
+    New-Item -ItemType Directory -Path $javaWork -Force|Out-Null
+    $runtime=Get-Java21 $javaWork
+    Assert ($runtime.StartsWith([IO.Path]::GetFullPath((Join-Path $env:USERPROFILE '.survivorsunited/runtimes')))) 'Downloaded runtime is not in the durable user runtime folder'
+    Assert (!( $runtime.StartsWith($javaWork))) 'Launcher runtime still lives in the AppData setup work folder'
+    Assert (Test-Path -LiteralPath $runtime) 'Returned runtime does not exist'
+} finally { $env:JAVA_HOME=$oldJavaHome; $env:USERPROFILE=$oldUserProfile }
+Say 'Windows downloaded Java runtime location fixture passed.'

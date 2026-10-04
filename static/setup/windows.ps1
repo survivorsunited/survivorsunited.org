@@ -61,7 +61,10 @@ function Get-Java21([string]$Work) {
     $package = $assets[0].binary.package
     $archive = Join-Path $Work 'java21.zip'
     Get-VerifiedFile $package.link $archive $package.checksum
-    $javaFolder = Join-Path $Work 'java21'
+    # Store Launcher can redirect AppData paths; keep its executable outside AppData.
+    $javaFolder = Join-Path $env:USERPROFILE ('.survivorsunited/runtimes/' + [IO.Path]::GetFileName($Work) + '/java21')
+    Assert-PlainPath $javaFolder
+    New-Item -ItemType Directory -Path $javaFolder -Force | Out-Null
     Expand-Archive -LiteralPath $archive -DestinationPath $javaFolder
     $java = @(Get-ChildItem -LiteralPath $javaFolder -Filter java.exe -Recurse | Where-Object {$_.Directory.Name -eq 'bin'})
     if ($java.Count -ne 1) { throw 'Java archive did not contain exactly one runtime.' }
