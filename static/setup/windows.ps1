@@ -32,6 +32,8 @@ function Assert-Closed {
     if ($busy.Count) { throw 'Close Minecraft and Minecraft Launcher, then run this script again. Nothing will be force-closed.' }
 }
 function Get-VerifiedFile([string]$Url, [string]$Destination, [string]$Hash) {
+    # Keep the named checks visible without PowerShell 5.1's per-buffer redraws.
+    $ProgressPreference = 'SilentlyContinue'
     if ($Url -notmatch '^https://') { throw 'Download URL must use HTTPS.' }
     Say "Downloading $Url"
     Invoke-WebRequest -UseBasicParsing -Uri $Url -OutFile $Destination
@@ -109,7 +111,7 @@ function Set-Mods([string]$Pack, [string]$Game, [string]$RecoveryFolder = '') {
 function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$BackupFolder) {
     Assert-PlainPath $File
     $data = Get-Content -LiteralPath $File -Raw | ConvertFrom-Json
-    if (!$data.profiles) { throw 'Launcher profile data is missing. Open Java Edition once and retry.' }
+    if (!$data.profiles) { throw 'Launcher profile data is missing. Open Minecraft Launcher once, close it, and retry.' }
     Copy-Item -LiteralPath $File -Destination (Join-Path $BackupFolder ([IO.Path]::GetFileName($File)))
     $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java}
     $data.profiles | Add-Member -NotePropertyName 'survivors-united-1.21.11' -NotePropertyValue $profile -Force
@@ -202,12 +204,12 @@ function Main {
             & winget install --exact --id Mojang.MinecraftLauncher --source winget --accept-source-agreements --accept-package-agreements
             if ($LASTEXITCODE -ne 0) { throw 'Launcher installation did not complete. Install it manually and rerun.' }
         }
-        Say 'Open Minecraft Launcher, sign in to the account that owns Java Edition, and launch to the main menu once. Then close the game and launcher.'
-        Confirm-Step 'Have you reached the Java Edition main menu and closed both the game and launcher?'
+        Say 'Open Minecraft Launcher once and sign in to the account that owns Java Edition. Then close the launcher. You do not need to launch or install vanilla Minecraft first.'
+        Confirm-Step 'Have you opened and closed Minecraft Launcher?'
         Assert-Closed
         Assert-PlainPath $root
         $profileFiles = @('launcher_profiles.json','launcher_profiles_microsoft_store.json') | ForEach-Object {Join-Path $root $_} | Where-Object {Test-Path -LiteralPath $_ -PathType Leaf}
-        if (!$profileFiles) { throw 'Launcher profiles were not found. Complete the first Java Edition launch and rerun.' }
+        if (!$profileFiles) { throw 'Launcher profiles were not found. Open Minecraft Launcher once, close it, and rerun.' }
         if (!$GameDirectory) {
             Say 'If your old profile uses a custom Game Directory, enter it below. Otherwise press Enter.'
             $GameDirectory = Read-Host "Game Directory [$root]"

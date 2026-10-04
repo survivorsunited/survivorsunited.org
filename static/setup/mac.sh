@@ -225,11 +225,11 @@ main() {
     launcher="$HOME/Applications/Minecraft.app"
   fi
   open "$launcher"
-  say 'Sign in with the account that owns Java Edition. Launch once to the main menu, then close the game and launcher.'
-  confirm 'Have you reached the Java Edition main menu and closed both the game and launcher?'
+  say 'Sign in with the account that owns Java Edition, then close the launcher. You do not need to launch or install vanilla Minecraft first.'
+  confirm 'Have you opened and closed Minecraft Launcher?'
   closed
   plain_path "$root"
-  [ -f "$root/launcher_profiles.json" ] || { fail 'Launcher profiles missing. Complete the first Java Edition launch and rerun.'; return 1; }
+  [ -f "$root/launcher_profiles.json" ] || { fail 'Launcher profiles missing. Open Minecraft Launcher once, close it, and rerun.'; return 1; }
   if [ -z "$game" ]; then
     printf 'If your old profile uses a custom Game Directory, enter it. Otherwise press Return [%s]: ' "$root"
     read -r game

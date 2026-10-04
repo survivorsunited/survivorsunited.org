@@ -154,7 +154,7 @@ export function AutomaticSetup({computer}: {computer: Computer}) {
     <CopyValue value={command}/>
     <p>Follow the prompts. The script prints each check, sets up Java and Fabric, and backs up your old mods before installing the new pack.</p>
     <p>If setup fails, choose <strong>Restore</strong> when prompted to recover your previous mods and launcher profiles. You can also run this same command again and choose <strong>Restore</strong>.</p>
-    <p>You will sign in and open Java Edition when asked. At the end, select the new profile, press Play, and join Survivors United. Your worlds and settings stay in place.</p>
+    <p>Open Launcher and sign in when asked, then close it. You do not need to install or launch vanilla Minecraft first. At the end, select the new profile, press Play, and join Survivors United. Your worlds and settings stay in place.</p>
     <Help><p><a href={windows ? '/setup/windows.ps1' : '/setup/mac.sh'}>Read the setup script</a>. It saves a log, keeps dated mod backups, and checks downloaded files. Enter your old profile’s full Game Directory when asked if you use a custom folder.</p><p>The script never asks for your password. If a check fails, it stops and tells you what to fix. You can use the manual path at any time.</p></Help>
   </>;
 }
