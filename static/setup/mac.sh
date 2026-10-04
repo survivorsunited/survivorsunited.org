@@ -41,6 +41,12 @@ verified_download() {
   [ "$actual" = "$expected" ] || { fail "Download verification failed: $target. No mods replaced."; return 1; }
   say 'SHA256 verified.'
 }
+extract_pack() {
+  # Some optional shader filenames cannot be decoded by macOS unzip under SSH's
+  # locale. Client setup needs only the installer and the two client mod folders.
+  # Info-ZIP's * also matches /, so mods/*.jar includes mods/optional/*.jar.
+  unzip -q "$1" 'install/fabric-installer-1.1.0.jar' 'mods/*.jar' -d "$2"
+}
 # Stage and verify all files before moving the current mods folder. Never delete a backup.
 set_mods() {
   local pack="$1" game="$2" stage backup source dest found=0
@@ -219,11 +225,11 @@ main() {
     launcher="$HOME/Applications/Minecraft.app"
   fi
   open "$launcher"
-  say 'Sign in with the account that owns Java Edition. Launch once to the main menu, then close the game and launcher.'
-  confirm 'Have you reached the Java Edition main menu and closed both the game and launcher?'
+  say 'Sign in with the account that owns Java Edition, then close the launcher. You do not need to launch or install vanilla Minecraft first.'
+  confirm 'Have you opened and closed Minecraft Launcher?'
   closed
   plain_path "$root"
-  [ -f "$root/launcher_profiles.json" ] || { fail 'Launcher profiles missing. Complete the first Java Edition launch and rerun.'; return 1; }
+  [ -f "$root/launcher_profiles.json" ] || { fail 'Launcher profiles missing. Open Minecraft Launcher once, close it, and rerun.'; return 1; }
   if [ -z "$game" ]; then
     printf 'If your old profile uses a custom Game Directory, enter it. Otherwise press Return [%s]: ' "$root"
     read -r game
@@ -258,7 +264,7 @@ main() {
   "$java" -version 2>&1 | grep -q 'version "21[.\"]' || { fail 'Java 21 verification failed.'; return 1; }
   say '(3/6) Downloading and verifying the pinned modpack.'
   verified_download "$PACK_URL" "$work/modpack.zip" "$PACK_HASH"
-  unzip -q "$work/modpack.zip" -d "$work/pack"
+  extract_pack "$work/modpack.zip" "$work/pack"
   say '(4/6) Installing Fabric into the launcher folder.'
   closed
   plain_path "$root/versions"
