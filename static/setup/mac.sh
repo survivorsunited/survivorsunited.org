@@ -32,6 +32,49 @@ closed() {
     fi
   done
 }
+confirm_launcher() {
+  local answer
+  printf '%s [Y/n] ' "$1"
+  read -r answer
+  case "$answer" in ''|y|Y|yes|YES) ;; *) fail 'Stopped at your request. Run again when ready.'; return 1;; esac
+}
+wait_launcher_closed() {
+  while ! closed 2>/dev/null; do
+    say 'Minecraft or Launcher is still running. Save and exit any game, then quit Launcher completely using Minecraft Launcher > Quit or Command-Q.'
+    confirm_launcher 'Check again and continue? Press Return after quitting Launcher' || return 1
+  done
+}
+launcher_profiles_ready() {
+  [ -f "$1/launcher_profiles.json" ] || return 1
+  plain_path "$1/launcher_profiles.json" || return 1
+  [ "$(/usr/bin/osascript -l JavaScript - "$1/launcher_profiles.json" <<'JS'
+ObjC.import('Foundation');
+function run(args) {
+  try {
+    const text = $.NSString.stringWithContentsOfFileEncodingError(args[0], $.NSUTF8StringEncoding, null);
+    const data = JSON.parse(ObjC.unwrap(text));
+    return data.profiles && typeof data.profiles === 'object' && !Array.isArray(data.profiles) ? 'ready' : 'missing';
+  } catch (error) { return 'missing'; }
+}
+JS
+)" = ready ]
+}
+prepare_launcher() {
+  local root="$1" launcher="$2"
+  plain_path "$root" || return 1
+  if launcher_profiles_ready "$root"; then
+    say 'Launcher setup files already found. No need to open Launcher again; your account is checked when you press Play.'
+  else
+    open "$launcher"
+    while ! launcher_profiles_ready "$root"; do
+      say 'Sign in with the account that owns Java Edition, then quit Launcher. You do not need to press Play first.'
+      confirm_launcher 'Ready to check Launcher setup?' || return 1
+      wait_launcher_closed || return 1
+      launcher_profiles_ready "$root" || say 'Launcher setup files are not ready yet. Open Launcher once, then quit it and try again here.'
+    done
+  fi
+  wait_launcher_closed
+}
 verified_download() {
   local url="$1" target="$2" expected="$3" actual
   case "$url" in https://*) ;; *) fail 'Download URL must use HTTPS.'; return 1;; esac
@@ -224,12 +267,7 @@ main() {
     hdiutil detach "$mount"
     launcher="$HOME/Applications/Minecraft.app"
   fi
-  open "$launcher"
-  say 'Sign in with the account that owns Java Edition, then close the launcher. You do not need to launch or install vanilla Minecraft first.'
-  confirm 'Have you opened and closed Minecraft Launcher?'
-  closed
-  plain_path "$root"
-  [ -f "$root/launcher_profiles.json" ] || { fail 'Launcher profiles missing. Open Minecraft Launcher once, close it, and rerun.'; return 1; }
+  prepare_launcher "$root" "$launcher"
   if [ -z "$game" ]; then
     printf 'If your old profile uses a custom Game Directory, enter it. Otherwise press Return [%s]: ' "$root"
     read -r game

@@ -18,3 +18,23 @@ function run(args) {
  return 'Mac profile: 8 GB heap, existing settings and original backup verified.';
 }
 JS
+# Repeat setup should not open Launcher or prompt when profile files already exist.
+closed() { :; }
+open() { printf 'Unexpected Launcher open\n' >&2; return 1; }
+prepare_launcher "$fixture" /Applications/Minecraft.app
+confirm_launcher 'Default Yes' <<< ''
+if confirm_launcher 'Explicit No' <<< n; then printf 'No was accepted\n'; exit 1; fi
+checks=0
+closed() { checks=$((checks+1)); [ "$checks" -ge 2 ]; }
+wait_launcher_closed <<< ''
+[ "$checks" -eq 2 ]
+closed() { :; }
+fresh="$fixture/fresh"
+mkdir "$fresh"
+open() { :; }
+confirm_launcher() { printf '%s' '{"profiles":{}}' > "$fresh/launcher_profiles.json"; }
+prepare_launcher "$fresh" /Applications/Minecraft.app
+launcher_profiles_ready "$fresh"
+printf '%s' '{"profiles":[]}' > "$fresh/launcher_profiles.json"
+if launcher_profiles_ready "$fresh"; then printf 'Invalid profile accepted\n'; exit 1; fi
+printf 'Mac Launcher readiness, existing setup, retry, default Yes and cancellation verified.\n'

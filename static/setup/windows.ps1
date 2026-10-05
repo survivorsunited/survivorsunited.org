@@ -31,6 +31,45 @@ function Assert-Closed {
     })
     if ($busy.Count) { throw 'Close Minecraft and Minecraft Launcher, then run this script again. Nothing will be force-closed.' }
 }
+function Confirm-LauncherStep([string]$Message) {
+    $answer = Read-Host "$Message [Y/n]"
+    if ($answer -and $answer -notmatch '^(y|yes)$') { throw 'Stopped at your request. Run the script again when ready.' }
+}
+function Wait-LauncherClosed {
+    while ($true) {
+        try { Assert-Closed; return } catch {
+            if ($_.Exception.Message -notlike 'Close Minecraft and Minecraft Launcher*') { throw }
+            Say 'Minecraft or Launcher is still running. Save and exit any game, then close Launcher completely. If needed, end Minecraft Launcher in Task Manager.'
+            Confirm-LauncherStep 'Check again and continue? Press Enter after closing Launcher'
+        }
+    }
+}
+function Get-LauncherProfileFiles([string]$Root) {
+    foreach ($name in @('launcher_profiles.json','launcher_profiles_microsoft_store.json')) {
+        $file = Join-Path $Root $name
+        if (Test-Path -LiteralPath $file -PathType Leaf) {
+            Assert-PlainPath $file
+            try { $data = Get-Content -LiteralPath $file -Raw | ConvertFrom-Json } catch { continue }
+            if ($data.PSObject.Properties.Name -contains 'profiles' -and $null -ne $data.profiles -and $data.profiles -is [pscustomobject]) { $file }
+        }
+    }
+}
+function Initialize-LauncherProfiles([string]$Root) {
+    Assert-PlainPath $Root
+    while ($true) {
+        $files = @(Get-LauncherProfileFiles $Root)
+        if ($files.Count) {
+            Say 'Launcher setup files already found. No need to open Launcher again; your account is checked when you press Play.'
+            Wait-LauncherClosed
+            $files = @(Get-LauncherProfileFiles $Root)
+            if ($files.Count) { return $files }
+        }
+        Say 'Open Minecraft Launcher and sign in with the account that owns Java Edition, then close Launcher. You do not need to press Play first.'
+        Confirm-LauncherStep 'Ready to check Launcher setup?'
+        Wait-LauncherClosed
+        if (!( @(Get-LauncherProfileFiles $Root).Count)) { Say 'Launcher setup files are not ready yet. Open Launcher once, then close it and try again here.' }
+    }
+}
 function Get-VerifiedFile([string]$Url, [string]$Destination, [string]$Hash) {
     # Keep the named checks visible without PowerShell 5.1's per-buffer redraws.
     $ProgressPreference = 'SilentlyContinue'
@@ -207,12 +246,7 @@ function Main {
             & winget install --exact --id Mojang.MinecraftLauncher --source winget --accept-source-agreements --accept-package-agreements
             if ($LASTEXITCODE -ne 0) { throw 'Launcher installation did not complete. Install it manually and rerun.' }
         }
-        Say 'Open Minecraft Launcher once and sign in to the account that owns Java Edition. Then close the launcher. You do not need to launch or install vanilla Minecraft first.'
-        Confirm-Step 'Have you opened and closed Minecraft Launcher?'
-        Assert-Closed
-        Assert-PlainPath $root
-        $profileFiles = @('launcher_profiles.json','launcher_profiles_microsoft_store.json') | ForEach-Object {Join-Path $root $_} | Where-Object {Test-Path -LiteralPath $_ -PathType Leaf}
-        if (!$profileFiles) { throw 'Launcher profiles were not found. Open Minecraft Launcher once, close it, and rerun.' }
+        $profileFiles = @(Initialize-LauncherProfiles $root)
         if (!$GameDirectory) {
             Say 'If your old profile uses a custom Game Directory, enter it below. Otherwise press Enter.'
             $GameDirectory = Read-Host "Game Directory [$root]"

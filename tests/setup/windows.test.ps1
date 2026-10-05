@@ -110,3 +110,31 @@ try {
     Assert (Test-Path -LiteralPath $runtime) 'Returned runtime does not exist'
 } finally { $env:JAVA_HOME=$oldJavaHome; $env:USERPROFILE=$oldUserProfile }
 Say 'Windows downloaded Java runtime location fixture passed.'
+# Launcher setup detection must skip questions on repeat runs and retry a busy Launcher in place.
+& {
+    $root=Join-Path $fixture 'existing launcher'
+    New-Item -ItemType Directory -Path $root -Force|Out-Null
+    [IO.File]::WriteAllText("$root/launcher_profiles.json",'{"profiles":{}}')
+    function Assert-Closed { }
+    function Read-Host { param($Prompt); throw 'Existing closed Launcher should not prompt' }
+    $files=@(Initialize-LauncherProfiles $root)
+    Assert ($files.Count -eq 1) 'Existing Launcher profile not detected'
+    [IO.File]::WriteAllText("$root/launcher_profiles_microsoft_store.json",'{"profiles":{}}')
+    Assert (@(Get-LauncherProfileFiles $root).Count -eq 2) 'Store Launcher profiles not detected'
+    $script:busyChecks=0; $script:retryPrompts=0
+    function Assert-Closed { $script:busyChecks++; if($script:busyChecks -eq 1){throw 'Close Minecraft and Minecraft Launcher, then run this script again. Nothing will be force-closed.'} }
+    function Read-Host { param($Prompt); $script:retryPrompts++; return '' }
+    $files=@(Initialize-LauncherProfiles $root)
+    Assert ($script:busyChecks -eq 2 -and $script:retryPrompts -eq 1 -and $files.Count -eq 2) 'Busy Launcher did not retry with Enter as Yes'
+    $fresh=Join-Path $fixture 'fresh launcher'
+    function Assert-Closed { }
+    function Read-Host { param($Prompt); New-Item -ItemType Directory -Path $fresh -Force|Out-Null; [IO.File]::WriteAllText("$fresh/launcher_profiles.json",'{"profiles":{}}'); return '' }
+    Assert (@(Initialize-LauncherProfiles $fresh).Count -eq 1) 'First-run Launcher detection failed after confirmation'
+    [IO.File]::WriteAllText("$fresh/launcher_profiles.json",'{"profiles":[]}')
+    Assert (@(Get-LauncherProfileFiles $fresh).Count -eq 0) 'Invalid profiles accepted'
+    function Read-Host { param($Prompt); return 'n' }
+    $cancelled=$false
+    try { Confirm-LauncherStep 'Continue?' } catch { $cancelled=$true }
+    Assert $cancelled 'Explicit No did not stop Launcher retry'
+}
+Say 'Windows repeat-run detection, first-run readiness, retry, default Yes and cancellation passed.'
