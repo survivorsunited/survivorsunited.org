@@ -18,9 +18,9 @@ For most players, start with the [Setup Wizard](/docs/minecraft/installation) an
 
 ## Technical reference
 
-The scripts pin Minecraft 1.21.11, Fabric Loader 0.19.5, and the SHA256 of the Survivors United GitHub pack. Java downloads are verified against Adoptium's published SHA256. Windows uses WinGet's Mojang launcher package; Mac uses Mojang's signed launcher from its official download endpoint. Private Java runtimes do not change system Java or PATH.
+The scripts target Minecraft 1.21.11 and Fabric Loader 0.19.5. Each run selects the latest stable Survivors United GitHub modpack release and verifies the pack against that same release's published SHA256. Future modpack releases are picked up automatically. If the release has no matching 1.21.11 pack or valid checksum, setup stops before replacing mods. Moving to another Minecraft version still requires an installer compatibility update. Java downloads are verified against Adoptium's published SHA256. Windows uses WinGet's Mojang launcher package; Mac uses Mojang's signed launcher from its official download endpoint. Private Java runtimes do not change system Java or PATH.
 
-Profiles use the selected Game Directory and Java 21. Existing launcher profiles are preserved and backed up. Client JARs from both pack folders are staged and verified before the old mods folder is moved. A failed activation attempts to restore the old folder. The script stops for running Minecraft/Launcher processes or linked paths rather than closing applications or following those paths.
+Profiles use the selected Game Directory, Java 21 or newer, and an 8 GB maximum memory allocation. Existing launcher profiles are preserved and backed up. Client JARs from both pack folders are staged and verified before the old mods folder is moved. A failed activation attempts to restore the old folder. The script waits for you to close running Minecraft/Launcher processes and stops for linked paths.
 
 A script cannot verify Java Edition ownership without the user's sign-in, or confirm a successful game launch and server connection. Those checks remain interactive. No worlds are opened or upgraded by the script. Downloads and logs are retained for troubleshooting; keep the private Java folder because the new profile refers to it.
 
