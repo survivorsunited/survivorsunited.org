@@ -210,6 +210,35 @@ function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$Backu
     [IO.File]::Replace($temp, $File, "$File.su-backup-$([Guid]::NewGuid().ToString('N'))")
     Say "Launcher profile saved; original backed up in $BackupFolder"
 }
+function Set-LauncherAcknowledgement([string]$Root, [string]$Work) {
+    $key = "fabric-loader-$LoaderVersion-${MinecraftVersion}_survivors-united-$MinecraftVersion"
+    foreach ($name in @('launcher_ui_state.json','launcher_ui_state_microsoft_store.json')) {
+        $file = Join-Path $Root $name
+        if (!(Test-Path -LiteralPath $file -PathType Leaf)) { continue }
+        try {
+            Assert-PlainPath $file
+            $raw = [IO.File]::ReadAllText($file)
+            $start = $raw.IndexOf('{')
+            if ($start -lt 0) { throw 'Unknown launcher state format' }
+            $data = $raw.Substring($start) | ConvertFrom-Json
+            $events = $data.data.UiEvents | ConvertFrom-Json
+            if (!$events.hidePlayerSafetyDisclaimer -or $events.hidePlayerSafetyDisclaimer -isnot [pscustomobject]) { throw 'Unknown launcher acknowledgement format' }
+            $existing = $events.hidePlayerSafetyDisclaimer.PSObject.Properties[$key]
+            if ($existing -and $existing.Value -eq $true) { Say 'Launcher acknowledgement already remembered for Survivors United.'; continue }
+            Say 'Fabric is a modified installation. Minecraft Launcher warns that mods may not support all player safety features.'
+            $answer = Read-Host 'Understand and remember this acknowledgement for Survivors United? [Y/n] (n keeps the first-launch warning)'
+            if ($answer -and $answer -notmatch '^(y|yes)$') { continue }
+            $events.hidePlayerSafetyDisclaimer | Add-Member -NotePropertyName $key -NotePropertyValue $true -Force
+            $data.data.UiEvents = $events | ConvertTo-Json -Depth 100 -Compress
+            $saved = Join-Path $Work "restore/$name"
+            Copy-Item -LiteralPath $file -Destination $saved
+            $temp = "$file.su-new-$([Guid]::NewGuid().ToString('N'))"
+            [IO.File]::WriteAllText($temp, ($raw.Substring(0,$start) + ($data | ConvertTo-Json -Depth 100)), (New-Object Text.UTF8Encoding($false)))
+            [IO.File]::Replace($temp, $file, "$file.su-backup-$([Guid]::NewGuid().ToString('N'))")
+            Say 'Launcher acknowledgement remembered for this Survivors United installation.'
+        } catch { Say 'Could not remember the Launcher acknowledgement. If shown, tick "Don''t warn me again" and press Play once.' }
+    }
+}
 function Ensure-WinGet {
     if (Get-Command winget -ErrorAction SilentlyContinue) { return }
     Say 'WinGet is missing. Installing Microsoft WinGet and its required package provider.'
@@ -248,7 +277,7 @@ function Restore-Setup([string]$Work) {
             } else { Say 'Mods activation already rolled back, or never began; leaving active mods in place.' }
         } elseif (Test-Path -LiteralPath $mods) { [IO.Directory]::Move($mods, (Join-Path $game "mods.su-before-restore-$stamp")) }
     }
-    foreach ($name in @('launcher_profiles.json','launcher_profiles_microsoft_store.json')) {
+    foreach ($name in @('launcher_profiles.json','launcher_profiles_microsoft_store.json','launcher_ui_state.json','launcher_ui_state_microsoft_store.json')) {
         $saved = Join-Path $Work "restore/$name"
         if (Test-Path -LiteralPath $saved) {
             Assert-PlainPath $saved
@@ -329,6 +358,7 @@ function Main {
         foreach ($file in $profileFiles) { Set-Profile $file $game $java $work }
         Say '(5/6) Staging new mods, verifying each copy, and backing up the old folder.'
         Set-Mods $pack $game $work
+        Set-LauncherAcknowledgement $root $work
         Say '(6/6) Setup complete. Open Launcher and choose Survivors United 1.21.11, then Play.'
         Say "In the game: Multiplayer > Add Server > Survivors United > $ServerAddress > Done > Join Server."
         Set-Clipboard -Value $ServerAddress

@@ -24,6 +24,8 @@ Profiles use the selected Game Directory, Java 21 or newer, and an 8 GB maximum 
 
 A script cannot verify Java Edition ownership without the user's sign-in, or confirm a successful game launch and server connection. Those checks remain interactive. No worlds are opened or upgraded by the script. Downloads and logs are retained for troubleshooting; keep the private Java folder because the new profile refers to it.
 
+Launcher may show a first-run warning because Fabric modifies Minecraft and may not support all player safety features. During setup, you can press Enter to acknowledge this and remember the choice for the Survivors United installation, or answer **n** to keep the warning. Existing acknowledgements are detected. The original Launcher state is backed up and restored with your previous setup. If your Launcher uses an unsupported state format, tick **Don't warn me again about this installation** and press **Play** once in Launcher.
+
 If setup fails, the script offers to restore your previous mods and launcher profiles. Close the game and launcher before restoring. You can also rerun the same command and choose **Restore** to use the latest setup backup. Restoration keeps the original backup and moves replaced mods aside. Installed Launcher, Java and Fabric files remain available; worlds and settings stay in place.
 
 Script interface: Windows `-CheckOnly` / `-GameDirectory 'full path'` / `-RestoreBackup 'backup folder'`; Mac `--check-only` / `--game-directory 'full path'` / `--restore 'backup folder'`. Check-only does not download or alter files.

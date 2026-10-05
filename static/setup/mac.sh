@@ -190,6 +190,40 @@ function run(args) {
 }
 JS
 }
+launcher_acknowledgement_state() {
+  /usr/bin/osascript -l JavaScript - "$1" "$MC_VERSION" "$LOADER_VERSION" "$2" <<'JS'
+ObjC.import('Foundation');
+function run(args) {
+  const file = args[0];
+  const raw = ObjC.unwrap($.NSString.stringWithContentsOfFileEncodingError(file, $.NSUTF8StringEncoding, null));
+  const start = raw.indexOf('{');
+  if (start < 0) throw Error('Unknown launcher state format');
+  const data = JSON.parse(raw.slice(start));
+  const events = JSON.parse(data.data.UiEvents);
+  const flags = events.hidePlayerSafetyDisclaimer;
+  if (!flags || typeof flags !== 'object' || Array.isArray(flags)) throw Error('Unknown launcher acknowledgement format');
+  const key = 'fabric-loader-' + args[2] + '-' + args[1] + '_survivors-united-' + args[1];
+  if (args[3] === 'check') return flags[key] === true ? 'remembered' : 'needed';
+  flags[key] = true;
+  data.data.UiEvents = JSON.stringify(events);
+  if (!$(raw.slice(0,start) + JSON.stringify(data,null,2)).writeToFileAtomicallyEncodingError(file,true,$.NSUTF8StringEncoding,null)) throw Error('Could not save acknowledgement');
+  return 'Launcher acknowledgement remembered for this Survivors United installation.';
+}
+JS
+}
+set_launcher_acknowledgement() {
+  local work="$2" file="$1/launcher_ui_state.json" answer state
+  [ -f "$file" ] || return 0
+  plain_path "$file" || return 1
+  state=$(launcher_acknowledgement_state "$file" check 2>/dev/null) || { say 'Unknown Launcher state format. If shown, acknowledge the warning in Launcher once.'; return 0; }
+  if [ "$state" = remembered ]; then say 'Launcher acknowledgement already remembered for Survivors United.'; return 0; fi
+  say 'Fabric is a modified installation. Minecraft Launcher warns that mods may not support all player safety features.'
+  printf 'Understand and remember this acknowledgement for Survivors United? [Y/n] (n keeps the first-launch warning) '
+  read -r answer
+  case "$answer" in ''|y|Y|yes|YES) ;; *) return 0;; esac
+  cp -p "$file" "$work/restore/launcher_ui_state.json"
+  if ! launcher_acknowledgement_state "$file" save; then say "Could not remember the Launcher acknowledgement. If shown, tick \"Don't warn me again\" and press Play once."; fi
+}
 restore_setup() {
   local work="$1" root game mods backup stage previous name
   closed
@@ -216,7 +250,7 @@ restore_setup() {
       else say 'Mods activation already rolled back, or never began; leaving active mods in place.'; fi
     elif [ -e "$mods" ]; then mv "$mods" "$previous"; fi
   fi
-  for name in launcher_profiles.json launcher_profiles_microsoft_store.json; do
+  for name in launcher_profiles.json launcher_profiles_microsoft_store.json launcher_ui_state.json launcher_ui_state_microsoft_store.json; do
     if [ -f "$work/restore/$name" ]; then
       plain_path "$work/restore/$name"
       plain_path "$root/$name"
@@ -387,6 +421,7 @@ main() {
   set_profile "$root/launcher_profiles.json" "$game" "$java" "$work"
   say '(5/6) Staging new mods, verifying each copy, and backing up the old folder.'
   set_mods "$work/pack" "$game" "$work"
+  set_launcher_acknowledgement "$root" "$work"
   say '(6/6) Setup complete. Open Launcher and choose Survivors United 1.21.11, then Play.'
   printf '%s' "$SERVER" | pbcopy
   say "In the game: Multiplayer > Add Server > Survivors United > $SERVER > Done > Join Server."
