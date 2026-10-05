@@ -31,6 +31,45 @@ function Assert-Closed {
     })
     if ($busy.Count) { throw 'Close Minecraft and Minecraft Launcher, then run this script again. Nothing will be force-closed.' }
 }
+function Confirm-LauncherStep([string]$Message) {
+    $answer = Read-Host "$Message [Y/n]"
+    if ($answer -and $answer -notmatch '^(y|yes)$') { throw 'Stopped at your request. Run the script again when ready.' }
+}
+function Wait-LauncherClosed {
+    while ($true) {
+        try { Assert-Closed; return } catch {
+            if ($_.Exception.Message -notlike 'Close Minecraft and Minecraft Launcher*') { throw }
+            Say 'Minecraft or Launcher is still running. Save and exit any game, then close Launcher completely. If needed, end Minecraft Launcher in Task Manager.'
+            Confirm-LauncherStep 'Check again and continue? Press Enter after closing Launcher'
+        }
+    }
+}
+function Get-LauncherProfileFiles([string]$Root) {
+    foreach ($name in @('launcher_profiles.json','launcher_profiles_microsoft_store.json')) {
+        $file = Join-Path $Root $name
+        if (Test-Path -LiteralPath $file -PathType Leaf) {
+            Assert-PlainPath $file
+            try { $data = Get-Content -LiteralPath $file -Raw | ConvertFrom-Json } catch { continue }
+            if ($data.PSObject.Properties.Name -contains 'profiles' -and $null -ne $data.profiles -and $data.profiles -is [pscustomobject]) { $file }
+        }
+    }
+}
+function Initialize-LauncherProfiles([string]$Root) {
+    Assert-PlainPath $Root
+    while ($true) {
+        $files = @(Get-LauncherProfileFiles $Root)
+        if ($files.Count) {
+            Say 'Launcher setup files already found. No need to open Launcher again; your account is checked when you press Play.'
+            Wait-LauncherClosed
+            $files = @(Get-LauncherProfileFiles $Root)
+            if ($files.Count) { return $files }
+        }
+        Say 'Open Minecraft Launcher and sign in with the account that owns Java Edition, then close Launcher. You do not need to press Play first.'
+        Confirm-LauncherStep 'Ready to check Launcher setup?'
+        Wait-LauncherClosed
+        if (!( @(Get-LauncherProfileFiles $Root).Count)) { Say 'Launcher setup files are not ready yet. Open Launcher once, then close it and try again here.' }
+    }
+}
 function Get-VerifiedFile([string]$Url, [string]$Destination, [string]$Hash) {
     # Keep the named checks visible without PowerShell 5.1's per-buffer redraws.
     $ProgressPreference = 'SilentlyContinue'
@@ -45,18 +84,42 @@ function Read-JavaVersion([string]$Java) {
     $ErrorActionPreference = 'Continue'
     & $Java -version 2>&1 | Out-String
 }
+function Get-JavaMajor([string]$Output) {
+    if ($Output -match 'version "(\d+)(?:[.\"+\-])') { return [int]$Matches[1] }
+    return 0
+}
+function Use-ExistingJava([int]$Major, [string]$Java) {
+    Say "Compatible Java $Major found: $Java"
+    while ($true) {
+        $answer = Read-Host 'Keep using existing Java? [Y/n] (n installs a separate Java 21 runtime)'
+        if (!$answer -or $answer -match '^(y|yes)$') { return $true }
+        if ($answer -match '^(n|no)$') { return $false }
+        Say 'Press Enter to keep existing Java, or type n to install Java 21.'
+    }
+}
 function Get-Java21([string]$Work) {
     $candidates = @()
     if ($env:JAVA_HOME) { $candidates += (Join-Path $env:JAVA_HOME 'bin/java.exe') }
     $command = Get-Command java.exe -ErrorAction SilentlyContinue
     if ($command) { $candidates += $command.Source }
-    foreach ($candidate in $candidates) {
+    $retained = Join-Path $env:USERPROFILE '.survivorsunited/runtimes'
+    if (Test-Path -LiteralPath $retained) {
+        $candidates += @(Get-ChildItem -LiteralPath $retained -Filter java.exe -Recurse -File | Where-Object {$_.Directory.Name -eq 'bin'} | Select-Object -ExpandProperty FullName)
+    }
+    $compatibleFound = $false
+    foreach ($candidate in ($candidates | Select-Object -Unique)) {
         if (Test-Path -LiteralPath $candidate) {
             $output = Read-JavaVersion $candidate
-            if ($output -match 'version "21[.\"]') { Say "Java 21 found: $candidate"; return $candidate }
+            $major = Get-JavaMajor $output
+            if ($major -ge 21) {
+                $compatibleFound = $true
+                if (Use-ExistingJava $major $candidate) { return $candidate }
+                break
+            }
         }
     }
-    Say 'Java 21 not found. Installing a private Java runtime for this setup; system Java stays unchanged.'
+    if (!$compatibleFound) { Say 'No compatible Java found (Java 21 or newer required).' }
+    Say 'Installing a separate Java 21 runtime for Minecraft; system Java stays unchanged.'
     $assets = Invoke-RestMethod -Uri 'https://api.adoptium.net/v3/assets/latest/21/hotspot?architecture=x64&image_type=jdk&os=windows&vendor=eclipse'
     $package = $assets[0].binary.package
     $archive = Join-Path $Work 'java21.zip'
@@ -116,7 +179,7 @@ function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$Backu
     $data = Get-Content -LiteralPath $File -Raw | ConvertFrom-Json
     if (!$data.profiles) { throw 'Launcher profile data is missing. Open Minecraft Launcher once, close it, and retry.' }
     Copy-Item -LiteralPath $File -Destination (Join-Path $BackupFolder ([IO.Path]::GetFileName($File)))
-    $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java}
+    $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java; javaArgs='-Xmx8G'}
     $data.profiles | Add-Member -NotePropertyName 'survivors-united-1.21.11' -NotePropertyValue $profile -Force
     $temp = "$File.su-new-$([Guid]::NewGuid().ToString('N'))"
     [IO.File]::WriteAllText($temp, ($data | ConvertTo-Json -Depth 100), (New-Object Text.UTF8Encoding($false)))
@@ -207,12 +270,7 @@ function Main {
             & winget install --exact --id Mojang.MinecraftLauncher --source winget --accept-source-agreements --accept-package-agreements
             if ($LASTEXITCODE -ne 0) { throw 'Launcher installation did not complete. Install it manually and rerun.' }
         }
-        Say 'Open Minecraft Launcher once and sign in to the account that owns Java Edition. Then close the launcher. You do not need to launch or install vanilla Minecraft first.'
-        Confirm-Step 'Have you opened and closed Minecraft Launcher?'
-        Assert-Closed
-        Assert-PlainPath $root
-        $profileFiles = @('launcher_profiles.json','launcher_profiles_microsoft_store.json') | ForEach-Object {Join-Path $root $_} | Where-Object {Test-Path -LiteralPath $_ -PathType Leaf}
-        if (!$profileFiles) { throw 'Launcher profiles were not found. Open Minecraft Launcher once, close it, and rerun.' }
+        $profileFiles = @(Initialize-LauncherProfiles $root)
         if (!$GameDirectory) {
             Say 'If your old profile uses a custom Game Directory, enter it below. Otherwise press Enter.'
             $GameDirectory = Read-Host "Game Directory [$root]"
@@ -222,7 +280,7 @@ function Main {
         Assert-PlainPath $game
         if (!(Test-Path -LiteralPath $game -PathType Container)) { throw 'Game Directory does not exist. Check the path in the old launcher profile.' }
         Say "Mods will go in: $game"
-        Confirm-Step 'Is this the Game Directory you want to install/update?'
+        Confirm-LauncherStep 'Is this the Game Directory you want to install/update?'
         New-Item -ItemType Directory -Path (Join-Path $work 'restore') | Out-Null
         foreach ($file in $profileFiles) { Copy-Item -LiteralPath $file -Destination (Join-Path $work "restore/$([IO.Path]::GetFileName($file))") }
         [IO.File]::WriteAllText((Join-Path $work 'game.path'), $game)

@@ -32,6 +32,49 @@ closed() {
     fi
   done
 }
+confirm_launcher() {
+  local answer
+  printf '%s [Y/n] ' "$1"
+  read -r answer
+  case "$answer" in ''|y|Y|yes|YES) ;; *) fail 'Stopped at your request. Run again when ready.'; return 1;; esac
+}
+wait_launcher_closed() {
+  while ! closed 2>/dev/null; do
+    say 'Minecraft or Launcher is still running. Save and exit any game, then quit Launcher completely using Minecraft Launcher > Quit or Command-Q.'
+    confirm_launcher 'Check again and continue? Press Return after quitting Launcher' || return 1
+  done
+}
+launcher_profiles_ready() {
+  [ -f "$1/launcher_profiles.json" ] || return 1
+  plain_path "$1/launcher_profiles.json" || return 1
+  [ "$(/usr/bin/osascript -l JavaScript - "$1/launcher_profiles.json" <<'JS'
+ObjC.import('Foundation');
+function run(args) {
+  try {
+    const text = $.NSString.stringWithContentsOfFileEncodingError(args[0], $.NSUTF8StringEncoding, null);
+    const data = JSON.parse(ObjC.unwrap(text));
+    return data.profiles && typeof data.profiles === 'object' && !Array.isArray(data.profiles) ? 'ready' : 'missing';
+  } catch (error) { return 'missing'; }
+}
+JS
+)" = ready ]
+}
+prepare_launcher() {
+  local root="$1" launcher="$2"
+  plain_path "$root" || return 1
+  if launcher_profiles_ready "$root"; then
+    say 'Launcher setup files already found. No need to open Launcher again; your account is checked when you press Play.'
+  else
+    open "$launcher"
+    while ! launcher_profiles_ready "$root"; do
+      say 'Sign in with the account that owns Java Edition, then quit Launcher. You do not need to press Play first.'
+      confirm_launcher 'Ready to check Launcher setup?' || return 1
+      wait_launcher_closed || return 1
+      launcher_profiles_ready "$root" || say 'Launcher setup files are not ready yet. Open Launcher once, then quit it and try again here.'
+    done
+  fi
+  wait_launcher_closed
+}
 verified_download() {
   local url="$1" target="$2" expected="$3" actual
   case "$url" in https://*) ;; *) fail 'Download URL must use HTTPS.'; return 1;; esac
@@ -108,7 +151,7 @@ function run(args) {
   if (!data.profiles || typeof data.profiles !== 'object') throw new Error('Launcher profiles missing');
   data.profiles['survivors-united-1.21.11'] = {
     name:'Survivors United 1.21.11', type:'custom',
-    lastVersionId:'fabric-loader-0.19.5-1.21.11', gameDir:args[1], javaDir:args[2]
+    lastVersionId:'fabric-loader-0.19.5-1.21.11', gameDir:args[1], javaDir:args[2], javaArgs:'-Xmx8G'
   };
   if (!$(JSON.stringify(data, null, 2)).writeToFileAtomicallyEncodingError(file, true, $.NSUTF8StringEncoding, null)) throw new Error('Could not save launcher profile');
   return 'Launcher profile saved; existing profiles preserved.';
@@ -168,6 +211,43 @@ setup_failed() {
   else say 'Your mods and launcher profiles have not been changed.'; fi
   exit 1
 }
+java_major() {
+  printf '%s\n' "$1" | sed -n 's/.*version "\([0-9][0-9]*\)[."+_-].*/\1/p' | head -n 1
+}
+find_existing_java() {
+  local candidate home output major
+  local candidates=()
+  [ -z "${JAVA_HOME:-}" ] || candidates+=("$JAVA_HOME/bin/java")
+  candidate=$(command -v java || true)
+  [ -z "$candidate" ] || candidates+=("$candidate")
+  home=$(/usr/libexec/java_home 2>/dev/null || true)
+  [ -z "$home" ] || candidates+=("$home/bin/java")
+  for candidate in "$HOME/Library/Application Support/SurvivorsUnited/"setup-*/java21/*/Contents/Home/bin/java; do
+    [ ! -x "$candidate" ] || candidates+=("$candidate")
+  done
+  for candidate in "${candidates[@]}"; do
+    [ -x "$candidate" ] || continue
+    output=$("$candidate" -version 2>&1) || continue
+    major=$(java_major "$output")
+    if [ -n "$major" ] && [ "$major" -ge 21 ]; then printf '%s\n' "$candidate"; return; fi
+  done
+}
+choose_existing_java() {
+  local candidate="$1" output major answer
+  JAVA_SELECTION=''
+  output=$("$candidate" -version 2>&1)
+  major=$(java_major "$output")
+  say "Compatible Java $major found: $candidate"
+  while true; do
+    printf 'Keep using existing Java? [Y/n] (n installs a separate Java 21 runtime) '
+    read -r answer || return 1
+    case "$answer" in
+      ''|y|Y|yes|YES) JAVA_SELECTION="$candidate"; return;;
+      n|N|no|NO) return;;
+      *) say 'Press Return to keep existing Java, or type n to install Java 21.';;
+    esac
+  done
+}
 main() {
   local root="$HOME/Library/Application Support/minecraft" game='' check=0 arch work java='' candidate package_url package_hash launcher mount restore='' previous='' answer saved
   while [ "$#" -gt 0 ]; do
@@ -224,12 +304,7 @@ main() {
     hdiutil detach "$mount"
     launcher="$HOME/Applications/Minecraft.app"
   fi
-  open "$launcher"
-  say 'Sign in with the account that owns Java Edition, then close the launcher. You do not need to launch or install vanilla Minecraft first.'
-  confirm 'Have you opened and closed Minecraft Launcher?'
-  closed
-  plain_path "$root"
-  [ -f "$root/launcher_profiles.json" ] || { fail 'Launcher profiles missing. Open Minecraft Launcher once, close it, and rerun.'; return 1; }
+  prepare_launcher "$root" "$launcher"
   if [ -z "$game" ]; then
     printf 'If your old profile uses a custom Game Directory, enter it. Otherwise press Return [%s]: ' "$root"
     read -r game
@@ -240,15 +315,20 @@ main() {
   [ -d "$game" ] || { fail 'Game Directory does not exist. Check the old profile path.'; return 1; }
   game=$(cd "$game" && pwd -P)
   say "Mods will go in: $game"
-  confirm 'Is this the Game Directory you want to install/update?'
+  confirm_launcher 'Is this the Game Directory you want to install/update?'
   mkdir "$work/restore"
   cp -p "$root/launcher_profiles.json" "$work/restore/launcher_profiles.json"
   printf '%s' "$game" > "$work/game.path"
   printf '%s' "$root" > "$work/root.path"
   RECOVERY_WORK="$work"
-  say '(2/6) Checking or downloading Java 21.'
-  candidate=$(/usr/libexec/java_home -v 21 2>/dev/null || true)
-  if [ -n "$candidate" ] && "$candidate/bin/java" -version 2>&1 | grep -q 'version "21[.\"]'; then java="$candidate/bin/java"; fi
+  say '(2/6) Checking Java (21 or newer).'
+  candidate=$(find_existing_java)
+  if [ -n "$candidate" ]; then
+    choose_existing_java "$candidate"
+    java="$JAVA_SELECTION"
+  else
+    say 'No compatible Java found (Java 21 or newer required).'
+  fi
   if [ -z "$java" ]; then
     say 'Installing a private Java 21 runtime for this setup; system Java stays unchanged.'
     curl --fail --location --proto '=https' --proto-redir '=https' --output "$work/java-metadata.json" "https://api.adoptium.net/v3/assets/latest/21/hotspot?architecture=$arch&image_type=jdk&os=mac&vendor=eclipse"
@@ -261,7 +341,8 @@ main() {
     [ -n "$java" ] && [ "$(printf '%s\n' "$java" | wc -l | tr -d ' ')" = 1 ] || { fail 'Java runtime missing or ambiguous.'; return 1; }
   fi
   "$java" -version
-  "$java" -version 2>&1 | grep -q 'version "21[.\"]' || { fail 'Java 21 verification failed.'; return 1; }
+  candidate=$(java_major "$("$java" -version 2>&1)")
+  [ -n "$candidate" ] && [ "$candidate" -ge 21 ] || { fail 'Java runtime must be version 21 or newer.'; return 1; }
   say '(3/6) Downloading and verifying the pinned modpack.'
   verified_download "$PACK_URL" "$work/modpack.zip" "$PACK_HASH"
   extract_pack "$work/modpack.zip" "$work/pack"

@@ -34,6 +34,7 @@ New-Item -ItemType Directory -Path "$fixture/backup" | Out-Null
 Set-Profile $profile $game 'C:\Java21\bin\java.exe' "$fixture/backup"
 # Use a separate backup directory so source and backup do not share a path.
 $data = Get-Content $profile -Raw | ConvertFrom-Json
+Assert ($data.profiles.'survivors-united-1.21.11'.javaArgs -eq '-Xmx8G') 'Profile must set an 8 GB maximum heap'
 Assert ($data.profiles.old.name -eq 'Keep me') 'Existing profile lost'
 Assert ($data.settings.keep -eq $true) 'Existing settings lost'
 Assert ($data.profiles.'survivors-united-1.21.11'.gameDir -eq $game) 'Custom directory missing'
@@ -109,3 +110,65 @@ try {
     Assert (Test-Path -LiteralPath $runtime) 'Returned runtime does not exist'
 } finally { $env:JAVA_HOME=$oldJavaHome; $env:USERPROFILE=$oldUserProfile }
 Say 'Windows downloaded Java runtime location fixture passed.'
+# Launcher setup detection must skip questions on repeat runs and retry a busy Launcher in place.
+& {
+    $root=Join-Path $fixture 'existing launcher'
+    New-Item -ItemType Directory -Path $root -Force|Out-Null
+    [IO.File]::WriteAllText("$root/launcher_profiles.json",'{"profiles":{}}')
+    function Assert-Closed { }
+    function Read-Host { param($Prompt); throw 'Existing closed Launcher should not prompt' }
+    $files=@(Initialize-LauncherProfiles $root)
+    Assert ($files.Count -eq 1) 'Existing Launcher profile not detected'
+    [IO.File]::WriteAllText("$root/launcher_profiles_microsoft_store.json",'{"profiles":{}}')
+    Assert (@(Get-LauncherProfileFiles $root).Count -eq 2) 'Store Launcher profiles not detected'
+    $script:busyChecks=0; $script:retryPrompts=0
+    function Assert-Closed { $script:busyChecks++; if($script:busyChecks -eq 1){throw 'Close Minecraft and Minecraft Launcher, then run this script again. Nothing will be force-closed.'} }
+    function Read-Host { param($Prompt); $script:retryPrompts++; return '' }
+    $files=@(Initialize-LauncherProfiles $root)
+    Assert ($script:busyChecks -eq 2 -and $script:retryPrompts -eq 1 -and $files.Count -eq 2) 'Busy Launcher did not retry with Enter as Yes'
+    $fresh=Join-Path $fixture 'fresh launcher'
+    function Assert-Closed { }
+    function Read-Host { param($Prompt); New-Item -ItemType Directory -Path $fresh -Force|Out-Null; [IO.File]::WriteAllText("$fresh/launcher_profiles.json",'{"profiles":{}}'); return '' }
+    Assert (@(Initialize-LauncherProfiles $fresh).Count -eq 1) 'First-run Launcher detection failed after confirmation'
+    [IO.File]::WriteAllText("$fresh/launcher_profiles.json",'{"profiles":[]}')
+    Assert (@(Get-LauncherProfileFiles $fresh).Count -eq 0) 'Invalid profiles accepted'
+    function Read-Host { param($Prompt); return 'n' }
+    $cancelled=$false
+    try { Confirm-LauncherStep 'Continue?' } catch { $cancelled=$true }
+    Assert $cancelled 'Explicit No did not stop Launcher retry'
+}
+Say 'Windows repeat-run detection, first-run readiness, retry, default Yes and cancellation passed.'
+# Existing Java 21 or newer is the default; choosing No downloads the specific Java 21 runtime.
+& {
+    foreach($major in @(17,21,22,25)) { Assert ((Get-JavaMajor "openjdk version `"$major.0.2`"") -eq $major) "Java $major version parsing failed" }
+    Assert ((Get-JavaMajor 'not a Java runtime') -eq 0) 'Invalid Java output accepted'
+    $oldHome=$env:JAVA_HOME; $oldProfile=$env:USERPROFILE
+    try {
+        $env:USERPROFILE=Join-Path $fixture 'java choices home'
+        $env:JAVA_HOME=Join-Path $fixture 'existing Java'
+        New-Item -ItemType Directory -Path "$env:JAVA_HOME/bin" -Force|Out-Null
+        $existing=Join-Path $env:JAVA_HOME 'bin/java.exe'
+        [IO.File]::WriteAllText($existing,'fixture')
+        $script:existingMajor=22; $script:installRequests=0; $script:javaAnswer=''
+        function Read-JavaVersion { param($Java); $global:LASTEXITCODE=0; if($Java -eq $existing){"java version `"$script:existingMajor.0.2`""}else{'openjdk version "21.0.12"'} }
+        function Read-Host { param($Prompt); return $script:javaAnswer }
+        function Get-VerifiedFile { param($Url,$Destination,$Hash); $script:installRequests++; [IO.File]::WriteAllText($Destination,'fixture') }
+        foreach($major in @(21,22,25)) {
+            $script:existingMajor=$major
+            Assert ((Get-Java21 $fixture) -eq $existing) "Java $major was not retained by default"
+        }
+        Assert ($script:installRequests -eq 0) 'Existing compatible Java caused downloads'
+        $script:javaAnswer='n'
+        $work=Join-Path $fixture 'specific-java-choice'; New-Item -ItemType Directory -Path $work|Out-Null
+        Assert ((Get-Java21 $work) -ne $existing) 'Specific Java installation did not replace the profile choice'
+        Assert ($script:installRequests -eq 1) 'Specific Java 21 choice did not download'
+        $script:existingMajor=17
+        function Read-Host { param($Prompt); throw 'Old Java should not be offered as compatible' }
+        $work=Join-Path $fixture 'old-java-choice'; New-Item -ItemType Directory -Path $work|Out-Null
+        # Avoid the earlier downloaded fixture runtime being considered a real candidate.
+        $env:USERPROFILE=Join-Path $fixture 'old java user home'
+        Assert ((Get-Java21 $work) -ne $existing) 'Java 17 accepted as compatible'
+        Assert ($script:installRequests -eq 2) 'Old Java did not trigger Java 21 installation'
+    } finally { $env:JAVA_HOME=$oldHome; $env:USERPROFILE=$oldProfile }
+}
+Say 'Windows Java 21/22/25 reuse, default Yes, specific install choice and old Java fallback passed.'
