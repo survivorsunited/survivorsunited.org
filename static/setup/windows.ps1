@@ -5,6 +5,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $MinecraftVersion = '1.21.11'
 $LoaderVersion = '0.19.5'
+$JavaArguments = '-Xmx8G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'
 $ServerAddress = 'minecraft.survivorsunited.org'
 $script:RecoveryWork = ''
 function Say([string]$Message) { Write-Host "[Survivors United] $Message" }
@@ -104,6 +105,41 @@ function Get-LatestPack([string]$Work) {
     Say "Selected latest stable modpack: $($pack.Tag)"
     Get-VerifiedFile $pack.Url (Join-Path $Work 'modpack.zip') $hash
 }
+function Resolve-JavaExecutable([string]$Java) {
+    # Resolve this read-only executable handle, including links in parent folders.
+    # Minecraft data and backup paths still use Assert-PlainPath without resolving links.
+    if (!('SurvivorsUnited.JavaPath' -as [type])) {
+        Add-Type -TypeDefinition @'
+using System;
+using System.Text;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+namespace SurvivorsUnited {
+    public static class JavaPath {
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern uint GetFinalPathNameByHandle(SafeFileHandle handle, StringBuilder path, uint size, uint flags);
+    }
+}
+'@
+    }
+    $stream = [IO.File]::Open($Java, [IO.FileMode]::Open, [IO.FileAccess]::Read, ([IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete))
+    try {
+        $buffer = New-Object Text.StringBuilder 32768
+        $length = [SurvivorsUnited.JavaPath]::GetFinalPathNameByHandle($stream.SafeFileHandle, $buffer, 32768, 0)
+        if (!$length -or $length -ge 32768) { throw "Could not resolve Java executable: $Java" }
+        $resolved = $buffer.ToString()
+        if ($resolved.StartsWith('\\?\UNC\')) { $resolved = '\\' + $resolved.Substring(8) }
+        elseif ($resolved.StartsWith('\\?\')) { $resolved = $resolved.Substring(4) }
+        Assert-PlainPath $resolved
+        return $resolved
+    } finally { $stream.Dispose() }
+}
+function Get-GameJava([string]$Java) {
+    $resolved = Resolve-JavaExecutable $Java
+    $javaw = Join-Path ([IO.Path]::GetDirectoryName($resolved)) 'javaw.exe'
+    if (Test-Path -LiteralPath $javaw -PathType Leaf) { return (Resolve-JavaExecutable $javaw) }
+    return $resolved
+}
 function Read-JavaVersion([string]$Java) {
     $ErrorActionPreference = 'Continue'
     & $Java -version 2>&1 | Out-String
@@ -133,6 +169,10 @@ function Get-Java21([string]$Work) {
     $compatibleFound = $false
     foreach ($candidate in ($candidates | Select-Object -Unique)) {
         if (Test-Path -LiteralPath $candidate) {
+            try { $candidate = Resolve-JavaExecutable $candidate; $null = Get-GameJava $candidate } catch {
+                Say "Could not use Java at ${candidate}: $($_.Exception.Message). Checking other runtimes."
+                continue
+            }
             $output = Read-JavaVersion $candidate
             $major = Get-JavaMajor $output
             if ($major -ge 21) {
@@ -201,12 +241,11 @@ function Set-Mods([string]$Pack, [string]$Game, [string]$RecoveryFolder = '') {
 function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$BackupFolder) {
     Assert-PlainPath $File
     # Setup needs console output; the game should use the sibling GUI launcher.
-    $javaw = Join-Path ([IO.Path]::GetDirectoryName($Java)) 'javaw.exe'
-    if (Test-Path -LiteralPath $javaw -PathType Leaf) { Assert-PlainPath $javaw; $Java = $javaw }
+    $Java = Get-GameJava $Java
     $data = Get-Content -LiteralPath $File -Raw | ConvertFrom-Json
     if (!$data.profiles) { throw 'Launcher profile data is missing. Open Minecraft Launcher once, close it, and retry.' }
     Copy-Item -LiteralPath $File -Destination (Join-Path $BackupFolder ([IO.Path]::GetFileName($File)))
-    $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java; javaArgs='-Xmx8G'}
+    $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java; javaArgs=$JavaArguments}
     $data.profiles | Add-Member -NotePropertyName 'survivors-united-1.21.11' -NotePropertyValue $profile -Force
     $temp = "$File.su-new-$([Guid]::NewGuid().ToString('N'))"
     [IO.File]::WriteAllText($temp, ($data | ConvertTo-Json -Depth 100), (New-Object Text.UTF8Encoding($false)))

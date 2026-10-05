@@ -3,6 +3,7 @@
 set -eEuo pipefail
 MC_VERSION=1.21.11
 LOADER_VERSION=0.19.5
+JAVA_ARGUMENTS='-Xmx8G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M'
 SERVER=minecraft.survivorsunited.org
 RECOVERY_WORK=''
 say() { printf '[Survivors United] %s\n' "$*"; }
@@ -173,7 +174,7 @@ set_profile() {
   local file="$1" game="$2" java="$3" backup="$4"
   plain_path "$file"
   cp -p "$file" "$backup/$(basename "$file")"
-  /usr/bin/osascript -l JavaScript - "$file" "$game" "$java" <<'JS'
+  /usr/bin/osascript -l JavaScript - "$file" "$game" "$java" "$JAVA_ARGUMENTS" <<'JS'
 ObjC.import('Foundation');
 function run(args) {
   const file = args[0];
@@ -183,7 +184,7 @@ function run(args) {
   if (!data.profiles || typeof data.profiles !== 'object') throw new Error('Launcher profiles missing');
   data.profiles['survivors-united-1.21.11'] = {
     name:'Survivors United 1.21.11', type:'custom',
-    lastVersionId:'fabric-loader-0.19.5-1.21.11', gameDir:args[1], javaDir:args[2], javaArgs:'-Xmx8G'
+    lastVersionId:'fabric-loader-0.19.5-1.21.11', gameDir:args[1], javaDir:args[2], javaArgs:args[3]
   };
   if (!$(JSON.stringify(data, null, 2)).writeToFileAtomicallyEncodingError(file, true, $.NSUTF8StringEncoding, null)) throw new Error('Could not save launcher profile');
   return 'Launcher profile saved; existing profiles preserved.';
