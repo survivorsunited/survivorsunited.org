@@ -256,7 +256,7 @@ function Main {
         Assert-PlainPath $game
         if (!(Test-Path -LiteralPath $game -PathType Container)) { throw 'Game Directory does not exist. Check the path in the old launcher profile.' }
         Say "Mods will go in: $game"
-        Confirm-Step 'Is this the Game Directory you want to install/update?'
+        Confirm-LauncherStep 'Is this the Game Directory you want to install/update?'
         New-Item -ItemType Directory -Path (Join-Path $work 'restore') | Out-Null
         foreach ($file in $profileFiles) { Copy-Item -LiteralPath $file -Destination (Join-Path $work "restore/$([IO.Path]::GetFileName($file))") }
         [IO.File]::WriteAllText((Join-Path $work 'game.path'), $game)

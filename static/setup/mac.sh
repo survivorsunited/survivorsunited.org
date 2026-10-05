@@ -278,7 +278,7 @@ main() {
   [ -d "$game" ] || { fail 'Game Directory does not exist. Check the old profile path.'; return 1; }
   game=$(cd "$game" && pwd -P)
   say "Mods will go in: $game"
-  confirm 'Is this the Game Directory you want to install/update?'
+  confirm_launcher 'Is this the Game Directory you want to install/update?'
   mkdir "$work/restore"
   cp -p "$root/launcher_profiles.json" "$work/restore/launcher_profiles.json"
   printf '%s' "$game" > "$work/game.path"
