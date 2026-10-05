@@ -5,8 +5,6 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $MinecraftVersion = '1.21.11'
 $LoaderVersion = '0.19.5'
-$PackUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip'
-$PackHash = '03FF0A27EFCD23EA528D1C0148BF5A60957FC3A145740B4979F6C90739F35599'
 $ServerAddress = 'minecraft.survivorsunited.org'
 $script:RecoveryWork = ''
 function Say([string]$Message) { Write-Host "[Survivors United] $Message" }
@@ -80,6 +78,31 @@ function Get-VerifiedFile([string]$Url, [string]$Destination, [string]$Hash) {
     $actual = (Get-FileHash -LiteralPath $Destination -Algorithm SHA256).Hash
     if ($actual -ne $Hash) { throw "Download verification failed: $Destination. No mods have been replaced." }
     Say 'SHA256 verified.'
+}
+function Resolve-PackRelease($Release) {
+    if ($Release.draft -or $Release.prerelease -or !$Release.tag_name) { throw 'Expected a published stable modpack release.' }
+    $name = "modpack-$MinecraftVersion.zip"
+    $pack = @($Release.assets | Where-Object { $_.name -eq $name })
+    $hashes = @($Release.assets | Where-Object { $_.name -eq 'release-hashes.txt' })
+    if ($pack.Count -ne 1 -or $hashes.Count -ne 1) { throw "Latest release does not contain a verified Minecraft $MinecraftVersion pack. No mods have been changed." }
+    $prefix = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/' + $Release.tag_name + '/'
+    if ($pack[0].browser_download_url -ne ($prefix + $name) -or $hashes[0].browser_download_url -ne ($prefix + 'release-hashes.txt')) { throw 'Unexpected modpack release download URL.' }
+    return [pscustomobject]@{ Tag = $Release.tag_name; Name = $name; Url = $pack[0].browser_download_url; HashUrl = $hashes[0].browser_download_url }
+}
+function Get-PackHash([string]$Text, [string]$Name) {
+    $pattern = '^([a-fA-F0-9]{64})\s+\*?' + [regex]::Escape($Name) + '\s*$'
+    $entries = @($Text -split '\r?\n' | Where-Object { $_ -match $pattern })
+    if ($entries.Count -ne 1) { throw 'Release checksum is missing, invalid or duplicated. No mods have been changed.' }
+    return [regex]::Match($entries[0], $pattern).Groups[1].Value
+}
+function Get-LatestPack([string]$Work) {
+    $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/survivorsunited/minecraft-mods-manager/releases/latest' -Headers @{ 'User-Agent' = 'SurvivorsUnited-Setup'; Accept = 'application/vnd.github+json' }
+    $pack = Resolve-PackRelease $release
+    $hashFile = Join-Path $Work 'release-hashes.txt'
+    Invoke-WebRequest -UseBasicParsing -Uri $pack.HashUrl -OutFile $hashFile
+    $hash = Get-PackHash (Get-Content -LiteralPath $hashFile -Raw) $pack.Name
+    Say "Selected latest stable modpack: $($pack.Tag)"
+    Get-VerifiedFile $pack.Url (Join-Path $Work 'modpack.zip') $hash
 }
 function Read-JavaVersion([string]$Java) {
     $ErrorActionPreference = 'Continue'
@@ -289,9 +312,9 @@ function Main {
         $script:RecoveryWork = $work
         Say '(2/6) Checking or downloading Java 21.'
         $java = Get-Java21 $work
-        Say '(3/6) Downloading and verifying the pinned modpack.'
+    Say '(3/6) Finding, downloading and verifying the latest stable modpack.'
         $zip = Join-Path $work 'modpack.zip'
-        Get-VerifiedFile $PackUrl $zip $PackHash
+    Get-LatestPack $work
         $pack = Join-Path $work 'pack'
         Expand-Archive -LiteralPath $zip -DestinationPath $pack
         Get-ModFiles $pack | Out-Null

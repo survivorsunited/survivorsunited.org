@@ -3,8 +3,6 @@
 set -eEuo pipefail
 MC_VERSION=1.21.11
 LOADER_VERSION=0.19.5
-PACK_URL=https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip
-PACK_HASH=03ff0a27efcd23ea528d1c0148bf5a60957fc3a145740b4979f6c90739f35599
 SERVER=minecraft.survivorsunited.org
 RECOVERY_WORK=''
 say() { printf '[Survivors United] %s\n' "$*"; }
@@ -83,6 +81,40 @@ verified_download() {
   actual=$(shasum -a 256 "$target" | awk '{print $1}')
   [ "$actual" = "$expected" ] || { fail "Download verification failed: $target. No mods replaced."; return 1; }
   say 'SHA256 verified.'
+}
+resolve_pack_release() {
+  /usr/bin/osascript -l JavaScript - "$1" "$MC_VERSION" <<'JS'
+ObjC.import('Foundation');
+function run(args) {
+  const release = JSON.parse(ObjC.unwrap($.NSString.stringWithContentsOfFileEncodingError(args[0], $.NSUTF8StringEncoding, null)));
+  if (release.draft || release.prerelease || !release.tag_name) throw Error('Expected a published stable modpack release.');
+  const name = 'modpack-' + args[1] + '.zip';
+  const pack = release.assets.filter(a => a.name === name);
+  const hashes = release.assets.filter(a => a.name === 'release-hashes.txt');
+  if (pack.length !== 1 || hashes.length !== 1) throw Error('Latest release does not contain a verified Minecraft ' + args[1] + ' pack.');
+  const prefix = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/' + release.tag_name + '/';
+  if (pack[0].browser_download_url !== prefix + name || hashes[0].browser_download_url !== prefix + 'release-hashes.txt') throw Error('Unexpected modpack release download URL.');
+  return [release.tag_name, pack[0].browser_download_url, hashes[0].browser_download_url].join('\n');
+}
+JS
+}
+pack_hash() {
+  awk -v name="modpack-$MC_VERSION.zip" '
+    { sub(/\r$/, ""); file=$2; sub(/^\*/, "", file); if (file == name && NF == 2 && length($1) == 64 && $1 !~ /[^a-fA-F0-9]/) { count++; hash=tolower($1) } }
+    END { if (count != 1) exit 1; print hash }
+  ' "$1"
+}
+latest_pack() {
+  local work="$1" resolved tag url hashes hash
+  curl --fail --location --proto '=https' --proto-redir '=https' --retry 2 -H 'Accept: application/vnd.github+json' -H 'User-Agent: SurvivorsUnited-Setup' --output "$work/release.json" 'https://api.github.com/repos/survivorsunited/minecraft-mods-manager/releases/latest'
+  resolved=$(resolve_pack_release "$work/release.json") || return 1
+  tag=$(printf '%s\n' "$resolved" | sed -n '1p')
+  url=$(printf '%s\n' "$resolved" | sed -n '2p')
+  hashes=$(printf '%s\n' "$resolved" | sed -n '3p')
+  curl --fail --location --proto '=https' --proto-redir '=https' --retry 2 --output "$work/release-hashes.txt" "$hashes"
+  hash=$(pack_hash "$work/release-hashes.txt") || { fail 'Release checksum is missing, invalid or duplicated. No mods have been changed.'; return 1; }
+  say "Selected latest stable modpack: $tag"
+  verified_download "$url" "$work/modpack.zip" "$hash"
 }
 extract_pack() {
   # Some optional shader filenames cannot be decoded by macOS unzip under SSH's
@@ -343,8 +375,8 @@ main() {
   "$java" -version
   candidate=$(java_major "$("$java" -version 2>&1)")
   [ -n "$candidate" ] && [ "$candidate" -ge 21 ] || { fail 'Java runtime must be version 21 or newer.'; return 1; }
-  say '(3/6) Downloading and verifying the pinned modpack.'
-  verified_download "$PACK_URL" "$work/modpack.zip" "$PACK_HASH"
+  say '(3/6) Finding, downloading and verifying the latest stable modpack.'
+  latest_pack "$work"
   extract_pack "$work/modpack.zip" "$work/pack"
   say '(4/6) Installing Fabric into the launcher folder.'
   closed
