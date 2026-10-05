@@ -138,3 +138,37 @@ Say 'Windows downloaded Java runtime location fixture passed.'
     Assert $cancelled 'Explicit No did not stop Launcher retry'
 }
 Say 'Windows repeat-run detection, first-run readiness, retry, default Yes and cancellation passed.'
+# Existing Java 21 or newer is the default; choosing No downloads the specific Java 21 runtime.
+& {
+    foreach($major in @(17,21,22,25)) { Assert ((Get-JavaMajor "openjdk version `"$major.0.2`"") -eq $major) "Java $major version parsing failed" }
+    Assert ((Get-JavaMajor 'not a Java runtime') -eq 0) 'Invalid Java output accepted'
+    $oldHome=$env:JAVA_HOME; $oldProfile=$env:USERPROFILE
+    try {
+        $env:USERPROFILE=Join-Path $fixture 'java choices home'
+        $env:JAVA_HOME=Join-Path $fixture 'existing Java'
+        New-Item -ItemType Directory -Path "$env:JAVA_HOME/bin" -Force|Out-Null
+        $existing=Join-Path $env:JAVA_HOME 'bin/java.exe'
+        [IO.File]::WriteAllText($existing,'fixture')
+        $script:existingMajor=22; $script:installRequests=0; $script:javaAnswer=''
+        function Read-JavaVersion { param($Java); $global:LASTEXITCODE=0; if($Java -eq $existing){"java version `"$script:existingMajor.0.2`""}else{'openjdk version "21.0.12"'} }
+        function Read-Host { param($Prompt); return $script:javaAnswer }
+        function Get-VerifiedFile { param($Url,$Destination,$Hash); $script:installRequests++; [IO.File]::WriteAllText($Destination,'fixture') }
+        foreach($major in @(21,22,25)) {
+            $script:existingMajor=$major
+            Assert ((Get-Java21 $fixture) -eq $existing) "Java $major was not retained by default"
+        }
+        Assert ($script:installRequests -eq 0) 'Existing compatible Java caused downloads'
+        $script:javaAnswer='n'
+        $work=Join-Path $fixture 'specific-java-choice'; New-Item -ItemType Directory -Path $work|Out-Null
+        Assert ((Get-Java21 $work) -ne $existing) 'Specific Java installation did not replace the profile choice'
+        Assert ($script:installRequests -eq 1) 'Specific Java 21 choice did not download'
+        $script:existingMajor=17
+        function Read-Host { param($Prompt); throw 'Old Java should not be offered as compatible' }
+        $work=Join-Path $fixture 'old-java-choice'; New-Item -ItemType Directory -Path $work|Out-Null
+        # Avoid the earlier downloaded fixture runtime being considered a real candidate.
+        $env:USERPROFILE=Join-Path $fixture 'old java user home'
+        Assert ((Get-Java21 $work) -ne $existing) 'Java 17 accepted as compatible'
+        Assert ($script:installRequests -eq 2) 'Old Java did not trigger Java 21 installation'
+    } finally { $env:JAVA_HOME=$oldHome; $env:USERPROFILE=$oldProfile }
+}
+Say 'Windows Java 21/22/25 reuse, default Yes, specific install choice and old Java fallback passed.'

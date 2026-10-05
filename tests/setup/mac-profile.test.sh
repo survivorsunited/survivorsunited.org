@@ -38,3 +38,21 @@ launcher_profiles_ready "$fresh"
 printf '%s' '{"profiles":[]}' > "$fresh/launcher_profiles.json"
 if launcher_profiles_ready "$fresh"; then printf 'Invalid profile accepted\n'; exit 1; fi
 printf 'Mac Launcher readiness, existing setup, retry, default Yes and cancellation verified.\n'
+for major in 17 21 22 25; do
+  [ "$(java_major "openjdk version \"$major.0.2\"")" = "$major" ]
+done
+[ -z "$(java_major 'not a Java runtime')" ]
+mkdir -p "$fixture/existing-java/bin"
+cat > "$fixture/existing-java/bin/java" <<'JAVA'
+#!/bin/bash
+printf 'openjdk version "22.0.2"\n' >&2
+JAVA
+chmod +x "$fixture/existing-java/bin/java"
+JAVA_HOME="$fixture/existing-java"
+existing=$(find_existing_java)
+[ "$existing" = "$JAVA_HOME/bin/java" ]
+choose_existing_java "$existing" <<< ''
+[ "$JAVA_SELECTION" = "$existing" ]
+choose_existing_java "$existing" <<< n
+[ -z "$JAVA_SELECTION" ]
+printf 'Mac Java version detection, Java 22 reuse by default and specific Java 21 choice verified.\n'

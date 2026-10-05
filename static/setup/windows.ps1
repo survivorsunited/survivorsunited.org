@@ -84,18 +84,42 @@ function Read-JavaVersion([string]$Java) {
     $ErrorActionPreference = 'Continue'
     & $Java -version 2>&1 | Out-String
 }
+function Get-JavaMajor([string]$Output) {
+    if ($Output -match 'version "(\d+)(?:[.\"+\-])') { return [int]$Matches[1] }
+    return 0
+}
+function Use-ExistingJava([int]$Major, [string]$Java) {
+    Say "Compatible Java $Major found: $Java"
+    while ($true) {
+        $answer = Read-Host 'Keep using existing Java? [Y/n] (n installs a separate Java 21 runtime)'
+        if (!$answer -or $answer -match '^(y|yes)$') { return $true }
+        if ($answer -match '^(n|no)$') { return $false }
+        Say 'Press Enter to keep existing Java, or type n to install Java 21.'
+    }
+}
 function Get-Java21([string]$Work) {
     $candidates = @()
     if ($env:JAVA_HOME) { $candidates += (Join-Path $env:JAVA_HOME 'bin/java.exe') }
     $command = Get-Command java.exe -ErrorAction SilentlyContinue
     if ($command) { $candidates += $command.Source }
-    foreach ($candidate in $candidates) {
+    $retained = Join-Path $env:USERPROFILE '.survivorsunited/runtimes'
+    if (Test-Path -LiteralPath $retained) {
+        $candidates += @(Get-ChildItem -LiteralPath $retained -Filter java.exe -Recurse -File | Where-Object {$_.Directory.Name -eq 'bin'} | Select-Object -ExpandProperty FullName)
+    }
+    $compatibleFound = $false
+    foreach ($candidate in ($candidates | Select-Object -Unique)) {
         if (Test-Path -LiteralPath $candidate) {
             $output = Read-JavaVersion $candidate
-            if ($output -match 'version "21[.\"]') { Say "Java 21 found: $candidate"; return $candidate }
+            $major = Get-JavaMajor $output
+            if ($major -ge 21) {
+                $compatibleFound = $true
+                if (Use-ExistingJava $major $candidate) { return $candidate }
+                break
+            }
         }
     }
-    Say 'Java 21 not found. Installing a private Java runtime for this setup; system Java stays unchanged.'
+    if (!$compatibleFound) { Say 'No compatible Java found (Java 21 or newer required).' }
+    Say 'Installing a separate Java 21 runtime for Minecraft; system Java stays unchanged.'
     $assets = Invoke-RestMethod -Uri 'https://api.adoptium.net/v3/assets/latest/21/hotspot?architecture=x64&image_type=jdk&os=windows&vendor=eclipse'
     $package = $assets[0].binary.package
     $archive = Join-Path $Work 'java21.zip'

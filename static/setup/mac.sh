@@ -211,6 +211,43 @@ setup_failed() {
   else say 'Your mods and launcher profiles have not been changed.'; fi
   exit 1
 }
+java_major() {
+  printf '%s\n' "$1" | sed -n 's/.*version "\([0-9][0-9]*\)[."+_-].*/\1/p' | head -n 1
+}
+find_existing_java() {
+  local candidate home output major
+  local candidates=()
+  [ -z "${JAVA_HOME:-}" ] || candidates+=("$JAVA_HOME/bin/java")
+  candidate=$(command -v java || true)
+  [ -z "$candidate" ] || candidates+=("$candidate")
+  home=$(/usr/libexec/java_home 2>/dev/null || true)
+  [ -z "$home" ] || candidates+=("$home/bin/java")
+  for candidate in "$HOME/Library/Application Support/SurvivorsUnited/"setup-*/java21/*/Contents/Home/bin/java; do
+    [ ! -x "$candidate" ] || candidates+=("$candidate")
+  done
+  for candidate in "${candidates[@]}"; do
+    [ -x "$candidate" ] || continue
+    output=$("$candidate" -version 2>&1) || continue
+    major=$(java_major "$output")
+    if [ -n "$major" ] && [ "$major" -ge 21 ]; then printf '%s\n' "$candidate"; return; fi
+  done
+}
+choose_existing_java() {
+  local candidate="$1" output major answer
+  JAVA_SELECTION=''
+  output=$("$candidate" -version 2>&1)
+  major=$(java_major "$output")
+  say "Compatible Java $major found: $candidate"
+  while true; do
+    printf 'Keep using existing Java? [Y/n] (n installs a separate Java 21 runtime) '
+    read -r answer || return 1
+    case "$answer" in
+      ''|y|Y|yes|YES) JAVA_SELECTION="$candidate"; return;;
+      n|N|no|NO) return;;
+      *) say 'Press Return to keep existing Java, or type n to install Java 21.';;
+    esac
+  done
+}
 main() {
   local root="$HOME/Library/Application Support/minecraft" game='' check=0 arch work java='' candidate package_url package_hash launcher mount restore='' previous='' answer saved
   while [ "$#" -gt 0 ]; do
@@ -284,9 +321,14 @@ main() {
   printf '%s' "$game" > "$work/game.path"
   printf '%s' "$root" > "$work/root.path"
   RECOVERY_WORK="$work"
-  say '(2/6) Checking or downloading Java 21.'
-  candidate=$(/usr/libexec/java_home -v 21 2>/dev/null || true)
-  if [ -n "$candidate" ] && "$candidate/bin/java" -version 2>&1 | grep -q 'version "21[.\"]'; then java="$candidate/bin/java"; fi
+  say '(2/6) Checking Java (21 or newer).'
+  candidate=$(find_existing_java)
+  if [ -n "$candidate" ]; then
+    choose_existing_java "$candidate"
+    java="$JAVA_SELECTION"
+  else
+    say 'No compatible Java found (Java 21 or newer required).'
+  fi
   if [ -z "$java" ]; then
     say 'Installing a private Java 21 runtime for this setup; system Java stays unchanged.'
     curl --fail --location --proto '=https' --proto-redir '=https' --output "$work/java-metadata.json" "https://api.adoptium.net/v3/assets/latest/21/hotspot?architecture=$arch&image_type=jdk&os=mac&vendor=eclipse"
@@ -299,7 +341,8 @@ main() {
     [ -n "$java" ] && [ "$(printf '%s\n' "$java" | wc -l | tr -d ' ')" = 1 ] || { fail 'Java runtime missing or ambiguous.'; return 1; }
   fi
   "$java" -version
-  "$java" -version 2>&1 | grep -q 'version "21[.\"]' || { fail 'Java 21 verification failed.'; return 1; }
+  candidate=$(java_major "$("$java" -version 2>&1)")
+  [ -n "$candidate" ] && [ "$candidate" -ge 21 ] || { fail 'Java runtime must be version 21 or newer.'; return 1; }
   say '(3/6) Downloading and verifying the pinned modpack.'
   verified_download "$PACK_URL" "$work/modpack.zip" "$PACK_HASH"
   extract_pack "$work/modpack.zip" "$work/pack"
