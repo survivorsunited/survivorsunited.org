@@ -22,6 +22,14 @@ The scripts target Minecraft 1.21.11 and Fabric Loader 0.19.5. Each run selects 
 
 Profiles use the selected Game Directory, Java 21 or newer, and an 8 GB maximum memory allocation. Existing launcher profiles are preserved and backed up. Client JARs from both pack folders are staged and verified before the old mods folder is moved. A failed activation attempts to restore the old folder. The script waits for you to close running Minecraft/Launcher processes and stops for linked paths.
 
+Both installers set these Java arguments for the Survivors United profile:
+
+```text
+-Xmx8G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M
+```
+
+On Windows, setup resolves linked Java executable locations such as Oracle's `javapath` and uses the matching `javaw.exe` for the game. Linked Minecraft data folders and backup locations remain unsupported.
+
 A script cannot verify Java Edition ownership without the user's sign-in, or confirm a successful game launch and server connection. Those checks remain interactive. No worlds are opened or upgraded by the script. Downloads and logs are retained for troubleshooting; keep the private Java folder because the new profile refers to it.
 
 Launcher may show a first-run warning because Fabric modifies Minecraft and may not support all player safety features. During setup, you can press Enter to acknowledge this and remember the choice for the Survivors United installation, or answer **n** to keep the warning. Existing acknowledgements are detected. The original Launcher state is backed up and restored with your previous setup. If your Launcher uses an unsupported state format, tick **Don't warn me again about this installation** and press **Play** once in Launcher.

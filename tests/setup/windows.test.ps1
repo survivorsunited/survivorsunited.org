@@ -31,22 +31,26 @@ Assert (Test-Path "$game/mods/client.jar") 'Active mods lost on failure'
 $profile = Join-Path $fixture 'launcher_profiles.json'
 [IO.File]::WriteAllText($profile,'{"profiles":{"old":{"name":"Keep me"}},"settings":{"keep":true}}')
 New-Item -ItemType Directory -Path "$fixture/backup" | Out-Null
-Set-Profile $profile $game 'C:\Java21\bin\java.exe' "$fixture/backup"
+New-Item -ItemType Directory "$fixture/console-java/bin" | Out-Null
+$consoleJava = Join-Path "$fixture/console-java/bin" 'java.exe'
+[IO.File]::WriteAllText($consoleJava,'console-java-fixture')
+$consoleJava = Resolve-JavaExecutable $consoleJava
+Set-Profile $profile $game $consoleJava "$fixture/backup"
 # Use a separate backup directory so source and backup do not share a path.
 $data = Get-Content $profile -Raw | ConvertFrom-Json
-Assert ($data.profiles.'survivors-united-1.21.11'.javaArgs -eq '-Xmx8G') 'Profile must set an 8 GB maximum heap'
+Assert ($data.profiles.'survivors-united-1.21.11'.javaArgs -eq $JavaArguments) 'Profile must set the full requested Java arguments'
 Assert ($data.profiles.old.name -eq 'Keep me') 'Existing profile lost'
 Assert ($data.settings.keep -eq $true) 'Existing settings lost'
 Assert ($data.profiles.'survivors-united-1.21.11'.gameDir -eq $game) 'Custom directory missing'
 Assert (Test-Path "$fixture/backup/launcher_profiles.json") 'Profile backup missing'
-Assert ($data.profiles.'survivors-united-1.21.11'.javaDir -eq 'C:\Java21\bin\java.exe') 'Missing javaw fallback failed'
+Assert ($data.profiles.'survivors-united-1.21.11'.javaDir -eq $consoleJava) 'Missing javaw fallback failed'
 New-Item -ItemType Directory "$fixture/gui-java/bin", "$fixture/gui-backup" | Out-Null
 [IO.File]::WriteAllText("$fixture/gui-java/bin/java.exe",'console-java-fixture')
 [IO.File]::WriteAllText("$fixture/gui-java/bin/javaw.exe",'gui-java-fixture')
 Set-Profile $profile $game "$fixture/gui-java/bin/java.exe" "$fixture/gui-backup"
 $guiProfile = (Get-Content $profile -Raw | ConvertFrom-Json).profiles.'survivors-united-1.21.11'
-Assert ($guiProfile.javaDir -eq (Join-Path "$fixture/gui-java/bin" 'javaw.exe')) 'Game must use javaw when available'
-Assert ($guiProfile.javaArgs -eq '-Xmx8G') 'GUI Java selection lost memory setting'
+Assert ($guiProfile.javaDir -eq (Resolve-JavaExecutable "$fixture/gui-java/bin/javaw.exe")) 'Game must use javaw when available'
+Assert ($guiProfile.javaArgs -eq $JavaArguments) 'GUI Java selection lost requested arguments'
 function Invoke-WebRequest { param($Uri,$OutFile,[switch]$UseBasicParsing); [IO.File]::WriteAllText($OutFile,'corrupt-download') }
 $failed = $false
 try { Get-VerifiedFile 'https://example.test/archive' "$fixture/download" ('0' * 64) } catch { $failed = $true }
@@ -157,6 +161,7 @@ Say 'Windows repeat-run detection, first-run readiness, retry, default Yes and c
         New-Item -ItemType Directory -Path "$env:JAVA_HOME/bin" -Force|Out-Null
         $existing=Join-Path $env:JAVA_HOME 'bin/java.exe'
         [IO.File]::WriteAllText($existing,'fixture')
+        $existing = Resolve-JavaExecutable $existing
         $script:existingMajor=22; $script:installRequests=0; $script:javaAnswer=''
         function Read-JavaVersion { param($Java); $global:LASTEXITCODE=0; if($Java -eq $existing){"java version `"$script:existingMajor.0.2`""}else{'openjdk version "21.0.12"'} }
         function Read-Host { param($Prompt); return $script:javaAnswer }

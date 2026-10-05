@@ -13,7 +13,7 @@ ObjC.import('Foundation');
 function run(args) {
  const text=$.NSString.stringWithContentsOfFileEncodingError(args[0], $.NSUTF8StringEncoding,null);
  const data=JSON.parse(ObjC.unwrap(text));
- if(data.profiles['survivors-united-1.21.11'].javaArgs!=='-Xmx8G') throw Error('8 GB maximum heap missing');
+ if(data.profiles['survivors-united-1.21.11'].javaArgs!=='-Xmx8G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M') throw Error('Requested Java arguments missing');
  if(data.profiles.old.javaArgs!=='-Xmx2G' || !data.settings.keep) throw Error('Existing profile or settings changed');
  return 'Mac profile: 8 GB heap, existing settings and original backup verified.';
 }
