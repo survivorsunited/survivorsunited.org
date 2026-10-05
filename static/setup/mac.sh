@@ -108,7 +108,7 @@ function run(args) {
   if (!data.profiles || typeof data.profiles !== 'object') throw new Error('Launcher profiles missing');
   data.profiles['survivors-united-1.21.11'] = {
     name:'Survivors United 1.21.11', type:'custom',
-    lastVersionId:'fabric-loader-0.19.5-1.21.11', gameDir:args[1], javaDir:args[2]
+    lastVersionId:'fabric-loader-0.19.5-1.21.11', gameDir:args[1], javaDir:args[2], javaArgs:'-Xmx8G'
   };
   if (!$(JSON.stringify(data, null, 2)).writeToFileAtomicallyEncodingError(file, true, $.NSUTF8StringEncoding, null)) throw new Error('Could not save launcher profile');
   return 'Launcher profile saved; existing profiles preserved.';

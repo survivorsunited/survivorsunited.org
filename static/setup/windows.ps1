@@ -116,7 +116,7 @@ function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$Backu
     $data = Get-Content -LiteralPath $File -Raw | ConvertFrom-Json
     if (!$data.profiles) { throw 'Launcher profile data is missing. Open Minecraft Launcher once, close it, and retry.' }
     Copy-Item -LiteralPath $File -Destination (Join-Path $BackupFolder ([IO.Path]::GetFileName($File)))
-    $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java}
+    $profile = [pscustomobject]@{name='Survivors United 1.21.11'; type='custom'; lastVersionId="fabric-loader-$LoaderVersion-$MinecraftVersion"; gameDir=$Game; javaDir=$Java; javaArgs='-Xmx8G'}
     $data.profiles | Add-Member -NotePropertyName 'survivors-united-1.21.11' -NotePropertyValue $profile -Force
     $temp = "$File.su-new-$([Guid]::NewGuid().ToString('N'))"
     [IO.File]::WriteAllText($temp, ($data | ConvertTo-Json -Depth 100), (New-Object Text.UTF8Encoding($false)))

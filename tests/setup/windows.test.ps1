@@ -34,6 +34,7 @@ New-Item -ItemType Directory -Path "$fixture/backup" | Out-Null
 Set-Profile $profile $game 'C:\Java21\bin\java.exe' "$fixture/backup"
 # Use a separate backup directory so source and backup do not share a path.
 $data = Get-Content $profile -Raw | ConvertFrom-Json
+Assert ($data.profiles.'survivors-united-1.21.11'.javaArgs -eq '-Xmx8G') 'Profile must set an 8 GB maximum heap'
 Assert ($data.profiles.old.name -eq 'Keep me') 'Existing profile lost'
 Assert ($data.settings.keep -eq $true) 'Existing settings lost'
 Assert ($data.profiles.'survivors-united-1.21.11'.gameDir -eq $game) 'Custom directory missing'
