@@ -10,7 +10,7 @@ Close Minecraft and its launcher before changing mods. Install [Java 21](/docs/m
 
 ## (1) Download and extract the modpack
 
-[Download Survivors United modpack 1.21.11 ZIP](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip).
+[Download Survivors United modpack 1.21.11 ZIP](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip).
 
 - **Windows:** right-click the downloaded ZIP → **Extract All → Extract**.
 - **Mac:** double-click the ZIP in Finder → Downloads.

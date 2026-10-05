@@ -56,3 +56,5 @@ choose_existing_java "$existing" <<< ''
 choose_existing_java "$existing" <<< n
 [ -z "$JAVA_SELECTION" ]
 printf 'Mac Java version detection, Java 22 reuse by default and specific Java 21 choice verified.\n'
+
+confirm 'Initial setup defaults to Yes' <<< ''

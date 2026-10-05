@@ -172,3 +172,6 @@ Say 'Windows repeat-run detection, first-run readiness, retry, default Yes and c
     } finally { $env:JAVA_HOME=$oldHome; $env:USERPROFILE=$oldProfile }
 }
 Say 'Windows Java 21/22/25 reuse, default Yes, specific install choice and old Java fallback passed.'
+
+& { function Read-Host { param($Prompt); return '' }; Confirm-Step 'Proceed?' }
+Say 'Initial setup confirmation accepts Enter as Yes.'

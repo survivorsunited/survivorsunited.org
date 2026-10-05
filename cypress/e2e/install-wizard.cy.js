@@ -9,7 +9,7 @@ const next = () => {
 const ready = () => {
   cy.get('main').contains('label', 'I have Minecraft Launcher installed').find('input').check();
   cy.get('main').contains('label', 'My account owns Minecraft: Java Edition').find('input').check();
-  cy.get('main').contains('label', 'I have Java 21 installed').find('input').check();
+  cy.get('main').contains('label', 'I have Java 21 or newer installed').find('input').check();
   cy.get('main').contains('label', 'I reached the main menu').find('input').check();
   cy.get('main').contains('button', 'Continue to install or upgrade').click();
 };
@@ -96,11 +96,11 @@ describe('Setup Wizard', () => {
       cy.get('main').contains('label', 'I connected to Survivors United').find('input').check();
       cy.get('main').contains('a', 'What to do after joining').should('be.visible');
       cy.get('main').contains('button', 'Check prerequisites').click();
-      cy.get('main').contains('label', 'I have Java 21 installed').find('input').should('be.checked').uncheck();
+      cy.get('main').contains('label', 'I have Java 21 or newer installed').find('input').should('be.checked').uncheck();
       cy.get('main').contains('label', 'I reached the main menu').find('input').should('not.be.checked');
       cy.get('main').contains('button', 'Continue to install or upgrade').should('be.disabled');
       cy.reload();
-      cy.get('main').contains('label', 'I have Java 21 installed').find('input').should('not.be.checked');
+      cy.get('main').contains('label', 'I have Java 21 or newer installed').find('input').should('not.be.checked');
     });
   }
 

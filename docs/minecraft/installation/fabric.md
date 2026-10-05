@@ -10,7 +10,7 @@ Fabric Loader lets Minecraft run the Survivors United mods. **Fabric API is alre
 
 ## (1) Download and extract the installer
 
-[Download Survivors United modpack 1.21.11 ZIP](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip).
+[Download Survivors United modpack 1.21.11 ZIP](https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip).
 
 - **Windows:** in Downloads, right-click the ZIP → **Extract All → Extract**.
 - **Mac:** in Finder → Downloads, double-click the ZIP. If already extracted, open the folder.

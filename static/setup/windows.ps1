@@ -5,13 +5,14 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $MinecraftVersion = '1.21.11'
 $LoaderVersion = '0.19.5'
-$PackUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip'
-$PackHash = 'BCB3FCF4815EDD3CAC38A6C9258802758B05B0C92FE6F5260370BD064D8CCABC'
+$PackUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip'
+$PackHash = '03FF0A27EFCD23EA528D1C0148BF5A60957FC3A145740B4979F6C90739F35599'
 $ServerAddress = 'minecraft.survivorsunited.org'
 $script:RecoveryWork = ''
 function Say([string]$Message) { Write-Host "[Survivors United] $Message" }
 function Confirm-Step([string]$Message) {
-    if ((Read-Host "$Message [y/N]") -notmatch '^(y|yes)$') { throw 'Stopped at your request. Run the script again when ready.' }
+    $answer = Read-Host "$Message [Y/n]"
+    if ($answer -and $answer -notmatch '^(y|yes)$') { throw 'Stopped at your request. Run the script again when ready.' }
 }
 function Assert-PlainPath([string]$Path) {
     $itemPath = [IO.Path]::GetFullPath($Path)
@@ -256,7 +257,7 @@ function Main {
     $previous = @(Get-ChildItem -LiteralPath $cache -Directory -ErrorAction SilentlyContinue | Where-Object {Test-Path -LiteralPath (Join-Path $_.FullName 'root.path')} | Sort-Object LastWriteTime -Descending)
     if ($previous.Count) {
         Say "Previous setup backup: $($previous[0].FullName)"
-        if ((Read-Host 'Install/update or restore the previous setup? [I/r]') -match '^(r|restore)$') { Restore-Setup $previous[0].FullName; return }
+        if ((Read-Host 'Install/update now? [Y/n] (n restores the previous setup)') -match '^(n|no|r|restore)$') { Restore-Setup $previous[0].FullName; return }
     }
     Confirm-Step 'Proceed with Launcher/Java setup, Fabric installation and a backed-up mod replacement?'
     $work = Join-Path $cache ([Guid]::NewGuid().ToString('N'))
@@ -313,7 +314,8 @@ function Main {
         Say "Setup failed: $($_.Exception.Message)"
         if ($script:RecoveryWork) {
             Say "Recovery backup: $script:RecoveryWork. Rerun this same command and choose Restore if you prefer to restore later."
-            if ((Read-Host 'Restore your previous mods and launcher profiles now? [y/N]') -match '^(y|yes)$') { Restore-Setup $script:RecoveryWork }
+            $answer = Read-Host 'Restore your previous mods and launcher profiles now? [Y/n]'
+            if (!$answer -or $answer -match '^(y|yes)$') { Restore-Setup $script:RecoveryWork }
         } else { Say 'Your mods and launcher profiles have not been changed.' }
         throw
     } finally { Stop-Transcript | Out-Null }
