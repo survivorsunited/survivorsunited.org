@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 type Computer = 'windows' | 'mac';
-const packUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip';
+const packUrl = 'https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip';
 const server = 'minecraft.survivorsunited.org';
 const macJavaArm = 'https://api.adoptium.net/v3/installer/latest/21/ga/mac/aarch64/jdk/hotspot/normal/eclipse';
 const macJavaIntel = 'https://api.adoptium.net/v3/installer/latest/21/ga/mac/x64/jdk/hotspot/normal/eclipse';
@@ -21,7 +21,7 @@ type Requirement = 'launcher' | 'account' | 'java';
 const requirements: {id: Requirement; label: string; action: string}[] = [
   {id: 'launcher', label: 'I have Minecraft Launcher installed', action: 'Install the launcher'},
   {id: 'account', label: 'My account owns Minecraft: Java Edition', action: 'Check my account'},
-  {id: 'java', label: 'I have Java 21 installed', action: 'Install Java / I’m not sure'},
+  {id: 'java', label: 'I have Java 21 or newer installed', action: 'Install Java / I’m not sure'},
 ];
 
 function CopyValue({value}: {value: string}) {
@@ -71,7 +71,7 @@ function Step({computer, step}: {computer: Computer; step: number}) {
       <Help><p><strong>Buy Now / Play Demo?</strong> Check you are signed in to the account that owns Java Edition. Do not open a single-player world for this setup.</p></Help>
     </>;
     case 3: return <>
-      <p>Java opens the Fabric installer. <strong>If Java 21 is already installed, you can skip installing it.</strong> If you are unsure, use the installer below.</p>
+      <p>Java opens the Fabric installer. <strong>If Java 21 or newer is already installed, you can skip installing it.</strong> If you are unsure, use the installer below.</p>
       {!mac && <><p>In <strong>PowerShell</strong>, install Java 21 with:</p><CopyValue value="winget install --exact --id EclipseAdoptium.Temurin.21.JDK --source winget"/><p>Close and reopen PowerShell.</p></>}
       <p>To check the installed version in {mac ? 'Terminal' : 'PowerShell'}, run:</p>
       <CopyValue value="java -version"/>

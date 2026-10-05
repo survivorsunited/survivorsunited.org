@@ -3,17 +3,17 @@
 set -eEuo pipefail
 MC_VERSION=1.21.11
 LOADER_VERSION=0.19.5
-PACK_URL=https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.02-1.21.11-r3/modpack-1.21.11.zip
-PACK_HASH=bcb3fcf4815edd3cac38a6c9258802758b05b0c92fe6f5260370bd064d8ccabc
+PACK_URL=https://github.com/survivorsunited/minecraft-mods-manager/releases/download/release-2026.10.05-1.21.11-r1/modpack-1.21.11.zip
+PACK_HASH=03ff0a27efcd23ea528d1c0148bf5a60957fc3a145740b4979f6c90739f35599
 SERVER=minecraft.survivorsunited.org
 RECOVERY_WORK=''
 say() { printf '[Survivors United] %s\n' "$*"; }
 fail() { say "STOPPED: $*" >&2; return 1; }
 confirm() {
   local answer
-  printf '%s [y/N] ' "$1"
+  printf '%s [Y/n] ' "$1"
   read -r answer
-  case "$answer" in y|Y|yes|YES) ;; *) fail 'Stopped at your request. Run again when ready.';; esac
+  case "$answer" in ''|y|Y|yes|YES) ;; *) fail 'Stopped at your request. Run again when ready.';; esac
 }
 plain_path() {
   local path="$1"
@@ -204,8 +204,8 @@ setup_failed() {
   if [ "$BASH_SUBSHELL" -gt 0 ]; then exit 1; fi
   if [ -n "$RECOVERY_WORK" ]; then
     say "Recovery backup: $RECOVERY_WORK. Rerun this same command and choose Restore if you prefer to restore later."
-    printf 'Restore your previous mods and launcher profiles now? [y/N] '
-    if read -r answer && { [ "$answer" = y ] || [ "$answer" = Y ] || [ "$answer" = yes ]; }; then
+    printf 'Restore your previous mods and launcher profiles now? [Y/n] '
+    if read -r answer && { [ -z "$answer" ] || [ "$answer" = y ] || [ "$answer" = Y ] || [ "$answer" = yes ] || [ "$answer" = YES ]; }; then
       (set -e; restore_setup "$RECOVERY_WORK") || say 'Restore did not complete. Keep all backups and the log for support.'
     fi
   else say 'Your mods and launcher profiles have not been changed.'; fi
@@ -280,9 +280,9 @@ main() {
   done
   if [ -n "$previous" ]; then
     say "Previous setup backup: $previous"
-    printf 'Install/update or restore the previous setup? [I/r] '
+    printf 'Install/update now? [Y/n] (n restores the previous setup) '
     read -r answer
-    case "$answer" in r|R|restore) restore_setup "$previous"; return;; esac
+    case "$answer" in n|N|no|NO|r|R|restore) restore_setup "$previous"; return;; esac
   fi
   confirm 'Proceed with Launcher/Java setup, Fabric installation and a backed-up mod replacement?'
   work=$(mktemp -d "$HOME/Library/Application Support/SurvivorsUnited/setup-XXXXXXXX")
