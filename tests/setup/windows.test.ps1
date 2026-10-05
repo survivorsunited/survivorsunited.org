@@ -39,6 +39,14 @@ Assert ($data.profiles.old.name -eq 'Keep me') 'Existing profile lost'
 Assert ($data.settings.keep -eq $true) 'Existing settings lost'
 Assert ($data.profiles.'survivors-united-1.21.11'.gameDir -eq $game) 'Custom directory missing'
 Assert (Test-Path "$fixture/backup/launcher_profiles.json") 'Profile backup missing'
+Assert ($data.profiles.'survivors-united-1.21.11'.javaDir -eq 'C:\Java21\bin\java.exe') 'Missing javaw fallback failed'
+New-Item -ItemType Directory "$fixture/gui-java/bin", "$fixture/gui-backup" | Out-Null
+[IO.File]::WriteAllText("$fixture/gui-java/bin/java.exe",'console-java-fixture')
+[IO.File]::WriteAllText("$fixture/gui-java/bin/javaw.exe",'gui-java-fixture')
+Set-Profile $profile $game "$fixture/gui-java/bin/java.exe" "$fixture/gui-backup"
+$guiProfile = (Get-Content $profile -Raw | ConvertFrom-Json).profiles.'survivors-united-1.21.11'
+Assert ($guiProfile.javaDir -eq (Join-Path "$fixture/gui-java/bin" 'javaw.exe')) 'Game must use javaw when available'
+Assert ($guiProfile.javaArgs -eq '-Xmx8G') 'GUI Java selection lost memory setting'
 function Invoke-WebRequest { param($Uri,$OutFile,[switch]$UseBasicParsing); [IO.File]::WriteAllText($OutFile,'corrupt-download') }
 $failed = $false
 try { Get-VerifiedFile 'https://example.test/archive' "$fixture/download" ('0' * 64) } catch { $failed = $true }

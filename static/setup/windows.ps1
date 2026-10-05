@@ -200,6 +200,9 @@ function Set-Mods([string]$Pack, [string]$Game, [string]$RecoveryFolder = '') {
 }
 function Set-Profile([string]$File, [string]$Game, [string]$Java, [string]$BackupFolder) {
     Assert-PlainPath $File
+    # Setup needs console output; the game should use the sibling GUI launcher.
+    $javaw = Join-Path ([IO.Path]::GetDirectoryName($Java)) 'javaw.exe'
+    if (Test-Path -LiteralPath $javaw -PathType Leaf) { Assert-PlainPath $javaw; $Java = $javaw }
     $data = Get-Content -LiteralPath $File -Raw | ConvertFrom-Json
     if (!$data.profiles) { throw 'Launcher profile data is missing. Open Minecraft Launcher once, close it, and retry.' }
     Copy-Item -LiteralPath $File -Destination (Join-Path $BackupFolder ([IO.Path]::GetFileName($File)))
